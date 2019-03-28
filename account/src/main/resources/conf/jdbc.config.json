@@ -1,0 +1,5 @@
+{
+  "url":"jdbc:hsqldb:file:db/account",
+  "driver_class":"org.hsqldb.jdbcDriver",
+  "max_pool_size":30
+}
