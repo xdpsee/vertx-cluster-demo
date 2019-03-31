@@ -1,4 +1,4 @@
-package pri.zhenhui.demo.account;
+package pri.zhenhui.demo.account.domain;
 
 import io.vertx.codegen.annotations.DataObject;
 import io.vertx.core.json.JsonObject;
@@ -27,6 +27,8 @@ public class User implements Serializable {
     private Date createAt;
 
     private Date updateAt;
+
+    public User() {}
 
     public User(JsonObject jsonObj) {
         UserConverter.fromJson(jsonObj, this);

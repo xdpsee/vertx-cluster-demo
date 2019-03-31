@@ -5,8 +5,8 @@ import io.vertx.ext.web.RoutingContext;
 import io.vertx.servicediscovery.ServiceDiscovery;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
-import pri.zhenhui.demo.todolist.Todolist;
-import pri.zhenhui.demo.todolist.TodolistDataService;
+import pri.zhenhui.demo.todolist.domain.Todolist;
+import pri.zhenhui.demo.todolist.TodolistService;
 
 public class TodolistCreateHandler extends AbstractHandler {
 
@@ -24,9 +24,9 @@ public class TodolistCreateHandler extends AbstractHandler {
                 return;
             }
 
-            TodolistDataService service = getService(TodolistDataService.SERVICE_NAME
-                    , TodolistDataService.SERVICE_ADDRESS
-                    , TodolistDataService.class);
+            TodolistService service = getService(TodolistService.SERVICE_NAME
+                    , TodolistService.SERVICE_ADDRESS
+                    , TodolistService.class);
 
             Todolist todolist = new Todolist(new JsonObject()
                     .put("id", RandomStringUtils.randomAlphanumeric(32))

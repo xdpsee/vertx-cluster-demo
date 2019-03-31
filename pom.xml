@@ -9,6 +9,7 @@
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
     <modules>
+        <module>common</module>
         <module>account</module>
         <module>todolist</module>
         <module>webapi</module>
