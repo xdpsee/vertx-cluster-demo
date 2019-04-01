@@ -24,6 +24,7 @@ public class DBUtils {
             SqlFile sqlFile = new SqlFile(new File(url.getFile()));
             sqlFile.setConnection(connection);
             sqlFile.execute();
+
         } finally {
             if (connection != null) {
                 connection.close();

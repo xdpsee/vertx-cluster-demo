@@ -10,8 +10,8 @@
         <result property="password" column="password"/>
         <result property="avatar" column="avatar"/>
         <result property="email" column="email"/>
-        <result property="create_at" column="create_at"/>
-        <result property="update_at" column="update_at"/>
+        <result property="createAt" column="create_at"/>
+        <result property="updateAt" column="update_at"/>
     </resultMap>
 
     <insert id="insert" parameterType="pri.zhenhui.demo.account.domain.User">

@@ -7,20 +7,16 @@ import io.vertx.core.Handler;
 import io.vertx.core.json.JsonObject;
 import pri.zhenhui.demo.account.domain.User;
 
-@VertxGen
 @ProxyGen
-public interface UserService {
+@VertxGen
+public interface UserWriteService {
 
-    String SERVICE_NAME = "service.data.user";
+    String SERVICE_NAME = "service.data.user.write";
 
-    String SERVICE_ADDRESS = "address.service.data.user";
+    String SERVICE_ADDRESS = "address.service.data.user.write";
 
     void createUser(User user, Handler<AsyncResult<Boolean>> resultHandler);
 
     void updateUser(JsonObject fields, Handler<AsyncResult<Boolean>> resultHandler);
 
-    void queryUserByName(String username, Handler<AsyncResult<User>> resultHandler);
-
-    void queryUserByPhone(String phone, Handler<AsyncResult<User>> resultHandler);
 }
-

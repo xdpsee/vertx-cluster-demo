@@ -2,16 +2,17 @@ package pri.zhenhui.demo.webapi.handlers.todolist;
 
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.RoutingContext;
-import io.vertx.servicediscovery.ServiceDiscovery;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
-import pri.zhenhui.demo.todolist.domain.Todolist;
 import pri.zhenhui.demo.todolist.TodolistService;
+import pri.zhenhui.demo.todolist.domain.Todolist;
+import pri.zhenhui.demo.webapi.support.AbstractHandler;
+import pri.zhenhui.demo.webapi.support.AppContext;
 
 public class TodolistCreateHandler extends AbstractHandler {
 
-    public TodolistCreateHandler(ServiceDiscovery serviceDiscovery) {
-        super(serviceDiscovery);
+    public TodolistCreateHandler(AppContext appContext) {
+        super(appContext);
     }
 
     @Override
@@ -24,7 +25,7 @@ public class TodolistCreateHandler extends AbstractHandler {
                 return;
             }
 
-            TodolistService service = getService(TodolistService.SERVICE_NAME
+            TodolistService service = appContext.getService(TodolistService.SERVICE_NAME
                     , TodolistService.SERVICE_ADDRESS
                     , TodolistService.class);
 
