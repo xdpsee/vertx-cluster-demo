@@ -1,9 +1,9 @@
 package pri.zhenhui.demo.support;
 
-import io.vertx.core.AbstractVerticle;
-import io.vertx.core.Future;
+import io.reactivex.Completable;
 import io.vertx.core.eventbus.MessageConsumer;
 import io.vertx.core.json.JsonObject;
+import io.vertx.reactivex.core.AbstractVerticle;
 import io.vertx.servicediscovery.Record;
 import io.vertx.servicediscovery.ServiceDiscovery;
 import io.vertx.servicediscovery.types.EventBusService;
@@ -30,38 +30,52 @@ public abstract class AbstractMicroServiceVerticle<S> extends AbstractVerticle {
         this.serviceRecord = EventBusService.createRecord(serviceName, serviceAddress, serviceClass);
     }
 
+
     @Override
-    public void start(Future<Void> startFuture) throws Exception {
+    public Completable rxStart() {
 
-        start();
+        return vertx.rxExecuteBlocking(future -> {
+            try {
+                start();
 
-        final S service = this.serviceImpl();
-        serviceBinder = new ServiceBinder(vertx);
-        registry = serviceBinder.setAddress(serviceAddress).register(serviceClass, service);
+                final S service = this.serviceImpl();
+                serviceBinder = new ServiceBinder(getVertx());
+                registry = serviceBinder.setAddress(serviceAddress).register(serviceClass, service);
 
-        serviceDiscovery = ServiceDiscovery.create(vertx);
-        serviceDiscovery.publish(serviceRecord, published -> {
-            if (published.failed()) {
-                startFuture.fail(published.cause());
-            } else {
-                startFuture.complete();
+                serviceDiscovery = ServiceDiscovery.create(getVertx());
+                serviceDiscovery.publish(serviceRecord, published -> {
+                    if (published.failed()) {
+                        future.fail(published.cause());
+                    } else {
+                        future.complete();
+                    }
+                });
+
+            } catch (Throwable e) {
+                future.fail(e.getCause());
             }
-        });
+        }).ignoreElement();
     }
 
     @Override
-    public void stop(Future<Void> stopFuture) throws Exception {
+    public Completable rxStop() {
 
-        stop();
+        return vertx.rxExecuteBlocking(future -> {
+            try {
+                stop();
 
-        serviceBinder.unregister(registry);
-        serviceDiscovery.unpublish(serviceRecord.getRegistration(), unpublished -> {
-            if (unpublished.failed()) {
-                stopFuture.fail(unpublished.cause());
-            } else {
-                stopFuture.complete();
+                serviceBinder.unregister(registry);
+                serviceDiscovery.unpublish(serviceRecord.getRegistration(), unpublished -> {
+                    if (unpublished.failed()) {
+                        future.fail(unpublished.cause());
+                    } else {
+                        future.complete();
+                    }
+                });
+            } catch (Throwable e) {
+                future.fail(e);
             }
-        });
+        }).ignoreElement();
     }
 
     protected abstract S serviceImpl();

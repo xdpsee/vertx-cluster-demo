@@ -2,9 +2,10 @@ package pri.zhenhui.demo.todolist;
 
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
-import io.vertx.core.Vertx;
+import io.vertx.reactivex.core.Context;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
+import pri.zhenhui.demo.support.SqlSessionFactoryUtils;
 import pri.zhenhui.demo.todolist.domain.Todolist;
 import pri.zhenhui.demo.todolist.mapper.TodolistMapper;
 
@@ -14,19 +15,19 @@ import java.util.Map;
 
 public class TodolistServiceImpl implements TodolistService {
 
-    private Vertx vertx;
+    private Context context;
 
     private SqlSessionFactory sqlSessionFactory;
 
-    public TodolistServiceImpl(Vertx vertx, SqlSessionFactory sqlSessionFactory) {
-        this.vertx = vertx;
-        this.sqlSessionFactory = sqlSessionFactory;
+    public TodolistServiceImpl(Context context) {
+        this.context = context;
+        this.sqlSessionFactory = SqlSessionFactoryUtils.build();
     }
 
     @Override
     public void listTodoes(Long userId, int offset, int limit, Handler<AsyncResult<List<Todolist>>> resultHandler) {
 
-        vertx.<List<Todolist>>executeBlocking(future -> {
+        context.<List<Todolist>>executeBlocking(future -> {
             SqlSession session = sqlSessionFactory.openSession();
             try {
                 TodolistMapper todolistMapper = session.getMapper(TodolistMapper.class);
@@ -44,7 +45,7 @@ public class TodolistServiceImpl implements TodolistService {
     @Override
     public void createTodo(Todolist todolist, Handler<AsyncResult<Boolean>> resultHandler) {
 
-        vertx.<Boolean>executeBlocking(future -> {
+        context.<Boolean>executeBlocking(future -> {
             SqlSession session = sqlSessionFactory.openSession();
             try {
                 TodolistMapper todolistMapper = session.getMapper(TodolistMapper.class);
@@ -61,7 +62,7 @@ public class TodolistServiceImpl implements TodolistService {
 
     @Override
     public void updateTodo(String todoId, String title, String status, Handler<AsyncResult<Boolean>> resultHandler) {
-        vertx.<Boolean>executeBlocking(future -> {
+        context.<Boolean>executeBlocking(future -> {
             SqlSession session = sqlSessionFactory.openSession();
             try {
                 TodolistMapper todolistMapper = session.getMapper(TodolistMapper.class);

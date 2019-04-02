@@ -1,9 +1,9 @@
 package pri.zhenhui.demo.webapi.support;
 
-import io.vertx.core.Vertx;
 import io.vertx.ext.auth.PubSecKeyOptions;
-import io.vertx.ext.auth.jwt.JWTAuth;
 import io.vertx.ext.auth.jwt.JWTAuthOptions;
+import io.vertx.reactivex.core.Vertx;
+import io.vertx.reactivex.ext.auth.jwt.JWTAuth;
 import io.vertx.servicediscovery.ServiceDiscovery;
 import io.vertx.servicediscovery.ServiceReference;
 import io.vertx.servicediscovery.types.EventBusService;
@@ -16,11 +16,10 @@ public final class AppContext {
 
     private final JWTAuth jwtAuth;
 
-
     public static AppContext create(Vertx vertx) {
 
         return new AppContext(vertx
-                , ServiceDiscovery.create(vertx)
+                , ServiceDiscovery.create(vertx.getDelegate())
                 , JWTAuth.create(vertx, new JWTAuthOptions()
                 .addPubSecKey(new PubSecKeyOptions()
                         .setAlgorithm("HS256")

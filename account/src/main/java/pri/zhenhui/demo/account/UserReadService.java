@@ -4,11 +4,7 @@ import io.vertx.codegen.annotations.ProxyGen;
 import io.vertx.codegen.annotations.VertxGen;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
-import pri.zhenhui.demo.account.domain.Authority;
-import pri.zhenhui.demo.account.domain.Role;
 import pri.zhenhui.demo.account.domain.User;
-
-import java.util.List;
 
 @ProxyGen
 @VertxGen

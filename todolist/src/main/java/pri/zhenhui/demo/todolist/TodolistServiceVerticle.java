@@ -8,7 +8,6 @@ import pri.zhenhui.demo.support.SqlSessionFactoryUtils;
 public class TodolistServiceVerticle extends AbstractMicroServiceVerticle<TodolistService> {
 
 
-    private SqlSessionFactory sqlSessionFactory;
 
     public TodolistServiceVerticle() {
         super(TodolistService.SERVICE_NAME, TodolistService.SERVICE_ADDRESS, TodolistService.class);
@@ -16,14 +15,13 @@ public class TodolistServiceVerticle extends AbstractMicroServiceVerticle<Todoli
 
     @Override
     public void start() throws Exception {
-        sqlSessionFactory = SqlSessionFactoryUtils.build();
-
+        SqlSessionFactory sqlSessionFactory = SqlSessionFactoryUtils.build();
         DBUtils.initDatabase(sqlSessionFactory);
     }
 
     @Override
     protected TodolistService serviceImpl() {
-        return new TodolistServiceImpl(vertx, sqlSessionFactory);
+        return new TodolistServiceImpl(vertx.getOrCreateContext());
     }
 
 }

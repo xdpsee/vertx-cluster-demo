@@ -1,8 +1,8 @@
 package pri.zhenhui.demo.webapi.handlers.security;
 
 import io.vertx.core.json.JsonObject;
-import io.vertx.ext.auth.jwt.impl.JWTUser;
-import io.vertx.ext.web.RoutingContext;
+import io.vertx.reactivex.ext.auth.User;
+import io.vertx.reactivex.ext.web.RoutingContext;
 import org.apache.commons.lang3.StringUtils;
 import pri.zhenhui.demo.webapi.support.AbstractHandler;
 import pri.zhenhui.demo.webapi.support.AppContext;
@@ -31,7 +31,7 @@ public class AuthenticationHandler extends AbstractHandler {
 
             appContext.jwtAuth().authenticate(new JsonObject().put("jwt", components[1]), authenticate -> {
                 if (authenticate.succeeded()) {
-                    JWTUser user = (JWTUser) authenticate.result();
+                    User user =  authenticate.result();
                     context.setUser(user);
                     context.next();
                 } else {

@@ -7,15 +7,21 @@ import java.io.InputStream;
 
 public class SqlSessionFactoryUtils {
 
-    public static SqlSessionFactory build() throws Exception {
+    private static SqlSessionFactory sqlSessionFactory = null;
 
-        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        InputStream inputStream = classLoader.getResourceAsStream("conf/mybatis-config.xml");
-        if (inputStream == null) {
-            throw new Exception("conf/mybatis-config.xml not found, please config it!");
+    public synchronized static SqlSessionFactory build() {
+
+        if (sqlSessionFactory != null) {
+            ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+            InputStream inputStream = classLoader.getResourceAsStream("conf/mybatis-config.xml");
+            if (inputStream == null) {
+                throw new RuntimeException("conf/mybatis-config.xml not found, please config it!");
+            }
+
+            sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
         }
 
-        return new SqlSessionFactoryBuilder().build(inputStream);
+        return sqlSessionFactory;
     }
 
 }

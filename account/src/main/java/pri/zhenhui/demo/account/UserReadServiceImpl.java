@@ -2,26 +2,27 @@ package pri.zhenhui.demo.account;
 
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
-import io.vertx.core.Vertx;
+import io.vertx.reactivex.core.Context;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import pri.zhenhui.demo.account.domain.User;
 import pri.zhenhui.demo.account.mapper.UserMapper;
+import pri.zhenhui.demo.support.SqlSessionFactoryUtils;
 
 public class UserReadServiceImpl implements UserReadService {
 
-    private Vertx vertx;
+    private final Context context;
 
-    private SqlSessionFactory sqlSessionFactory;
+    private final SqlSessionFactory sqlSessionFactory;
 
-    UserReadServiceImpl(Vertx vertx, SqlSessionFactory sqlSessionFactory) {
-        this.vertx = vertx;
-        this.sqlSessionFactory = sqlSessionFactory;
+    UserReadServiceImpl(Context context) {
+        this.context = context;
+        this.sqlSessionFactory = SqlSessionFactoryUtils.build();
     }
 
     @Override
     public void queryUserByName(String username, Handler<AsyncResult<User>> resultHandler) {
-        vertx.<User>executeBlocking(future -> {
+        context.<User>executeBlocking(future -> {
             try (SqlSession session = sqlSessionFactory.openSession()) {
                 UserMapper userMapper = session.getMapper(UserMapper.class);
                 User user = userMapper.selectByName(username);
@@ -34,7 +35,7 @@ public class UserReadServiceImpl implements UserReadService {
 
     @Override
     public void queryUserByPhone(String phone, Handler<AsyncResult<User>> resultHandler) {
-        vertx.<User>executeBlocking(future -> {
+        context.<User>executeBlocking(future -> {
             try (SqlSession session = sqlSessionFactory.openSession()) {
                 UserMapper userMapper = session.getMapper(UserMapper.class);
                 User user = userMapper.selectByPhone(phone);

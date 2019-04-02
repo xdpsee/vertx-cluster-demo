@@ -11,17 +11,19 @@ import java.util.List;
 
 @ProxyGen
 @VertxGen
-public interface AuthorityService {
+public interface AuthorityReadService {
 
-    String SERVICE_NAME = "service.data.authority";
+    String SERVICE_NAME = "service.data.authority.read";
 
-    String SERVICE_ADDRESS = "address.service.data.authority";
+    String SERVICE_ADDRESS = "address.service.data.authority.read";
 
     void queryRoles(List<String> roles, Handler<AsyncResult<List<Role>>> resultHandler);
 
     void queryUserRoles(Long userId, Handler<AsyncResult<List<Role>>> resultHandler);
 
     void queryAuthorities(List<String> authorities, Handler<AsyncResult<List<Authority>>> resultHandler);
+
+    void queryRoleAuthorities(Long roleId, Handler<AsyncResult<List<Authority>>> resultHandler);
 
     void queryUserAuthorities(Long userId, Handler<AsyncResult<List<Authority>>> resultHandler);
 

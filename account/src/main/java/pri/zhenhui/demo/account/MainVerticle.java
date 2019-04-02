@@ -1,47 +1,22 @@
 package pri.zhenhui.demo.account;
 
-import io.vertx.core.AbstractVerticle;
-import io.vertx.core.Future;
-import io.vertx.core.Verticle;
-import org.apache.ibatis.session.SqlSessionFactory;
-import pri.zhenhui.demo.support.SqlSessionFactoryUtils;
+import io.reactivex.Completable;
+import io.vertx.reactivex.core.AbstractVerticle;
 
 public class MainVerticle extends AbstractVerticle {
 
-    private SqlSessionFactory sqlSessionFactory;
-
     @Override
-    public void start(Future<Void> startFuture) throws Exception {
+    public Completable rxStart() {
 
-        sqlSessionFactory = SqlSessionFactoryUtils.build();
+        return vertx.rxDeployVerticle(new UserReadServiceVerticle())
+                .ignoreElement()
+                .andThen(vertx.rxDeployVerticle(new UserWriteServiceVerticle()))
+                .ignoreElement()
+                .andThen(vertx.rxDeployVerticle(new AuthorityReadServiceVerticle()))
+                .ignoreElement()
+                .andThen(vertx.rxDeployVerticle(new AuthorityWriteServiceVerticle()))
+                .ignoreElement();
 
-        deploy(new UserReadServiceVerticle(sqlSessionFactory))
-                .compose((v1) -> deploy(new UserWriteServiceVerticle(sqlSessionFactory))
-                        .compose((v2) -> deploy(new AuthorityServiceVerticle(sqlSessionFactory)))
-                        .setHandler(result -> {
-                            if (result.failed()) {
-                                startFuture.fail(result.cause());
-                            } else {
-                                startFuture.complete();
-                            }
-                        }));
-
-    }
-
-    private Future<Void> deploy(Verticle verticle) {
-
-        Future<Void> future = Future.future();
-
-        vertx.deployVerticle(verticle, deploy -> {
-            if (deploy.failed()) {
-                future.fail(deploy.cause());
-            } else {
-                future.complete();
-            }
-        });
-
-        return future;
     }
 }
-
 

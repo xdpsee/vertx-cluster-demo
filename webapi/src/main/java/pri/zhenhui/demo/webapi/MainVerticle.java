@@ -1,46 +1,44 @@
 package pri.zhenhui.demo.webapi;
 
-import io.vertx.core.AbstractVerticle;
-import io.vertx.core.Context;
-import io.vertx.core.Future;
-import io.vertx.core.Vertx;
-import io.vertx.ext.web.Router;
-import io.vertx.ext.web.handler.BodyHandler;
+import io.reactivex.Completable;
+import io.vertx.reactivex.core.AbstractVerticle;
+import io.vertx.reactivex.core.Future;
+import io.vertx.reactivex.ext.web.Router;
+import io.vertx.reactivex.ext.web.handler.BodyHandler;
+import pri.zhenhui.demo.webapi.handlers.security.AuthenticationHandler;
 import pri.zhenhui.demo.webapi.handlers.security.LoginHandler;
 import pri.zhenhui.demo.webapi.handlers.security.LogoutHandler;
 import pri.zhenhui.demo.webapi.handlers.todolist.TodolistCreateHandler;
 import pri.zhenhui.demo.webapi.support.AppContext;
-import pri.zhenhui.demo.webapi.handlers.security.AuthenticationHandler;
 
 public class MainVerticle extends AbstractVerticle {
 
     private AppContext appContext;
 
     @Override
-    public void init(Vertx vertx, Context context) {
-        super.init(vertx, context);
+    public Completable rxStart() {
 
-        this.appContext = AppContext.create(vertx);
-    }
+        Future<Void> future = Future.future();
 
-    @Override
-    public void start(Future<Void> startFuture) throws Exception {
+        appContext = AppContext.create(vertx);
 
-        vertx.createHttpServer().requestHandler(createRouter()).listen(8080, listen -> {
-            if (listen.succeeded()) {
-                startFuture.complete();
+        vertx.createHttpServer().requestHandler(createRouter()).listen(8080, result -> {
+            if (result.succeeded()) {
+                future.complete();
             } else {
-                startFuture.fail(listen.cause());
+                future.fail(result.cause());
             }
         });
+
+        return future.rxSetHandler().ignoreElement();
     }
 
     @Override
-    public void stop(Future<Void> stopFuture) throws Exception {
+    public Completable rxStop() {
 
-        this.appContext.close();
+        appContext.close();
 
-        stopFuture.complete();
+        return super.rxStop();
     }
 
     private Router createRouter() {

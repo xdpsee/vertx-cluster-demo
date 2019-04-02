@@ -3,28 +3,29 @@ package pri.zhenhui.demo.account;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
-import io.vertx.core.Vertx;
+import io.vertx.reactivex.core.Context;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import pri.zhenhui.demo.account.domain.Authority;
 import pri.zhenhui.demo.account.domain.Role;
 import pri.zhenhui.demo.account.mapper.AuthorityMapper;
 import pri.zhenhui.demo.account.mapper.RoleMapper;
+import pri.zhenhui.demo.support.SqlSessionFactoryUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
 
-public class AuthorityServiceImpl implements AuthorityService {
+public class AuthorityReadServiceImpl implements AuthorityReadService {
 
-    private final Vertx vertx;
+    private final Context context;
 
     private final SqlSessionFactory sqlSessionFactory;
 
-    AuthorityServiceImpl(Vertx vertx, SqlSessionFactory sqlSessionFactory) {
-        this.vertx = vertx;
-        this.sqlSessionFactory = sqlSessionFactory;
+    AuthorityReadServiceImpl(Context context) {
+        this.context = context;
+        this.sqlSessionFactory = SqlSessionFactoryUtils.build();
     }
 
     @Override
@@ -34,7 +35,7 @@ public class AuthorityServiceImpl implements AuthorityService {
             return;
         }
 
-        vertx.<List<Role>>executeBlocking(future -> {
+        context.<List<Role>>executeBlocking(future -> {
             try (SqlSession session = sqlSessionFactory.openSession()) {
                 RoleMapper roleMapper = session.getMapper(RoleMapper.class);
                 List<Role> result = roleMapper.selectByTitles(roles);
@@ -47,7 +48,7 @@ public class AuthorityServiceImpl implements AuthorityService {
 
     @Override
     public void queryUserRoles(Long userId, Handler<AsyncResult<List<Role>>> resultHandler) {
-        vertx.<List<Role>>executeBlocking(future -> {
+        context.<List<Role>>executeBlocking(future -> {
             try (SqlSession session = sqlSessionFactory.openSession()) {
                 RoleMapper roleMapper = session.getMapper(RoleMapper.class);
                 List<Role> roles = roleMapper.selectByUser(userId);
@@ -65,7 +66,7 @@ public class AuthorityServiceImpl implements AuthorityService {
             return;
         }
 
-        vertx.<List<Authority>>executeBlocking(future -> {
+        context.<List<Authority>>executeBlocking(future -> {
             try (SqlSession session = sqlSessionFactory.openSession()) {
                 AuthorityMapper authorityMapper = session.getMapper(AuthorityMapper.class);
                 List<Authority> result = authorityMapper.selectByTitles(authorities);
@@ -77,8 +78,13 @@ public class AuthorityServiceImpl implements AuthorityService {
     }
 
     @Override
+    public void queryRoleAuthorities(Long roleId, Handler<AsyncResult<List<Authority>>> resultHandler) {
+
+    }
+
+    @Override
     public void queryUserAuthorities(Long userId, Handler<AsyncResult<List<Authority>>> resultHandler) {
-        vertx.<List<Authority>>executeBlocking(future -> {
+        context.<List<Authority>>executeBlocking(future -> {
             try (SqlSession session = sqlSessionFactory.openSession()) {
                 RoleMapper roleMapper = session.getMapper(RoleMapper.class);
                 List<Role> roles = roleMapper.selectByUser(userId);
@@ -96,4 +102,6 @@ public class AuthorityServiceImpl implements AuthorityService {
             }
         }, resultHandler);
     }
+
+
 }

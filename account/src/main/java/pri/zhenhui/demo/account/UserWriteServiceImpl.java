@@ -2,28 +2,29 @@ package pri.zhenhui.demo.account;
 
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
-import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonObject;
+import io.vertx.reactivex.core.Context;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import pri.zhenhui.demo.account.domain.User;
 import pri.zhenhui.demo.account.mapper.UserMapper;
+import pri.zhenhui.demo.support.SqlSessionFactoryUtils;
 
 public class UserWriteServiceImpl implements UserWriteService {
 
-    private final Vertx vertx;
+    private final Context context;
 
     private final SqlSessionFactory sqlSessionFactory;
 
-    UserWriteServiceImpl(Vertx vertx, SqlSessionFactory sqlSessionFactory) {
-        this.vertx = vertx;
-        this.sqlSessionFactory = sqlSessionFactory;
+    UserWriteServiceImpl(Context context) {
+        this.context = context;
+        this.sqlSessionFactory = SqlSessionFactoryUtils.build();
     }
 
     @Override
     public void createUser(User user, Handler<AsyncResult<Boolean>> resultHandler) {
 
-        vertx.<Boolean>executeBlocking(future -> {
+        context.<Boolean>executeBlocking(future -> {
             try (SqlSession session = sqlSessionFactory.openSession()) {
                 UserMapper userMapper = session.getMapper(UserMapper.class);
                 userMapper.insert(user);
@@ -39,7 +40,7 @@ public class UserWriteServiceImpl implements UserWriteService {
     @Override
     public void updateUser(JsonObject fields, Handler<AsyncResult<Boolean>> resultHandler) {
 
-        vertx.<Boolean>executeBlocking(future -> {
+        context.<Boolean>executeBlocking(future -> {
             try (SqlSession session = sqlSessionFactory.openSession()) {
                 UserMapper userMapper = session.getMapper(UserMapper.class);
                 int rows = userMapper.update(fields.getMap());
