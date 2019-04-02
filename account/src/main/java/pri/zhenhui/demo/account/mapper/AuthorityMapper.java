@@ -14,9 +14,14 @@ public interface AuthorityMapper {
 
     List<Authority> selectByTitles(@Param("titles") List<String> titles);
 
-    List<Authority> selectByRole(@Param("roleIds") List<Long> roleIds);
+    List<Authority> selectByRoles(@Param("roleIds") List<Long> roleIds);
 
     int update(Map<String, Object> fields);
+
+    int insertRoleAuthorities(@Param("roleId") Long roleId, @Param("authorityIds") List<Long> authorityIds);
+
+    int deleteRoleAuthorities(@Param("roleId") Long roleId, @Param("authorityIds") List<Long> authorityIds);
+
 }
 
 

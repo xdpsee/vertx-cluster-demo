@@ -18,4 +18,8 @@ public interface RoleMapper {
 
     int update(Map<String, Object> fields);
 
+    int insertUserRoles(@Param("userId") Long userId, @Param("roleIds") List<Long> roleIds);
+
+    int deleteUserRoles(@Param("userId") Long userId, @Param("roleIds") List<Long> roleIds);
+
 }

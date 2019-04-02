@@ -13,6 +13,7 @@ import pri.zhenhui.demo.account.mapper.RoleMapper;
 import pri.zhenhui.demo.support.SqlSessionFactoryUtils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
@@ -26,6 +27,19 @@ public class AuthorityReadServiceImpl implements AuthorityReadService {
     AuthorityReadServiceImpl(Context context) {
         this.context = context;
         this.sqlSessionFactory = SqlSessionFactoryUtils.build();
+    }
+
+    @Override
+    public void queryAllRoles(Handler<AsyncResult<List<Role>>> resultHandler) {
+        context.<List<Role>>executeBlocking(future -> {
+            try (SqlSession session = sqlSessionFactory.openSession()) {
+                RoleMapper roleMapper = session.getMapper(RoleMapper.class);
+                List<Role> result = roleMapper.selectAll();
+                future.complete(result);
+            } catch (Exception e) {
+                future.fail(e);
+            }
+        }, resultHandler);
     }
 
     @Override
@@ -60,6 +74,19 @@ public class AuthorityReadServiceImpl implements AuthorityReadService {
     }
 
     @Override
+    public void queryAllAuthorities(Handler<AsyncResult<List<Authority>>> resultHandler) {
+        context.<List<Authority>>executeBlocking(future -> {
+            try (SqlSession session = sqlSessionFactory.openSession()) {
+                AuthorityMapper authorityMapper = session.getMapper(AuthorityMapper.class);
+                List<Authority> result = authorityMapper.selectAll();
+                future.complete(result);
+            } catch (Exception e) {
+                future.fail(e);
+            }
+        }, resultHandler);
+    }
+
+    @Override
     public void queryAuthorities(List<String> authorities, Handler<AsyncResult<List<Authority>>> resultHandler) {
         if (authorities == null || authorities.isEmpty()) {
             resultHandler.handle(Future.succeededFuture(new ArrayList<>()));
@@ -79,7 +106,15 @@ public class AuthorityReadServiceImpl implements AuthorityReadService {
 
     @Override
     public void queryRoleAuthorities(Long roleId, Handler<AsyncResult<List<Authority>>> resultHandler) {
-
+        context.<List<Authority>>executeBlocking(future -> {
+            try (SqlSession session = sqlSessionFactory.openSession()) {
+                AuthorityMapper authorityMapper = session.getMapper(AuthorityMapper.class);
+                List<Authority> result = authorityMapper.selectByRoles(Collections.singletonList(roleId));
+                future.complete(result);
+            } catch (Throwable e) {
+                future.fail(e);
+            }
+        }, resultHandler);
     }
 
     @Override
@@ -92,7 +127,7 @@ public class AuthorityReadServiceImpl implements AuthorityReadService {
                     future.complete(new ArrayList<>());
                 } else {
                     AuthorityMapper authorityMapper = session.getMapper(AuthorityMapper.class);
-                    List<Authority> authorities = authorityMapper.selectByRole(roles.stream()
+                    List<Authority> authorities = authorityMapper.selectByRoles(roles.stream()
                             .map(Role::getId)
                             .collect(toList()));
                     future.complete(authorities);
