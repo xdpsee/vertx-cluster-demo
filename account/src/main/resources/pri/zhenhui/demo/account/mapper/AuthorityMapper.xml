@@ -38,7 +38,7 @@
         </foreach>
     </select>
 
-    <select id="selectByUser" resultMap="roleMap">
+    <select id="selectByUser" resultMap="authorityMap">
         select * from user_roles ur left join roles r on ur.role_id = r.id where ur.user_id = #{userId}
     </select>
 

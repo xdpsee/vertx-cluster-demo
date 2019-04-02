@@ -25,6 +25,8 @@ public class DBUtils {
             sqlFile.setConnection(connection);
             sqlFile.execute();
 
+            session.commit();
+
         } finally {
             if (connection != null) {
                 connection.close();

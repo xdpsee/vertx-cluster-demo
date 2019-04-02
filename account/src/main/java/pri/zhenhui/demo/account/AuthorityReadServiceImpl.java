@@ -10,7 +10,7 @@ import pri.zhenhui.demo.account.domain.Authority;
 import pri.zhenhui.demo.account.domain.Role;
 import pri.zhenhui.demo.account.mapper.AuthorityMapper;
 import pri.zhenhui.demo.account.mapper.RoleMapper;
-import pri.zhenhui.demo.support.SqlSessionFactoryUtils;
+import pri.zhenhui.demo.support.SqlSessionFactoryLoader;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -26,7 +26,7 @@ public class AuthorityReadServiceImpl implements AuthorityReadService {
 
     AuthorityReadServiceImpl(Context context) {
         this.context = context;
-        this.sqlSessionFactory = SqlSessionFactoryUtils.build();
+        this.sqlSessionFactory = SqlSessionFactoryLoader.load();
     }
 
     @Override

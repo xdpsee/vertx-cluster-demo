@@ -9,7 +9,7 @@ import pri.zhenhui.demo.account.domain.Authority;
 import pri.zhenhui.demo.account.domain.Role;
 import pri.zhenhui.demo.account.mapper.AuthorityMapper;
 import pri.zhenhui.demo.account.mapper.RoleMapper;
-import pri.zhenhui.demo.support.SqlSessionFactoryUtils;
+import pri.zhenhui.demo.support.SqlSessionFactoryLoader;
 
 import java.util.HashMap;
 import java.util.List;
@@ -24,7 +24,7 @@ public class AuthorityWriteServiceImpl implements AuthorityWriteService {
 
     AuthorityWriteServiceImpl(Context context) {
         this.context = context;
-        this.sqlSessionFactory = SqlSessionFactoryUtils.build();
+        this.sqlSessionFactory = SqlSessionFactoryLoader.load();
     }
 
     @Override

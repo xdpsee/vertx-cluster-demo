@@ -32,13 +32,15 @@ create table if not exists authorities
   constraint authority_uk_1 unique (title)
 );
 
-create table if not exists user_roles(
+create table if not exists user_roles
+(
   user_id bigint not null,
   role_id bigint not null,
   constraint user_role_uk_1 unique (user_id,role_id)
 );
 
-create table if not exists role_authorities(
+create table if not exists role_authorities
+(
   role_id bigint not null,
   authority_id bigint not null,
   constraint role_authority_uk_1 unique (role_id,authority_id)

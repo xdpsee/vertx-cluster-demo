@@ -8,7 +8,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import pri.zhenhui.demo.account.domain.User;
 import pri.zhenhui.demo.account.mapper.UserMapper;
-import pri.zhenhui.demo.support.SqlSessionFactoryUtils;
+import pri.zhenhui.demo.support.SqlSessionFactoryLoader;
 
 public class UserWriteServiceImpl implements UserWriteService {
 
@@ -18,7 +18,7 @@ public class UserWriteServiceImpl implements UserWriteService {
 
     UserWriteServiceImpl(Context context) {
         this.context = context;
-        this.sqlSessionFactory = SqlSessionFactoryUtils.build();
+        this.sqlSessionFactory = SqlSessionFactoryLoader.load();
     }
 
     @Override

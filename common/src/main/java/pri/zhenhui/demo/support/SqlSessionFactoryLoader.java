@@ -5,13 +5,13 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 
 import java.io.InputStream;
 
-public class SqlSessionFactoryUtils {
+public class SqlSessionFactoryLoader {
 
     private static SqlSessionFactory sqlSessionFactory = null;
 
-    public synchronized static SqlSessionFactory build() {
+    public synchronized static SqlSessionFactory load() {
 
-        if (sqlSessionFactory != null) {
+        if (sqlSessionFactory == null) {
             ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
             InputStream inputStream = classLoader.getResourceAsStream("conf/mybatis-config.xml");
             if (inputStream == null) {

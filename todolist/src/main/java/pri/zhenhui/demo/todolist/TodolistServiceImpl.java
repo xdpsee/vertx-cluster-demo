@@ -5,7 +5,7 @@ import io.vertx.core.Handler;
 import io.vertx.reactivex.core.Context;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
-import pri.zhenhui.demo.support.SqlSessionFactoryUtils;
+import pri.zhenhui.demo.support.SqlSessionFactoryLoader;
 import pri.zhenhui.demo.todolist.domain.Todolist;
 import pri.zhenhui.demo.todolist.mapper.TodolistMapper;
 
@@ -21,7 +21,7 @@ public class TodolistServiceImpl implements TodolistService {
 
     public TodolistServiceImpl(Context context) {
         this.context = context;
-        this.sqlSessionFactory = SqlSessionFactoryUtils.build();
+        this.sqlSessionFactory = SqlSessionFactoryLoader.load();
     }
 
     @Override

@@ -2,10 +2,13 @@ package pri.zhenhui.demo.webapi.handlers.security;
 
 import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
+import io.vertx.ext.jwt.JWTOptions;
 import io.vertx.reactivex.ext.web.RoutingContext;
 import org.apache.commons.lang3.StringUtils;
 import org.mindrot.jbcrypt.BCrypt;
+import pri.zhenhui.demo.account.AuthorityReadService;
 import pri.zhenhui.demo.account.UserReadService;
+import pri.zhenhui.demo.account.domain.User;
 import pri.zhenhui.demo.webapi.support.AbstractHandler;
 import pri.zhenhui.demo.webapi.support.AppContext;
 import pri.zhenhui.demo.webapi.support.Result;
@@ -30,24 +33,40 @@ public class LoginHandler extends AbstractHandler {
         final UserReadService userReadService = appContext.getService(UserReadService.SERVICE_NAME
                 , UserReadService.SERVICE_ADDRESS
                 , UserReadService.class);
+        final AuthorityReadService authorityReadService = appContext.getService(AuthorityReadService.SERVICE_NAME
+                , AuthorityReadService.SERVICE_ADDRESS
+                , AuthorityReadService.class);
 
         userReadService.queryUserByName(username, query -> {
             if (query.failed()) {
                 context.response().end(Json.encode(Result.error(500, "internal server error", query.cause())));
-            } else {
-                if (query.result() == null) {
-                    context.response().end(Json.encode(Result.error(404, "user not found")));
-                } else {
-                    if (!BCrypt.checkpw(password, query.result().getPassword())) {
-                        context.response().end(Json.encode(Result.error(401, "password mismatch")));
-                    } else {
-                        String token = appContext.jwtAuth().generateToken(new JsonObject()
-                                .put("sub", username)
-                        );
-                        context.response().end(Json.encode(Result.success(token)));
-                    }
-                }
+                return;
             }
+
+            final User user = query.result();
+            if (user == null) {
+                context.response().end(Json.encode(Result.error(404, "user not found")));
+                return;
+            }
+
+            if (!BCrypt.checkpw(password, query.result().getPassword())) {
+                context.response().end(Json.encode(Result.error(401, "password mismatch")));
+                return;
+            }
+
+            authorityReadService.queryUserAuthorities(user.getId(), ar -> {
+                if (ar.failed()) {
+                    context.response().end(Json.encode(Result.error(500, "internal server error", ar.cause())));
+                    return;
+                }
+
+                JsonObject claims = new JsonObject().put("sub", username);
+                JWTOptions options = new JWTOptions();
+                ar.result().forEach(authority -> options.addPermission(authority.getTitle()));
+
+                String token = appContext.jwtAuth().generateToken(claims, options);
+                context.response().end(Json.encode(Result.success(token)));
+            });
         });
     }
 }

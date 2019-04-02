@@ -3,7 +3,7 @@ package pri.zhenhui.demo.todolist;
 import org.apache.ibatis.session.SqlSessionFactory;
 import pri.zhenhui.demo.support.AbstractMicroServiceVerticle;
 import pri.zhenhui.demo.support.DBUtils;
-import pri.zhenhui.demo.support.SqlSessionFactoryUtils;
+import pri.zhenhui.demo.support.SqlSessionFactoryLoader;
 
 public class TodolistServiceVerticle extends AbstractMicroServiceVerticle<TodolistService> {
 
@@ -15,7 +15,7 @@ public class TodolistServiceVerticle extends AbstractMicroServiceVerticle<Todoli
 
     @Override
     public void start() throws Exception {
-        SqlSessionFactory sqlSessionFactory = SqlSessionFactoryUtils.build();
+        SqlSessionFactory sqlSessionFactory = SqlSessionFactoryLoader.load();
         DBUtils.initDatabase(sqlSessionFactory);
     }
 
