@@ -6,8 +6,8 @@ import io.vertx.ext.jwt.JWTOptions;
 import io.vertx.reactivex.ext.web.RoutingContext;
 import org.apache.commons.lang3.StringUtils;
 import org.mindrot.jbcrypt.BCrypt;
-import pri.zhenhui.demo.account.AuthorityReadService;
-import pri.zhenhui.demo.account.UserReadService;
+import pri.zhenhui.demo.account.AuthorityService;
+import pri.zhenhui.demo.account.AccountService;
 import pri.zhenhui.demo.account.domain.User;
 import pri.zhenhui.demo.webapi.support.AbstractHandler;
 import pri.zhenhui.demo.webapi.support.AppContext;
@@ -30,33 +30,33 @@ public class LoginHandler extends AbstractHandler {
             return;
         }
 
-        final UserReadService userReadService = appContext.getService(UserReadService.SERVICE_NAME
-                , UserReadService.SERVICE_ADDRESS
-                , UserReadService.class);
-        final AuthorityReadService authorityReadService = appContext.getService(AuthorityReadService.SERVICE_NAME
-                , AuthorityReadService.SERVICE_ADDRESS
-                , AuthorityReadService.class);
+        final AccountService accountService = appContext.getService(AccountService.SERVICE_NAME
+                , AccountService.SERVICE_ADDRESS
+                , AccountService.class);
+        final AuthorityService authorityService = appContext.getService(AuthorityService.SERVICE_NAME
+                , AuthorityService.SERVICE_ADDRESS
+                , AuthorityService.class);
 
-        userReadService.queryUserByName(username, query -> {
-            if (query.failed()) {
-                context.response().end(Json.encode(Result.error(500, "internal server error", query.cause())));
+        accountService.queryUserByName(username, queryUserByName -> {
+            if (queryUserByName.failed()) {
+                write(context, Result.error(500, "internal server error", queryUserByName.cause()));
                 return;
             }
 
-            final User user = query.result();
+            final User user = queryUserByName.result();
             if (user == null) {
-                context.response().end(Json.encode(Result.error(404, "user not found")));
+                write(context, Result.error(404, "user not found"));
                 return;
             }
 
-            if (!BCrypt.checkpw(password, query.result().getPassword())) {
-                context.response().end(Json.encode(Result.error(401, "password mismatch")));
+            if (!BCrypt.checkpw(password, queryUserByName.result().getPassword())) {
+                write(context, Result.error(401, "password mismatch"));
                 return;
             }
 
-            authorityReadService.queryUserAuthorities(user.getId(), ar -> {
+            authorityService.queryUserAuthorities(user.getId(), ar -> {
                 if (ar.failed()) {
-                    context.response().end(Json.encode(Result.error(500, "internal server error", ar.cause())));
+                    write(context, Result.error(500, "internal server error", ar.cause()));
                     return;
                 }
 
@@ -65,7 +65,7 @@ public class LoginHandler extends AbstractHandler {
                 ar.result().forEach(authority -> options.addPermission(authority.getTitle()));
 
                 String token = appContext.jwtAuth().generateToken(claims, options);
-                context.response().end(Json.encode(Result.success(token)));
+                write(context, Result.success(token));
             });
         });
     }

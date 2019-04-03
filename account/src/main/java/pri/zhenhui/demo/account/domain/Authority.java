@@ -2,43 +2,51 @@ package pri.zhenhui.demo.account.domain;
 
 import io.vertx.codegen.annotations.DataObject;
 import io.vertx.core.json.JsonObject;
+import pri.zhenhui.demo.account.domain.enums.AuthorityType;
 
 import java.io.Serializable;
-import java.util.Date;
 
 @SuppressWarnings("unused")
 @DataObject(generateConverter = true)
 public class Authority implements Serializable {
 
-    private static final long serialVersionUID = 6727188224701127966L;
+    private static final long serialVersionUID = 7474327774872249710L;
 
-    private Long id;
+    private long id;
 
     private String title;
 
     private String description;
 
-    private Date createAt;
-
-    private Date updateAt;
-
     public Authority() {}
 
     public Authority(JsonObject jsonObj) {
-        AuthorityConverter.fromJson(jsonObj, this);
+
     }
 
     public JsonObject toJson() {
-        JsonObject jsonObj = new JsonObject();
-        AuthorityConverter.toJson(this, jsonObj);
-        return jsonObj;
+        return null;
     }
 
-    public Long getId() {
+    public static Authority from(AuthorityType type) {
+
+        Authority authority = new Authority();
+        authority.id = type.id;
+        authority.title = type.title;
+        authority.description = type.description;
+
+        return authority;
+    }
+
+    public static Authority from(long id) {
+        return from(AuthorityType.valueOf(id));
+    }
+
+    public long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -56,22 +64,6 @@ public class Authority implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public Date getCreateAt() {
-        return createAt;
-    }
-
-    public void setCreateAt(Date createAt) {
-        this.createAt = createAt;
-    }
-
-    public Date getUpdateAt() {
-        return updateAt;
-    }
-
-    public void setUpdateAt(Date updateAt) {
-        this.updateAt = updateAt;
     }
 }
 

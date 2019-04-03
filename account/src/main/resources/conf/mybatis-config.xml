@@ -30,7 +30,6 @@
 
     <mappers>
         <mapper resource="pri/zhenhui/demo/account/mapper/UserMapper.xml"/>
-        <mapper resource="pri/zhenhui/demo/account/mapper/RoleMapper.xml"/>
         <mapper resource="pri/zhenhui/demo/account/mapper/AuthorityMapper.xml"/>
 
 

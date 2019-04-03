@@ -32,6 +32,10 @@
         );
     </insert>
 
+    <select id="selectById" resultMap="userMap">
+        select * from users where id = #{userId}
+    </select>
+
     <select id="selectByName" resultMap="userMap">
         select * from users where username = #{username}
     </select>

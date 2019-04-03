@@ -7,104 +7,84 @@ import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import pri.zhenhui.demo.account.domain.Authority;
 import pri.zhenhui.demo.account.domain.Role;
+import pri.zhenhui.demo.account.domain.enums.AuthorityType;
+import pri.zhenhui.demo.account.domain.enums.RoleType;
 import pri.zhenhui.demo.account.mapper.AuthorityMapper;
-import pri.zhenhui.demo.account.mapper.RoleMapper;
 import pri.zhenhui.demo.support.SqlSessionFactoryLoader;
 
-import java.util.HashMap;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
-public class AuthorityWriteServiceImpl implements AuthorityWriteService {
+import static java.util.stream.Collectors.toList;
+
+public class AuthorityServiceImpl implements AuthorityService {
 
     private final Context context;
 
     private final SqlSessionFactory sqlSessionFactory;
 
-    AuthorityWriteServiceImpl(Context context) {
+    AuthorityServiceImpl(Context context) {
         this.context = context;
         this.sqlSessionFactory = SqlSessionFactoryLoader.load();
     }
 
     @Override
-    public void createRole(Role role, Handler<AsyncResult<Long>> resultHandler) {
-        context.<Long>executeBlocking(future -> {
-            final SqlSession session = sqlSessionFactory.openSession();
-            try {
-                RoleMapper roleMapper = session.getMapper(RoleMapper.class);
-                roleMapper.insert(role);
-                session.commit();
-                future.complete(role.getId());
-            } catch (Throwable e) {
-                session.rollback();
-                future.fail(e);
-            } finally {
-                session.close();
-            }
+    public void queryRoles(Handler<AsyncResult<List<Role>>> resultHandler) {
+        context.<List<Role>>executeBlocking(future -> {
+            future.complete(Arrays.stream(RoleType.values()).map(Role::from).collect(toList()));
         }, resultHandler);
     }
 
     @Override
-    public void updateRole(Long roleId, String title, String description, Handler<AsyncResult<Boolean>> resultHandler) {
-        final Map<String, Object> params = new HashMap<>();
-        params.put("id", roleId);
-        params.put("title", title);
-        params.put("description", description);
-
-        context.<Boolean>executeBlocking(future -> {
-            final SqlSession session = sqlSessionFactory.openSession();
-            try {
-                RoleMapper roleMapper = session.getMapper(RoleMapper.class);
-                int rows = roleMapper.update(params);
-                session.commit();
-                future.complete(rows > 0);
-            } catch (Throwable e) {
-                session.rollback();
-                future.fail(e);
-            } finally {
-                session.close();
-            }
-        }, resultHandler);
-    }
-
-    @Override
-    public void createAuthority(Authority authority, Handler<AsyncResult<Long>> resultHandler) {
-        context.<Long>executeBlocking(future -> {
-            final SqlSession session = sqlSessionFactory.openSession();
-            try {
+    public void queryUserRoles(Long userId, Handler<AsyncResult<List<Role>>> resultHandler) {
+        context.<List<Role>>executeBlocking(future -> {
+            try (SqlSession session = sqlSessionFactory.openSession()) {
                 AuthorityMapper authorityMapper = session.getMapper(AuthorityMapper.class);
-                authorityMapper.insert(authority);
-                session.commit();
-                future.complete(authority.getId());
-            } catch (Throwable e) {
-                session.rollback();
+                List<Long> roles = authorityMapper.selectUserRoles(userId);
+                future.complete(roles.stream().map(Role::from).collect(toList()));
+            } catch (Exception e) {
                 future.fail(e);
-            } finally {
-                session.close();
             }
         }, resultHandler);
     }
 
     @Override
-    public void updateAuthority(Long authorityId, String title, String description, Handler<AsyncResult<Boolean>> resultHandler) {
-        final Map<String, Object> params = new HashMap<>();
-        params.put("id", authorityId);
-        params.put("title", title);
-        params.put("description", description);
+    public void queryAuthorities(Handler<AsyncResult<List<Authority>>> resultHandler) {
+        context.<List<Authority>>executeBlocking(future -> {
+            future.complete(Arrays.stream(AuthorityType.values()).map(Authority::from).collect(toList()));
+        }, resultHandler);
+    }
 
-        context.<Boolean>executeBlocking(future -> {
-            final SqlSession session = sqlSessionFactory.openSession();
-            try {
+    @Override
+    public void queryRoleAuthorities(Long roleId, Handler<AsyncResult<List<Authority>>> resultHandler) {
+        context.<List<Authority>>executeBlocking(future -> {
+            try (SqlSession session = sqlSessionFactory.openSession()) {
                 AuthorityMapper authorityMapper = session.getMapper(AuthorityMapper.class);
-                int rows = authorityMapper.update(params);
-                session.commit();
-                future.complete(rows > 0);
+                future.complete(authorityMapper.selectRoleAuthorities(roleId).stream()
+                        .map(Authority::from)
+                        .collect(toList()));
             } catch (Throwable e) {
-                session.rollback();
                 future.fail(e);
-            } finally {
-                session.close();
+            }
+        }, resultHandler);
+    }
+
+    @Override
+    public void queryUserAuthorities(Long userId, Handler<AsyncResult<List<Authority>>> resultHandler) {
+        context.<List<Authority>>executeBlocking(future -> {
+            try (SqlSession session = sqlSessionFactory.openSession()) {
+                AuthorityMapper roleMapper = session.getMapper(AuthorityMapper.class);
+                List<Long> roles = roleMapper.selectUserRoles(userId);
+                if (roles.isEmpty()) {
+                    roles.add(RoleType.USER.id);
+                }
+
+                AuthorityMapper authorityMapper = session.getMapper(AuthorityMapper.class);
+                List<Long> authorities = authorityMapper.selectMultiRoleAuthorities(roles);
+                future.complete(authorities.stream().map(Authority::from).collect(toList()));
+            } catch (Exception e) {
+                future.fail(e);
             }
         }, resultHandler);
     }
@@ -118,8 +98,8 @@ public class AuthorityWriteServiceImpl implements AuthorityWriteService {
             } else {
                 final SqlSession session = sqlSessionFactory.openSession();
                 try {
-                    RoleMapper roleMapper = session.getMapper(RoleMapper.class);
-                    int rows = roleMapper.insertUserRoles(userId, roles.stream().map(Role::getId).collect(Collectors.toList()));
+                    AuthorityMapper authorityMapper = session.getMapper(AuthorityMapper.class);
+                    int rows = authorityMapper.insertUserRoles(userId, roles.stream().map(Role::getId).collect(Collectors.toList()));
                     session.commit();
                     future.complete(rows > 0);
                 } catch (Throwable e) {
@@ -140,8 +120,8 @@ public class AuthorityWriteServiceImpl implements AuthorityWriteService {
             } else {
                 final SqlSession session = sqlSessionFactory.openSession();
                 try {
-                    RoleMapper roleMapper = session.getMapper(RoleMapper.class);
-                    int rows = roleMapper.deleteUserRoles(userId, roles.stream().map(Role::getId).collect(Collectors.toList()));
+                    AuthorityMapper authorityMapper = session.getMapper(AuthorityMapper.class);
+                    int rows = authorityMapper.deleteUserRoles(userId, roles.stream().map(Role::getId).collect(Collectors.toList()));
                     session.commit();
                     future.complete(rows > 0);
                 } catch (Throwable e) {
@@ -197,4 +177,5 @@ public class AuthorityWriteServiceImpl implements AuthorityWriteService {
             }
         }, resultHandler);
     }
+
 }

@@ -36,7 +36,7 @@ public class AuthenticationHandler extends AbstractHandler {
                     context.next();
                 } else {
                     authenticate.cause().printStackTrace();
-                    Result.error(401, "Authenticate Failed", authenticate.cause());
+                    write(context, Result.error(401, "Authenticate Failed", authenticate.cause()));
                 }
             });
         }

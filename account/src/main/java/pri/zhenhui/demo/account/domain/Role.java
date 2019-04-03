@@ -2,43 +2,47 @@ package pri.zhenhui.demo.account.domain;
 
 import io.vertx.codegen.annotations.DataObject;
 import io.vertx.core.json.JsonObject;
+import pri.zhenhui.demo.account.domain.enums.RoleType;
 
 import java.io.Serializable;
-import java.util.Date;
 
 @SuppressWarnings("unused")
 @DataObject(generateConverter = true)
 public class Role implements Serializable {
 
-    private static final long serialVersionUID = 6727188224701127966L;
+    private static final long serialVersionUID = 242612129412921209L;
 
-    private Long id;
+    private long id;
 
     private String title;
-
-    private String description;
-
-    private Date createAt;
-
-    private Date updateAt;
 
     public Role() {}
 
     public Role(JsonObject jsonObj) {
-        RoleConverter.fromJson(jsonObj, this);
+
+    }
+
+    public static Role from(RoleType type) {
+        Role role = new Role();
+        role.id = type.id;
+        role.title = type.title;
+
+        return role;
+    }
+
+    public static Role from(long id) {
+        return from(RoleType.valueOf(id));
     }
 
     public JsonObject toJson() {
-        JsonObject jsonObj = new JsonObject();
-        RoleConverter.toJson(this, jsonObj);
-        return jsonObj;
+        return null;
     }
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -48,29 +52,5 @@ public class Role implements Serializable {
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Date getCreateAt() {
-        return createAt;
-    }
-
-    public void setCreateAt(Date createAt) {
-        this.createAt = createAt;
-    }
-
-    public Date getUpdateAt() {
-        return updateAt;
-    }
-
-    public void setUpdateAt(Date updateAt) {
-        this.updateAt = updateAt;
     }
 }
