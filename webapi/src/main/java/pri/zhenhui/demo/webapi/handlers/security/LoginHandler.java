@@ -25,9 +25,8 @@ public class LoginHandler extends AbstractHandler {
     @Override
     public void handle(RoutingContext context) {
 
-        String username = context.request().getParam("username");
-        String password = context.request().getParam("password");
-
+        final String username = context.request().getParam("username");
+        final String password = context.request().getParam("password");
         if (StringUtils.isBlank(username) || StringUtils.isBlank(password)) {
             context.response().end(Json.encode(Result.error(400, "username and password shouldn't be empty")));
             return;
@@ -42,7 +41,7 @@ public class LoginHandler extends AbstractHandler {
 
         accountService.queryUserByName(username, queryUserByName -> {
             if (queryUserByName.failed()) {
-                write(context, Result.error(500, "internal server error", queryUserByName.cause()));
+                write(context, Result.error(500, "Service Error", queryUserByName.cause()));
                 return;
             }
 

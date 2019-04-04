@@ -20,8 +20,12 @@ public class MainVerticle extends AbstractVerticle {
     public Completable rxStart() {
 
         return Single.create(emitter -> {
-            appContext = AppContext.create(vertx);
-            emitter.onSuccess("appContext created");
+            try {
+                appContext = AppContext.create(vertx);
+                emitter.onSuccess("appContext created");
+            } catch (Exception e) {
+                emitter.onError(e);
+            }
         }).ignoreElement()
                 .andThen(vertx.createHttpServer().requestHandler(createRouter()).rxListen(8080))
                 .ignoreElement();
@@ -31,8 +35,12 @@ public class MainVerticle extends AbstractVerticle {
     @Override
     public Completable rxStop() {
         return Single.create(emitter -> {
-            appContext.close();
-            emitter.onSuccess("appContext closed");
+            try {
+                appContext.close();
+                emitter.onSuccess("appContext closed");
+            } catch (Exception e) {
+                emitter.onError(e);
+            }
         }).ignoreElement();
     }
 
