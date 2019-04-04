@@ -9,6 +9,7 @@ import pri.zhenhui.demo.webapi.handlers.security.AuthenticationHandler;
 import pri.zhenhui.demo.webapi.handlers.security.LoginHandler;
 import pri.zhenhui.demo.webapi.handlers.security.LogoutHandler;
 import pri.zhenhui.demo.webapi.handlers.todolist.TodolistCreateHandler;
+import pri.zhenhui.demo.webapi.handlers.todolist.TodolistQueryHandler;
 import pri.zhenhui.demo.webapi.support.AppContext;
 
 public class MainVerticle extends AbstractVerticle {
@@ -52,7 +53,7 @@ public class MainVerticle extends AbstractVerticle {
 
         router.route("/api/protected/*").handler(new AuthenticationHandler(appContext));
 
-        router.get("/api/protected/todolist").handler(new TodolistCreateHandler(appContext));
+        router.get("/api/protected/todolist").handler(new TodolistQueryHandler(appContext));
         router.post("/api/protected/todolist").handler(new TodolistCreateHandler(appContext));
         router.put("/api/protected/todolist").handler(new TodolistCreateHandler(appContext));
         router.delete("/api/protected/todolist").handler(new TodolistCreateHandler(appContext));

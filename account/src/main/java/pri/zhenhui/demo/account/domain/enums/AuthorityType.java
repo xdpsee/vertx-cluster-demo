@@ -9,7 +9,8 @@ public enum AuthorityType {
     USER_DELETE(3, "删除用户", "删除用户"),
     USER_VIEW(4, "查看用户信息", "查看用户信息"),
 
-    TODOLIST_CREATE(101, "创建todolist", "创建todolist")
+    TODOLIST_CREATE(101, "创建todolist", "创建todolist"),
+    TODOLIST_VIEW(102, "查看todolist", "查看todolist")
     ;
 
     public final long id;

@@ -21,11 +21,13 @@ public class Authority implements Serializable {
     public Authority() {}
 
     public Authority(JsonObject jsonObj) {
-
+        AuthorityConverter.fromJson(jsonObj, this);
     }
 
     public JsonObject toJson() {
-        return null;
+        JsonObject jsonObj = new JsonObject();
+        AuthorityConverter.toJson(this, jsonObj);
+        return jsonObj;
     }
 
     public static Authority from(AuthorityType type) {

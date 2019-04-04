@@ -50,8 +50,10 @@ public class TodolistServiceImpl implements TodolistService {
             try {
                 TodolistMapper todolistMapper = session.getMapper(TodolistMapper.class);
                 int rows = todolistMapper.insert(todolist);
+                session.commit();
                 future.complete(rows == 1);
             } catch (Exception e) {
+                session.rollback();
                 future.fail(e);
             } finally {
                 session.close();
@@ -73,8 +75,10 @@ public class TodolistServiceImpl implements TodolistService {
                 params.put("status", status);
 
                 int rows = todolistMapper.update(params);
+                session.commit();
                 future.complete(rows == 1);
             } catch (Exception e) {
+                session.rollback();
                 future.fail(e);
             } finally {
                 session.close();

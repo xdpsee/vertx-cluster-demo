@@ -6,12 +6,15 @@ import io.vertx.ext.jwt.JWTOptions;
 import io.vertx.reactivex.ext.web.RoutingContext;
 import org.apache.commons.lang3.StringUtils;
 import org.mindrot.jbcrypt.BCrypt;
-import pri.zhenhui.demo.account.AuthorityService;
 import pri.zhenhui.demo.account.AccountService;
+import pri.zhenhui.demo.account.AuthorityService;
+import pri.zhenhui.demo.account.domain.Authority;
 import pri.zhenhui.demo.account.domain.User;
 import pri.zhenhui.demo.webapi.support.AbstractHandler;
 import pri.zhenhui.demo.webapi.support.AppContext;
 import pri.zhenhui.demo.webapi.support.Result;
+
+import java.util.stream.Collectors;
 
 public class LoginHandler extends AbstractHandler {
 
@@ -45,27 +48,41 @@ public class LoginHandler extends AbstractHandler {
 
             final User user = queryUserByName.result();
             if (user == null) {
-                write(context, Result.error(404, "user not found"));
+                write(context, Result.error(404, "User Not Found"));
                 return;
             }
 
             if (!BCrypt.checkpw(password, queryUserByName.result().getPassword())) {
-                write(context, Result.error(401, "password mismatch"));
+                write(context, Result.error(401, "Password Mismatch"));
                 return;
             }
 
-            authorityService.queryUserAuthorities(user.getId(), ar -> {
-                if (ar.failed()) {
-                    write(context, Result.error(500, "internal server error", ar.cause()));
+            authorityService.queryUserAuthorities(user.getId(), queryUserAuthorities -> {
+                if (queryUserAuthorities.failed()) {
+                    write(context, Result.error(500, "Service Error", queryUserAuthorities.cause()));
                     return;
                 }
 
-                JsonObject claims = new JsonObject().put("sub", username);
-                JWTOptions options = new JWTOptions();
-                ar.result().forEach(authority -> options.addPermission(authority.getTitle()));
-
-                String token = appContext.jwtAuth().generateToken(claims, options);
-                write(context, Result.success(token));
+                this.<String>executeBlocking(future -> {
+                    try {
+                        JsonObject claims = new JsonObject().put("sub", username).put("uid", user.getId());
+                        JWTOptions options = new JWTOptions()
+                                .setPermissions(queryUserAuthorities.result()
+                                        .stream()
+                                        .map(Authority::getTitle)
+                                        .collect(Collectors.toList())
+                                );
+                        future.complete(appContext.jwtAuth().generateToken(claims, options));
+                    } catch (Throwable e) {
+                        future.fail(e);
+                    }
+                }, generateToken -> {
+                    if (generateToken.failed()) {
+                        write(context, Result.error(500, "Service Error", generateToken.cause()));
+                    } else {
+                        write(context, Result.success(generateToken.result()));
+                    }
+                });
             });
         });
     }

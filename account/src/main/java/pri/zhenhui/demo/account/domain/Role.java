@@ -19,14 +19,13 @@ public class Role implements Serializable {
     public Role() {}
 
     public Role(JsonObject jsonObj) {
-
+        RoleConverter.fromJson(jsonObj, this);
     }
 
     public static Role from(RoleType type) {
         Role role = new Role();
         role.id = type.id;
         role.title = type.title;
-
         return role;
     }
 
@@ -35,7 +34,9 @@ public class Role implements Serializable {
     }
 
     public JsonObject toJson() {
-        return null;
+        JsonObject jsonObj = new JsonObject();
+        RoleConverter.toJson(this, jsonObj);
+        return jsonObj;
     }
 
     public long getId() {

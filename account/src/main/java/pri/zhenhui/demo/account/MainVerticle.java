@@ -20,9 +20,11 @@ import java.util.stream.Collectors;
 public class MainVerticle extends AbstractVerticle {
 
     private static Map<RoleType, List<AuthorityType>> ROLE_AUTHORITIES = new HashMap<>();
+
     static {
         ROLE_AUTHORITIES.put(RoleType.USER, Arrays.asList(
-           AuthorityType.TODOLIST_CREATE
+                AuthorityType.TODOLIST_CREATE,
+                AuthorityType.TODOLIST_VIEW
         ));
 
         ROLE_AUTHORITIES.put(RoleType.ADMIN, Arrays.asList(
