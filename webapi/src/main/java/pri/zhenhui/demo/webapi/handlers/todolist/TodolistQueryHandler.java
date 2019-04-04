@@ -27,7 +27,8 @@ public class TodolistQueryHandler extends AbstractHandler {
                 , TodolistService.SERVICE_ADDRESS
                 , TodolistService.class);
 
-        context.user().rxIsAuthorized(AuthorityType.TODOLIST_VIEW.title)
+        context.user()
+                .rxIsAuthorized(AuthorityType.TODOLIST_VIEW.title)
                 .flatMap(success -> !success
                         ? Single.error(new PermissionException())
                         : Single.<List<Todolist>>create(emitter -> {

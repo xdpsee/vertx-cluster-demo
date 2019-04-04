@@ -1,13 +1,16 @@
 package pri.zhenhui.demo.account.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.vertx.codegen.annotations.DataObject;
+import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
+import org.apache.commons.beanutils.BeanUtils;
 
 import java.io.Serializable;
 import java.util.Date;
 
 @SuppressWarnings("unused")
-@DataObject(generateConverter = true)
+@DataObject
 public class User implements Serializable {
 
     private static final long serialVersionUID = -5781360306973268721L;
@@ -24,20 +27,26 @@ public class User implements Serializable {
 
     private String email;
 
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ")
     private Date createAt;
 
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ")
     private Date updateAt;
 
     public User() {}
 
     public User(JsonObject jsonObj) {
-        UserConverter.fromJson(jsonObj, this);
+        User r = Json.decodeValue(jsonObj.toString(), User.class);
+        try {
+            BeanUtils.copyProperties(this, r);
+        } catch (Exception e) {
+            throw new IllegalStateException("todolist copy properties");
+        }
     }
 
     public JsonObject toJson() {
-        JsonObject jsonObj = new JsonObject();
-        UserConverter.toJson(this, jsonObj);
-        return jsonObj;
+        String json = Json.encode(this);
+        return new JsonObject(json);
     }
 
     public Long getId() {

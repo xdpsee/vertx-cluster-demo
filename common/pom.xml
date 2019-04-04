@@ -55,5 +55,11 @@
             <!--<artifactId>jgroups</artifactId>-->
             <!--<version>3.0.9.Final</version>-->
         <!--</dependency>-->
+        <dependency>
+            <groupId>commons-beanutils</groupId>
+            <artifactId>commons-beanutils</artifactId>
+            <version>1.9.3</version>
+        </dependency>
+
     </dependencies>
 </project>

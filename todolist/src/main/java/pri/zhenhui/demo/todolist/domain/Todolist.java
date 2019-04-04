@@ -1,13 +1,16 @@
 package pri.zhenhui.demo.todolist.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.vertx.codegen.annotations.DataObject;
+import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
+import org.apache.commons.beanutils.BeanUtils;
 
 import java.io.Serializable;
 import java.util.Date;
 
 @SuppressWarnings("unused")
-@DataObject(generateConverter = true)
+@DataObject
 public class Todolist implements Serializable {
 
     private static final long serialVersionUID = -8154454363081002517L;
@@ -30,21 +33,27 @@ public class Todolist implements Serializable {
 
     private Long userId;
 
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ")
     private Date createAt;
 
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ")
     private Date updateAt;
 
     public Todolist() {
     }
 
     public Todolist(JsonObject jsonObj) {
-        TodolistConverter.fromJson(jsonObj, this);
+        Todolist r = Json.decodeValue(jsonObj.toString(), Todolist.class);
+        try {
+            BeanUtils.copyProperties(this, r);
+        } catch (Exception e) {
+            throw new IllegalStateException("todolist copy properties");
+        }
     }
 
     public JsonObject toJson() {
-        JsonObject jsonObj = new JsonObject();
-        TodolistConverter.toJson(this, jsonObj);
-        return jsonObj;
+        String json = Json.encode(this);
+        return new JsonObject(json);
     }
 
     public String getId() {

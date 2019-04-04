@@ -1,8 +1,8 @@
 package pri.zhenhui.demo.webapi;
 
 import io.reactivex.Completable;
+import io.reactivex.Single;
 import io.vertx.reactivex.core.AbstractVerticle;
-import io.vertx.reactivex.core.Future;
 import io.vertx.reactivex.ext.web.Router;
 import io.vertx.reactivex.ext.web.handler.BodyHandler;
 import pri.zhenhui.demo.webapi.handlers.security.AuthenticationHandler;
@@ -19,27 +19,21 @@ public class MainVerticle extends AbstractVerticle {
     @Override
     public Completable rxStart() {
 
-        Future<Void> future = Future.future();
+        return Single.create(emitter -> {
+            appContext = AppContext.create(vertx);
+            emitter.onSuccess("appContext created");
+        }).ignoreElement()
+                .andThen(vertx.createHttpServer().requestHandler(createRouter()).rxListen(8080))
+                .ignoreElement();
 
-        appContext = AppContext.create(vertx);
-
-        vertx.createHttpServer().requestHandler(createRouter()).listen(8080, result -> {
-            if (result.succeeded()) {
-                future.complete();
-            } else {
-                future.fail(result.cause());
-            }
-        });
-
-        return future.rxSetHandler().ignoreElement();
     }
 
     @Override
     public Completable rxStop() {
-
-        appContext.close();
-
-        return super.rxStop();
+        return Single.create(emitter -> {
+            appContext.close();
+            emitter.onSuccess("appContext closed");
+        }).ignoreElement();
     }
 
     private Router createRouter() {
