@@ -21,5 +21,8 @@ public interface TodolistService {
     void createTodo(Todolist todolist, Handler<AsyncResult<Boolean>> resultHandler);
 
     void updateTodo(String todoId, String title, String status, Handler<AsyncResult<Boolean>> resultHandler);
+
+    void deleteTodo(String todoId, Handler<AsyncResult<Boolean>> resultHandler);
+
 }
 

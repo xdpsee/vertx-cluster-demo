@@ -14,7 +14,7 @@ public abstract class AbstractMicroServiceVerticle<S> extends AbstractVerticle {
 
     private ServiceBinder serviceBinder;
 
-    private MessageConsumer<JsonObject> registry;
+    private MessageConsumer<JsonObject> registerConsumer;
 
     private ServiceDiscovery serviceDiscovery;
 
@@ -40,7 +40,7 @@ public abstract class AbstractMicroServiceVerticle<S> extends AbstractVerticle {
 
                 final S service = this.serviceImpl();
                 serviceBinder = new ServiceBinder(getVertx());
-                registry = serviceBinder.setAddress(serviceAddress).register(serviceClass, service);
+                registerConsumer = serviceBinder.setAddress(serviceAddress).register(serviceClass, service);
 
                 serviceDiscovery = ServiceDiscovery.create(getVertx());
                 serviceDiscovery.publish(serviceRecord, published -> {
@@ -64,7 +64,7 @@ public abstract class AbstractMicroServiceVerticle<S> extends AbstractVerticle {
             try {
                 stop();
 
-                serviceBinder.unregister(registry);
+                serviceBinder.unregister(registerConsumer);
                 serviceDiscovery.unpublish(serviceRecord.getRegistration(), unpublished -> {
                     if (unpublished.failed()) {
                         future.fail(unpublished.cause());

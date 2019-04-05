@@ -15,16 +15,6 @@ public class Todolist implements Serializable {
 
     private static final long serialVersionUID = -8154454363081002517L;
 
-    public static final String STATUS_TODO = "TODO";
-
-    public static final String STATUS_PROCESSING = "PROCESSING";
-
-    public static final String STATUS_FINISHED = "FINISHED";
-
-    public static final String STATUS_OBSOLETED = "OBSOLETED";
-
-    public static final String STATUS_DELETED = "DELETED";
-
     private String id;
 
     private String title;

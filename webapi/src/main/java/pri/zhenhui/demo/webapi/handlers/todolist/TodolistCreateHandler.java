@@ -5,6 +5,7 @@ import io.vertx.reactivex.ext.web.RoutingContext;
 import org.apache.commons.lang3.StringUtils;
 import pri.zhenhui.demo.account.domain.enums.AuthorityType;
 import pri.zhenhui.demo.todolist.TodolistService;
+import pri.zhenhui.demo.todolist.domain.Status;
 import pri.zhenhui.demo.todolist.domain.Todolist;
 import pri.zhenhui.demo.webapi.exception.PermissionException;
 import pri.zhenhui.demo.webapi.support.AbstractHandler;
@@ -36,7 +37,7 @@ public class TodolistCreateHandler extends AbstractHandler {
 
         final Todolist todolist = new Todolist();
         todolist.setTitle(title);
-        todolist.setStatus("TODO");
+        todolist.setStatus(Status.STATUS_TODO);
         todolist.setCreateAt(new Date());
         todolist.setUpdateAt(new Date());
 

@@ -84,6 +84,23 @@ public class TodolistServiceImpl implements TodolistService {
                 session.close();
             }
         }, resultHandler);
+    }
 
+    @Override
+    public void deleteTodo(String todoId, Handler<AsyncResult<Boolean>> resultHandler) {
+        context.<Boolean>executeBlocking(future -> {
+            SqlSession session = sqlSessionFactory.openSession();
+            try {
+                TodolistMapper todolistMapper = session.getMapper(TodolistMapper.class);
+                int rows = todolistMapper.delete(Long.parseLong(todoId));
+                session.commit();
+                future.complete(rows == 1);
+            } catch (Exception e) {
+                session.rollback();
+                future.fail(e);
+            } finally {
+                session.close();
+            }
+        }, resultHandler);
     }
 }

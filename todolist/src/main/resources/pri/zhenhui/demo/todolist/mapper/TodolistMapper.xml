@@ -43,4 +43,8 @@
         </if>
         where id = #{id}
     </update>
+
+    <delete id="delete">
+        delete from todolists where id = #{todoId} limit 1
+    </delete>
 </mapper>

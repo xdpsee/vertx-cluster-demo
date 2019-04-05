@@ -14,5 +14,5 @@ public interface TodolistMapper {
 
     int update(Map<String, Object> fields);
 
-
+    int delete(@Param("todoId") Long todoId);
 }

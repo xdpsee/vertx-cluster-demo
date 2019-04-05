@@ -24,14 +24,23 @@ public class MainVerticle extends AbstractVerticle {
     static {
         ROLE_AUTHORITIES.put(RoleType.USER, Arrays.asList(
                 AuthorityType.TODOLIST_CREATE,
-                AuthorityType.TODOLIST_VIEW
+                AuthorityType.TODOLIST_VIEW,
+                AuthorityType.TODOLIST_EDIT,
+                AuthorityType.TODOLIST_DELETE
         ));
 
         ROLE_AUTHORITIES.put(RoleType.ADMIN, Arrays.asList(
                 AuthorityType.USER_CREATE,
                 AuthorityType.USER_VIEW,
                 AuthorityType.USER_EDIT,
-                AuthorityType.USER_DELETE
+                AuthorityType.USER_DELETE,
+
+                AuthorityType.TODOLIST_CREATE,
+                AuthorityType.TODOLIST_VIEW,
+                AuthorityType.TODOLIST_EDIT,
+                AuthorityType.TODOLIST_DELETE
+
+
         ));
     }
 
@@ -57,7 +66,7 @@ public class MainVerticle extends AbstractVerticle {
                     session.close();
                 }
 
-                emitter.onSuccess("success");
+                emitter.onSuccess(true);
             } catch (Exception e) {
                 emitter.onError(e);
             }
