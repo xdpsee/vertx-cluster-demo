@@ -2,17 +2,11 @@ package pri.zhenhui.demo.account.domain;
 
 import io.vertx.codegen.annotations.DataObject;
 import io.vertx.core.json.JsonObject;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import pri.zhenhui.demo.account.domain.enums.RoleType;
 
 import java.io.Serializable;
 
 @SuppressWarnings("unused")
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 @DataObject(generateConverter = true)
 public class Role implements Serializable {
 
@@ -21,6 +15,14 @@ public class Role implements Serializable {
     private long id;
 
     private String title;
+
+    public Role() {
+    }
+
+    public Role(long id, String title) {
+        this.id = id;
+        this.title = title;
+    }
 
     public Role(JsonObject jsonObj) {
         RoleConverter.fromJson(jsonObj, this);
@@ -38,5 +40,21 @@ public class Role implements Serializable {
         JsonObject jsonObj = new JsonObject();
         RoleConverter.toJson(this, jsonObj);
         return jsonObj;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 }

@@ -2,17 +2,11 @@ package pri.zhenhui.demo.account.domain;
 
 import io.vertx.codegen.annotations.DataObject;
 import io.vertx.core.json.JsonObject;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import pri.zhenhui.demo.account.domain.enums.AuthorityType;
 
 import java.io.Serializable;
 
 @SuppressWarnings("unused")
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 @DataObject(generateConverter = true)
 public class Authority implements Serializable {
 
@@ -23,6 +17,15 @@ public class Authority implements Serializable {
     private String title;
 
     private String description;
+
+    public Authority() {
+    }
+
+    public Authority(long id, String title, String description) {
+        this.id = id;
+        this.title = title;
+        this.description = description;
+    }
 
     public Authority(JsonObject jsonObj) {
         AuthorityConverter.fromJson(jsonObj, this);
@@ -40,6 +43,30 @@ public class Authority implements Serializable {
 
     public static Authority from(long id) {
         return from(AuthorityType.valueOf(id));
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }
 

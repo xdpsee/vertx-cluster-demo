@@ -21,16 +21,18 @@ public class MainVerticle extends AbstractVerticle {
     @Override
     public Completable rxStart() {
 
-        return Single.create(emitter -> {
+        return Single.<Router>create(emitter -> {
             try {
                 appContext = AppContext.create(vertx);
-                emitter.onSuccess("appContext created");
+                Router router = createRouter();
+                emitter.onSuccess(router);
             } catch (Exception e) {
                 emitter.onError(e);
             }
-        }).ignoreElement()
-                .andThen(vertx.createHttpServer().requestHandler(createRouter()).rxListen(8080))
-                .ignoreElement();
+        }).flatMap(router -> vertx.createHttpServer()
+                .requestHandler(router)
+                .rxListen(8080)
+        ).ignoreElement();
 
     }
 

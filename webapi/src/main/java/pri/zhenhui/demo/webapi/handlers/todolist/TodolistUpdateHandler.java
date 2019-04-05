@@ -2,10 +2,8 @@ package pri.zhenhui.demo.webapi.handlers.todolist;
 
 import io.reactivex.Single;
 import io.vertx.reactivex.ext.web.RoutingContext;
-import org.apache.ibatis.session.SqlSessionFactory;
-import org.codehaus.plexus.util.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import pri.zhenhui.demo.account.domain.enums.AuthorityType;
-import pri.zhenhui.demo.support.SqlSessionFactoryLoader;
 import pri.zhenhui.demo.todolist.TodolistService;
 import pri.zhenhui.demo.webapi.exception.PermissionException;
 import pri.zhenhui.demo.webapi.support.AbstractHandler;
@@ -14,12 +12,8 @@ import pri.zhenhui.demo.webapi.support.Result;
 
 public class TodolistUpdateHandler extends AbstractHandler {
 
-    private final SqlSessionFactory sqlSessionFactory;
-
     public TodolistUpdateHandler(AppContext appContext) {
         super(appContext);
-
-        this.sqlSessionFactory = SqlSessionFactoryLoader.load();
     }
 
     @Override
@@ -53,7 +47,11 @@ public class TodolistUpdateHandler extends AbstractHandler {
                 .subscribe(success -> {
                     write(context, Result.success(success));
                 }, error -> {
-                    write(context, Result.error(500, "Service Error", error));
+                    if (error instanceof PermissionException) {
+                        write(context, Result.error(403, "Access Forbidden"));
+                    } else {
+                        write(context, Result.error(500, "Service Error", error));
+                    }
                 });
 
     }
