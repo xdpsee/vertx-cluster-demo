@@ -31,10 +31,6 @@ public class TodolistCreateHandler extends AbstractHandler {
             return;
         }
 
-        TodolistService service = appContext.getService(TodolistService.SERVICE_NAME
-                , TodolistService.SERVICE_ADDRESS
-                , TodolistService.class);
-
         final Todolist todolist = new Todolist();
         todolist.setTitle(title);
         todolist.setStatus(Status.STATUS_TODO);
@@ -51,6 +47,9 @@ public class TodolistCreateHandler extends AbstractHandler {
                 .flatMap(success -> !success
                         ? Single.error(new PermissionException())
                         : Single.create(emitter -> {
+                    TodolistService service = appContext.getService(TodolistService.SERVICE_NAME
+                            , TodolistService.SERVICE_ADDRESS
+                            , TodolistService.class);
                     service.createTodo(todolist, createTodo -> {
                         if (createTodo.failed()) {
                             emitter.onError(createTodo.cause());
