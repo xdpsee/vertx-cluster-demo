@@ -26,7 +26,7 @@ public class AuthenticationHandler extends AbstractHandler {
 
         } else {
             String[] components = header.split("\\s");
-            if (components.length != 2 || BEARER.equals(components[0])) {
+            if (components.length != 2 || !BEARER.equals(components[0])) {
                 throw new RuntimeException("Invalid Authorization Header ->  Authorization: " + header);
             }
 
