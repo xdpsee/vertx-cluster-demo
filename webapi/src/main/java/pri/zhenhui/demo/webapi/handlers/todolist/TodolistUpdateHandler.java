@@ -25,7 +25,7 @@ public class TodolistUpdateHandler extends AbstractHandler {
         final String status = context.request().getFormAttribute("status");
         if (StringUtils.isBlank(id)
                 || (StringUtils.isBlank(title) && StringUtils.isBlank(status))
-                || Status.accept(status)) {
+                || (!StringUtils.isBlank(status) && Status.accept(status))) {
             write(context, Result.error(400, "Bad Request"));
             return;
         }
