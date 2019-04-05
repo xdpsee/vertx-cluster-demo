@@ -64,6 +64,7 @@ public class TodolistServiceImpl implements TodolistService {
 
     @Override
     public void updateTodo(String todoId, String title, String status, Handler<AsyncResult<Boolean>> resultHandler) {
+
         context.<Boolean>executeBlocking(future -> {
             SqlSession session = sqlSessionFactory.openSession();
             try {

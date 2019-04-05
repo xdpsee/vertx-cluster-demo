@@ -12,7 +12,7 @@ public interface Status {
 
     String STATUS_DELETED = "DELETED";
 
-    default boolean accept(String status) {
+    static boolean accept(String status) {
         return STATUS_TODO.equals(status)
                 || STATUS_PROCESSING.equals(status)
                 || STATUS_FINISHED.equals(status)
