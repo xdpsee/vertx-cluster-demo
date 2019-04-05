@@ -11,6 +11,7 @@ import pri.zhenhui.demo.webapi.support.Result;
 public class AuthenticationHandler extends AbstractHandler {
 
     private static final String AUTHORIZATION = "Authorization";
+    private static final String BEARER = "Bearer";
 
     public AuthenticationHandler(AppContext appContext) {
         super(appContext);
@@ -25,7 +26,7 @@ public class AuthenticationHandler extends AbstractHandler {
 
         } else {
             String[] components = header.split("\\s");
-            if (components.length != 2) {
+            if (components.length != 2 || BEARER.equals(components[0])) {
                 throw new RuntimeException("Invalid Authorization Header ->  Authorization: " + header);
             }
 
