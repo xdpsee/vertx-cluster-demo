@@ -54,10 +54,13 @@ public class MainVerticle extends AbstractVerticle {
 
         router.route().handler(BodyHandler.create(false));
 
+        AuthenticationHandler authenticationHandler = new AuthenticationHandler(appContext);
+        router.route("/api/protected/*").handler(authenticationHandler);
+        router.route("/api/auth/logout").handler(authenticationHandler);
+
         router.post("/api/auth/login").handler(new LoginHandler(appContext));
         router.post("/api/auth/logout").handler(new LogoutHandler(appContext));
 
-        router.route("/api/protected/*").handler(new AuthenticationHandler(appContext));
 
         router.get("/api/protected/todolist").handler(new TodolistQueryHandler(appContext));
         router.post("/api/protected/todolist").handler(new TodolistCreateHandler(appContext));

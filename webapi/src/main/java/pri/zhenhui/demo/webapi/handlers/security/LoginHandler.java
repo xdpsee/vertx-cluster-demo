@@ -1,6 +1,5 @@
 package pri.zhenhui.demo.webapi.handlers.security;
 
-import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.jwt.JWTOptions;
 import io.vertx.reactivex.ext.web.RoutingContext;
@@ -28,7 +27,7 @@ public class LoginHandler extends AbstractHandler {
         final String username = context.request().getParam("username");
         final String password = context.request().getParam("password");
         if (StringUtils.isBlank(username) || StringUtils.isBlank(password)) {
-            context.response().end(Json.encode(Result.error(400, "username and password shouldn't be empty")));
+            write(context, Result.error(400, "Username or password shouldn't be empty"));
             return;
         }
 
