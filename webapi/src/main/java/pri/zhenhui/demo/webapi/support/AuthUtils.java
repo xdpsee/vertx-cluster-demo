@@ -9,7 +9,7 @@ public class AuthUtils {
     }
 
     public static String username(RoutingContext context) {
-        return context.user().principal().getString("dub");
+        return context.user().principal().getString("sub");
     }
 
 }

@@ -4,8 +4,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pri.zhenhui.demo.support.ExceptionUtils;
 
+import java.io.Serializable;
+
 @SuppressWarnings("unused")
-public final class Result<T> {
+public final class Result<T> implements Serializable {
+
+    private static final long serialVersionUID = -5906925430812625539L;
 
     private static final Logger logger = LoggerFactory.getLogger(Result.class);
 
