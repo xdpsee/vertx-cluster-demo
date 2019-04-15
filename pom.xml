@@ -13,6 +13,10 @@
         <module>account</module>
         <module>todolist</module>
         <module>webapi</module>
+        <module>server/domain</module>
+        <module>server/sdal</module>
+        <module>server/support</module>
+        <module>server/tracer</module>
     </modules>
 
     <properties>
