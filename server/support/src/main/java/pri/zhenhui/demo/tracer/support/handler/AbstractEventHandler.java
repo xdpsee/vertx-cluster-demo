@@ -8,7 +8,6 @@ import pri.zhenhui.demo.tracer.domain.Event;
 import pri.zhenhui.demo.tracer.domain.Position;
 import pri.zhenhui.demo.tracer.server.ServerConnector;
 
-import java.util.Collection;
 import java.util.List;
 
 public abstract class AbstractEventHandler extends AbstractDataHandler {
