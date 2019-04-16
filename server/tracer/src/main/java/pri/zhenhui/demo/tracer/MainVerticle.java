@@ -7,6 +7,7 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import pri.zhenhui.demo.support.DBUtils;
 import pri.zhenhui.demo.support.SqlSessionFactoryLoader;
 import pri.zhenhui.demo.tracer.data.service.DeviceReadServiceVerticle;
+import pri.zhenhui.demo.tracer.data.service.EventWriteServiceVerticle;
 import pri.zhenhui.demo.tracer.data.service.PositionWriteServiceVerticle;
 
 @SuppressWarnings("unused")
@@ -24,6 +25,9 @@ public class MainVerticle extends AbstractVerticle {
                 emitter.onError(e);
             }
         }).ignoreElement()
+                .andThen(vertx.rxDeployVerticle(new EventWriteServiceVerticle()))
+                .doOnSuccess(ret -> System.out.println("Deploy EventWriteServiceVerticle Ok!"))
+                .ignoreElement()
                 .andThen(vertx.rxDeployVerticle(new DeviceReadServiceVerticle()))
                 .doOnSuccess(ret -> System.out.println("Deploy DeviceReadServiceVerticle Ok!"))
                 .ignoreElement()

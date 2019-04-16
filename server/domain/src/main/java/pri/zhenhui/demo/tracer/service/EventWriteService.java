@@ -12,9 +12,9 @@ import java.util.List;
 @ProxyGen
 public interface EventWriteService {
 
-    String SERVICE_NAME = "service.event.data.read";
+    String SERVICE_NAME = "service.event.data.write";
 
-    String SERVICE_ADDRESS = "address.service.event.data.read";
+    String SERVICE_ADDRESS = "address.service.event.data.write";
 
     void saveEvent(List<Event> events, Handler<AsyncResult<Boolean>> resultHandler);
 
