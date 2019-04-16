@@ -6,6 +6,7 @@ import io.vertx.core.json.JsonObject;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import pri.zhenhui.demo.tracer.domain.misc.Attributes;
+import pri.zhenhui.demo.tracer.enums.DeviceStatus;
 import pri.zhenhui.demo.tracer.utils.JsonUtils;
 
 import java.io.Serializable;
@@ -23,17 +24,12 @@ public class Device extends Attributes implements Serializable {
     private String protocol;
 
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ")
-    private Date gmtCreate;
+    private Date createAt;
+
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ")
-    private Date gmtUpdate;
+    private Date updateAt;
 
-    // 扩展属性
-    public static final String KEY_SPEED_LIMIT = "speed.limit";
-
-    public static final String KEY_MAINTENANCE_START = "maintenance.start";
-
-    public static final String KEY_MAINTENANCE_INTERVAL = "maintenance.interval";
-
+    private DeviceStatus status;
 
     public Device(JsonObject jsonObj) {
         JsonUtils.fromJson(jsonObj, this);
@@ -42,4 +38,12 @@ public class Device extends Attributes implements Serializable {
     public JsonObject toJson() {
         return JsonUtils.toJson(this);
     }
+
+
+    // 扩展属性
+    public static final String KEY_SPEED_LIMIT = "speed.limit";
+
+    public static final String KEY_MAINTENANCE_START = "maintenance.start";
+
+    public static final String KEY_MAINTENANCE_INTERVAL = "maintenance.interval";
 }

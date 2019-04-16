@@ -1,24 +1,30 @@
 package pri.zhenhui.demo.tracer;
 
-import io.vertx.core.AbstractVerticle;
-import io.vertx.core.Future;
-import pri.zhenhui.demo.tracer.server.TraceServer;
+import io.reactivex.Completable;
+import io.reactivex.Single;
+import io.vertx.reactivex.core.AbstractVerticle;
+import org.apache.ibatis.session.SqlSessionFactory;
+import pri.zhenhui.demo.support.DBUtils;
+import pri.zhenhui.demo.support.SqlSessionFactoryLoader;
+import pri.zhenhui.demo.tracer.data.service.DeviceReadServiceVerticle;
 
+@SuppressWarnings("unused")
 public class MainVerticle extends AbstractVerticle {
 
-    private TraceServer traceServer;
-
     @Override
-    public void start(Future<Void> startFuture) throws Exception {
+    public Completable rxStart() {
 
-        startFuture.complete();
-    }
-
-    @Override
-    public void stop(Future<Void> stopFuture) throws Exception {
-
-
-        stopFuture.complete();
+        return Single.create(emitter -> {
+            try {
+                SqlSessionFactory sqlSessionFactory = SqlSessionFactoryLoader.load();
+                DBUtils.initDatabase(sqlSessionFactory);
+                emitter.onSuccess(true);
+            } catch (Throwable e) {
+                emitter.onError(e);
+            }
+        }).ignoreElement()
+                .andThen(vertx.rxDeployVerticle(new DeviceReadServiceVerticle()))
+                .ignoreElement();
     }
 }
 

@@ -25,10 +25,9 @@
         </dependency>
         <dependency>
             <groupId>pri.zhenhui.demo</groupId>
-            <artifactId>tracer-sdal</artifactId>
+            <artifactId>tracer-domain</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
-
 </project>
 

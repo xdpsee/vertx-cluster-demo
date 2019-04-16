@@ -6,6 +6,8 @@ import pri.zhenhui.demo.tracer.domain.misc.Network;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 @Data
 public class PositionDO extends BaseDO implements Serializable {
@@ -34,4 +36,7 @@ public class PositionDO extends BaseDO implements Serializable {
 
     private Network network;
 
+    private Map<String, Object> attributes = new HashMap<>();
+
 }
+

@@ -7,8 +7,8 @@ import java.util.Date;
 @Data
 public class BaseDO {
 
-    private Date gmtCreate;
+    private Date createAt;
 
-    private Date gmtUpdate;
+    private Date updateAt;
 
 }

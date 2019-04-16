@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pri.zhenhui.demo.tracer.data.mapper.DeviceMapper">
+
+    <resultMap id="deviceMap" type="pri.zhenhui.demo.tracer.data.domain.DeviceDO">
+        <result property="id" column="id"
+                typeHandler="pri.zhenhui.demo.tracer.data.type.handler.UniqueIDTypeHandler"/>
+        <result property="model" column="model"/>
+        <result property="protocol" column="protocol"/>
+        <result property="attributes" column="attributes"
+                typeHandler="pri.zhenhui.demo.tracer.data.type.handler.ObjectMapTypeHandler"/>
+        <result property="createAt" column="create_at"/>
+        <result property="updateAt" column="update_at"/>
+        <result property="status" column="status"
+                typeHandler="pri.zhenhui.demo.tracer.data.type.handler.DeviceStatusTypeHandler"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="pri.zhenhui.demo.tracer.data.domain.DeviceDO">
+        insert into devices (
+          id,
+          model,
+          protocol,
+          attributes,
+          create_at,
+          update_at,
+          status
+        ) values (
+          #{id},
+          #{model},
+          #{protocol},
+          #{attributes},
+          #{createAt},
+          #{updateAt},
+          #{status}
+        );
+    </insert>
+
+    <select id="selectById" resultMap="deviceMap">
+        select * from devices where id = #{deviceId}
+    </select>
+
+    <update id="updateAttrs">
+        update devices set update_at = current_timestamp(), attributes = #{attributes} where id = #{id}
+    </update>
+
+</mapper>
+

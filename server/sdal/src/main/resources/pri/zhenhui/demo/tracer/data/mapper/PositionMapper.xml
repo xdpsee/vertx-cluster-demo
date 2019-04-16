@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pri.zhenhui.demo.tracer.data.mapper.PositionMapper">
+
+    <resultMap id="positionMap" type="pri.zhenhui.demo.tracer.data.domain.PositionDO">
+        <result property="id" column="id"/>
+        <result property="deviceId" column="device_id"
+                typeHandler="pri.zhenhui.demo.tracer.data.type.handler.UniqueIDTypeHandler"/>
+        <result property="time" column="time"/>
+        <result property="type" column="type"/>
+        <result property="positionId" column="position_id"/>
+        <result property="attributes" column="attributes"
+                typeHandler="pri.zhenhui.demo.tracer.data.type.handler.ObjectMapTypeHandler"/>
+        <result property="createAt" column="create_at"/>
+        <result property="updateAt" column="update_at"/>
+        <result property="located" column="located"/>
+        <result property="latitude" column="latitude"/>
+        <result property="longitude" column="longitude"/>
+        <result property="altitude" column="altitude"/>
+        <result property="speed" column="speed"/>
+        <result property="course" column="course"/>
+        <result property="accuracy" column="accuracy"/>
+        <result property="network" column="network"
+                typeHandler="pri.zhenhui.demo.tracer.data.type.handler.NetworkTypeHandler"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="pri.zhenhui.demo.tracer.data.domain.PositionDO">
+        insert into positions (
+          `id`,
+          `device_id`,
+          `create_at`,
+          `update_at`,
+          `time`,
+          `located`,
+          `latitude`,
+          `longitude`,
+          `altitude`,
+          `speed`,
+          `course`,
+          `accuracy`,
+          `network`,
+          `attributes`
+        ) values (
+          #{id},
+          #{deviceId},
+          #{createAt},
+          #{updateAt},
+          #{time},
+          #{located},
+          #{latitude},
+          #{longitude},
+          #{altitude},
+          #{speed},
+          #{course},
+          #{accuracy},
+          #{network},
+          #{attributes}
+        );
+    </insert>
+
+</mapper>
+
+
+

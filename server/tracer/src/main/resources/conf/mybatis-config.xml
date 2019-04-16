@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <settings>
+        <setting name="cacheEnabled" value="true"/>
+        <setting name="lazyLoadingEnabled" value="true"/>
+        <setting name="multipleResultSetsEnabled" value="true"/>
+        <setting name="useColumnLabel" value="true"/>
+        <setting name="useGeneratedKeys" value="true"/>
+        <setting name="autoMappingBehavior" value="PARTIAL"/>
+        <setting name="autoMappingUnknownColumnBehavior" value="WARNING"/>
+        <setting name="defaultExecutorType" value="SIMPLE"/>
+        <setting name="defaultStatementTimeout" value="25"/>
+        <setting name="defaultFetchSize" value="100"/>
+        <setting name="safeRowBoundsEnabled" value="false"/>
+        <setting name="mapUnderscoreToCamelCase" value="false"/>
+        <setting name="localCacheScope" value="SESSION"/>
+        <setting name="jdbcTypeForNull" value="OTHER"/>
+        <setting name="lazyLoadTriggerMethods" value="equals,clone,hashCode,toString"/>
+    </settings>
+
+    <typeHandlers>
+        <typeHandler handler="pri.zhenhui.demo.tracer.data.type.handler.UniqueIDTypeHandler"/>
+        <typeHandler handler="pri.zhenhui.demo.tracer.data.type.handler.DeviceStatusTypeHandler"/>
+        <typeHandler handler="pri.zhenhui.demo.tracer.data.type.handler.ObjectMapTypeHandler"/>
+        <typeHandler handler="pri.zhenhui.demo.tracer.data.type.handler.NetworkTypeHandler"/>
+    </typeHandlers>
+
+    <environments default="development">
+        <environment id="development">
+            <transactionManager type="JDBC"/>
+            <dataSource type="pri.zhenhui.demo.support.HikariCPDataSourceFactory"/>
+        </environment>
+    </environments>
+
+
+    <mappers>
+        <mapper resource="pri/zhenhui/demo/tracer/data/mapper/DeviceMapper.xml"/>
+        <mapper resource="pri/zhenhui/demo/tracer/data/mapper/EventMapper.xml"/>
+        <mapper resource="pri/zhenhui/demo/tracer/data/mapper/PositionMapper.xml"/>
+    </mappers>
+
+
+
+</configuration>
