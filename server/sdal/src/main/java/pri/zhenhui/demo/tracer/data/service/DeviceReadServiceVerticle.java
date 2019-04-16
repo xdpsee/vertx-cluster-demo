@@ -11,7 +11,7 @@ public class DeviceReadServiceVerticle extends AbstractMicroServiceVerticle<Devi
 
     @Override
     protected DeviceReadService serviceImpl() {
-        return new DeviceReadServiceImpl(vertx.getDelegate().getOrCreateContext());
+        return new DeviceReadServiceImpl(vertx.getOrCreateContext());
     }
 }
 

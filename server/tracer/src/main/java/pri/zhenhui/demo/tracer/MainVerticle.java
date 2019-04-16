@@ -24,6 +24,7 @@ public class MainVerticle extends AbstractVerticle {
             }
         }).ignoreElement()
                 .andThen(vertx.rxDeployVerticle(new DeviceReadServiceVerticle()))
+                .doOnSuccess(ret -> System.out.println("deploy DeviceReadServiceVerticle ok!"))
                 .ignoreElement();
     }
 }
