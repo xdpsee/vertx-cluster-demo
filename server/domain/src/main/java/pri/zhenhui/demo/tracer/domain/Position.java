@@ -1,21 +1,27 @@
 package pri.zhenhui.demo.tracer.domain;
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.vertx.codegen.annotations.DataObject;
 import io.vertx.core.json.JsonObject;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import pri.zhenhui.demo.tracer.domain.misc.Attributes;
 import pri.zhenhui.demo.tracer.domain.misc.Network;
+import pri.zhenhui.demo.tracer.utils.JsonUtils;
 
 import java.util.Date;
 
-@DataObject(generateConverter = true, inheritConverter = true)
+@DataObject
+@Data
+@NoArgsConstructor
 public class Position extends Attributes implements Message {
-
     // 属性
     private Long id;
 
     private UniqueID deviceId;
 
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ")
     private Date time;
 
     private boolean located;
@@ -119,110 +125,13 @@ public class Position extends Attributes implements Message {
     public static final String PREFIX_IO = "io";
     public static final String PREFIX_COUNT = "count";
 
-    //
-
-    public Position() {
-
-    }
 
     public Position(JsonObject jsonObj) {
-        PositionConverter.fromJson(jsonObj, this);
+        JsonUtils.fromJson(jsonObj, this);
     }
 
     public JsonObject toJson() {
-        JsonObject jsonObj = new JsonObject();
-        PositionConverter.toJson(this, jsonObj);
-        return jsonObj;
-    }
-
-    // Getter,Setter
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public UniqueID getDeviceId() {
-        return deviceId;
-    }
-
-    public void setDeviceId(UniqueID deviceId) {
-        this.deviceId = deviceId;
-    }
-
-    public Date getTime() {
-        return time;
-    }
-
-    public void setTime(Date time) {
-        this.time = time;
-    }
-
-    public boolean isLocated() {
-        return located;
-    }
-
-    public void setLocated(boolean located) {
-        this.located = located;
-    }
-
-    public double getLatitude() {
-        return latitude;
-    }
-
-    public void setLatitude(double latitude) {
-        this.latitude = latitude;
-    }
-
-    public double getLongitude() {
-        return longitude;
-    }
-
-    public void setLongitude(double longitude) {
-        this.longitude = longitude;
-    }
-
-    public double getAltitude() {
-        return altitude;
-    }
-
-    public void setAltitude(double altitude) {
-        this.altitude = altitude;
-    }
-
-    public double getSpeed() {
-        return speed;
-    }
-
-    public void setSpeed(double speed) {
-        this.speed = speed;
-    }
-
-    public double getCourse() {
-        return course;
-    }
-
-    public void setCourse(double course) {
-        this.course = course;
-    }
-
-    public double getAccuracy() {
-        return accuracy;
-    }
-
-    public void setAccuracy(double accuracy) {
-        this.accuracy = accuracy;
-    }
-
-    public Network getNetwork() {
-        return network;
-    }
-
-    public void setNetwork(Network network) {
-        this.network = network;
+        return JsonUtils.toJson(this);
     }
 
     @Override

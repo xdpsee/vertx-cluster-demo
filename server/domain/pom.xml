@@ -33,6 +33,17 @@
             <artifactId>vertx-rx-java2</artifactId>
             <version>${vertx.version}</version>
         </dependency>
+        <dependency>
+            <groupId>commons-beanutils</groupId>
+            <artifactId>commons-beanutils</artifactId>
+            <version>RELEASE</version>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.6</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -43,6 +54,8 @@
                 <version>3.1</version>
                 <configuration>
                     <annotationProcessors>
+                        <!-- lombok在前， 否则会出错 -->
+                        <annotationProcessor>lombok.launch.AnnotationProcessorHider$AnnotationProcessor</annotationProcessor>
                         <annotationProcessor>io.vertx.codegen.CodeGenProcessor</annotationProcessor>
                     </annotationProcessors>
                     <generatedSourcesDirectory>${project.build.directory}/generated-sources/annotations</generatedSourcesDirectory>

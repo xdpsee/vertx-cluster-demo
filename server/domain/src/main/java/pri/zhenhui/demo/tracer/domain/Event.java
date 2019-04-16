@@ -1,15 +1,21 @@
 package pri.zhenhui.demo.tracer.domain;
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.vertx.codegen.annotations.DataObject;
 import io.vertx.core.json.JsonObject;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import pri.zhenhui.demo.tracer.domain.misc.Attributes;
 import pri.zhenhui.demo.tracer.enums.EventType;
+import pri.zhenhui.demo.tracer.utils.JsonUtils;
 
 import java.io.Serializable;
 import java.util.Date;
 
-@DataObject(generateConverter = true, inheritConverter = true)
+@DataObject
+@Data
+@NoArgsConstructor
 public class Event extends Attributes implements Serializable {
 
     private static final long serialVersionUID = 840651837022709446L;
@@ -20,9 +26,8 @@ public class Event extends Attributes implements Serializable {
 
     private long positionId;
 
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ")
     private Date time;
-
-    public Event() {}
 
     public Event(EventType type, UniqueID deviceId, long positionId) {
         this.type = type;
@@ -32,53 +37,17 @@ public class Event extends Attributes implements Serializable {
     }
 
     public Event(JsonObject jsonObj) {
-        EventConverter.fromJson(jsonObj, this);
+        JsonUtils.fromJson(jsonObj, this);
     }
 
     public JsonObject toJson() {
-        JsonObject jsonObj = new JsonObject();
-        EventConverter.toJson(this, jsonObj);
-        return jsonObj;
+        return JsonUtils.toJson(this);
     }
 
     // 扩展属性
 
     public static final String SPEED = "speed";
 
-
-    // Getter, Setter
-
-    public UniqueID getDeviceId() {
-        return deviceId;
-    }
-
-    public void setDeviceId(UniqueID deviceId) {
-        this.deviceId = deviceId;
-    }
-
-    public EventType getType() {
-        return type;
-    }
-
-    public void setType(EventType type) {
-        this.type = type;
-    }
-
-    public long getPositionId() {
-        return positionId;
-    }
-
-    public void setPositionId(long positionId) {
-        this.positionId = positionId;
-    }
-
-    public Date getTime() {
-        return time;
-    }
-
-    public void setTime(Date time) {
-        this.time = time;
-    }
 }
 
 

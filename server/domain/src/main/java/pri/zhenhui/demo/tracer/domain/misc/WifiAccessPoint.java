@@ -2,10 +2,15 @@ package pri.zhenhui.demo.tracer.domain.misc;
 
 import io.vertx.codegen.annotations.DataObject;
 import io.vertx.core.json.JsonObject;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import pri.zhenhui.demo.tracer.utils.JsonUtils;
 
 import java.io.Serializable;
 
-@DataObject(generateConverter = true)
+@DataObject
+@Data
+@NoArgsConstructor
 public class WifiAccessPoint implements Serializable {
 
     private static final long serialVersionUID = 436184760096180703L;
@@ -29,41 +34,11 @@ public class WifiAccessPoint implements Serializable {
         return wifiAccessPoint;
     }
 
-    public WifiAccessPoint() {}
-
     public WifiAccessPoint(JsonObject jsonObj) {
-        WifiAccessPointConverter.fromJson(jsonObj, this);
+        JsonUtils.fromJson(jsonObj, this);
     }
 
     public JsonObject toJson() {
-        JsonObject jsonObj = new JsonObject();
-        WifiAccessPointConverter.toJson(this, jsonObj);
-        return jsonObj;
-    }
-
-    // Getter,Setter
-
-    public String getMacAddress() {
-        return macAddress;
-    }
-
-    public void setMacAddress(String macAddress) {
-        this.macAddress = macAddress;
-    }
-
-    public Integer getSignalStrength() {
-        return signalStrength;
-    }
-
-    public void setSignalStrength(Integer signalStrength) {
-        this.signalStrength = signalStrength;
-    }
-
-    public Integer getChannel() {
-        return channel;
-    }
-
-    public void setChannel(Integer channel) {
-        this.channel = channel;
+        return JsonUtils.toJson(this);
     }
 }

@@ -3,10 +3,15 @@ package pri.zhenhui.demo.tracer.domain;
 
 import io.vertx.codegen.annotations.DataObject;
 import io.vertx.core.json.JsonObject;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import pri.zhenhui.demo.tracer.domain.misc.Attributes;
 import pri.zhenhui.demo.tracer.enums.CommandType;
+import pri.zhenhui.demo.tracer.utils.JsonUtils;
 
-@DataObject(generateConverter = true, inheritConverter = true)
+@DataObject
+@Data
+@NoArgsConstructor
 public class Command extends Attributes {
 
     private CommandType type;
@@ -22,34 +27,12 @@ public class Command extends Attributes {
     public static final String KEY_PHONE = "phone";
     public static final String KEY_DATA = "data";
 
-    public Command() {}
-
     public Command(JsonObject jsonObj) {
-        CommandConverter.fromJson(jsonObj, this);
+        JsonUtils.fromJson(jsonObj, this);
     }
 
     public JsonObject toJson() {
 
-        JsonObject jsonObj = new JsonObject();
-
-        CommandConverter.toJson(this, jsonObj);
-
-        return jsonObj;
-    }
-
-    public CommandType getType() {
-        return type;
-    }
-
-    public void setType(CommandType type) {
-        this.type = type;
-    }
-
-    public UniqueID getDeviceId() {
-        return deviceId;
-    }
-
-    public void setDeviceId(UniqueID deviceId) {
-        this.deviceId = deviceId;
+        return JsonUtils.toJson(this);
     }
 }

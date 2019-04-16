@@ -2,10 +2,15 @@ package pri.zhenhui.demo.tracer.domain.misc;
 
 import io.vertx.codegen.annotations.DataObject;
 import io.vertx.core.json.JsonObject;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import pri.zhenhui.demo.tracer.utils.JsonUtils;
 
 import java.io.Serializable;
 
-@DataObject(generateConverter = true)
+@Data
+@NoArgsConstructor
+@DataObject
 public class CellTower implements Serializable {
 
     private static final long serialVersionUID = 1758268454928348674L;
@@ -37,66 +42,14 @@ public class CellTower implements Serializable {
         return cellTower;
     }
 
-    public CellTower() {
-
-    }
-
     public CellTower(JsonObject jsonObj) {
-        CellTowerConverter.fromJson(jsonObj, this);
+        JsonUtils.fromJson(jsonObj, this);
     }
 
     public JsonObject toJson() {
-        JsonObject jsonObj = new JsonObject();
-        CellTowerConverter.toJson(this, jsonObj);
-        return jsonObj;
+        return JsonUtils.toJson(this);
     }
 
-    public String getRadioType() {
-        return radioType;
-    }
 
-    public void setRadioType(String radioType) {
-        this.radioType = radioType;
-    }
-
-    public Long getCellId() {
-        return cellId;
-    }
-
-    public void setCellId(Long cellId) {
-        this.cellId = cellId;
-    }
-
-    public Integer getLocationAreaCode() {
-        return locationAreaCode;
-    }
-
-    public void setLocationAreaCode(Integer locationAreaCode) {
-        this.locationAreaCode = locationAreaCode;
-    }
-
-    public Integer getMobileCountryCode() {
-        return mobileCountryCode;
-    }
-
-    public void setMobileCountryCode(Integer mobileCountryCode) {
-        this.mobileCountryCode = mobileCountryCode;
-    }
-
-    public Integer getMobileNetworkCode() {
-        return mobileNetworkCode;
-    }
-
-    public void setMobileNetworkCode(Integer mobileNetworkCode) {
-        this.mobileNetworkCode = mobileNetworkCode;
-    }
-
-    public Integer getSignalStrength() {
-        return signalStrength;
-    }
-
-    public void setSignalStrength(Integer signalStrength) {
-        this.signalStrength = signalStrength;
-    }
 }
 

@@ -1,14 +1,18 @@
 package pri.zhenhui.demo.tracer.domain;
 
 
-
 import io.vertx.codegen.annotations.DataObject;
 import io.vertx.core.json.JsonObject;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import pri.zhenhui.demo.tracer.utils.JsonUtils;
 
 import java.io.Serializable;
 import java.util.Arrays;
 
-@DataObject(generateConverter = true)
+@DataObject
+@Data
+@NoArgsConstructor
 public class UniqueID implements Serializable {
 
     private static final long serialVersionUID = -12312335569703L;
@@ -17,38 +21,17 @@ public class UniqueID implements Serializable {
 
     private String value;
 
-    public UniqueID() {
-    }
-
     public UniqueID(UniqueType type, String value) {
         this.type = type;
         this.value = value;
     }
 
     public UniqueID(JsonObject jsonObj) {
-        UniqueIDConverter.fromJson(jsonObj, this);
+        JsonUtils.fromJson(jsonObj, this);
     }
 
     public JsonObject toJson() {
-        JsonObject jsonObj = new JsonObject();
-        UniqueIDConverter.toJson(this, jsonObj);
-        return jsonObj;
-    }
-
-    public UniqueType getType() {
-        return type;
-    }
-
-    public void setType(UniqueType type) {
-        this.type = type;
-    }
-
-    public String getValue() {
-        return value;
-    }
-
-    public void setValue(String value) {
-        this.value = value;
+        return JsonUtils.toJson(this);
     }
 
     @Override
@@ -57,14 +40,13 @@ public class UniqueID implements Serializable {
     }
 
 
-
     public static UniqueID fromString(String unique) {
 
         int idx = unique.indexOf("-");
         if (idx > 0 && idx < unique.length()) {
             final String[] components = new String[]{
-                unique.substring(0, idx),
-                unique.substring(idx + 1)
+                    unique.substring(0, idx),
+                    unique.substring(idx + 1)
             };
 
             if (Arrays.stream(components).noneMatch(String::isEmpty)) {

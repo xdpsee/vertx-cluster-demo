@@ -1,0 +1,128 @@
+= Cheatsheets
+
+[[Attributes]]
+== Attributes
+
+
+[cols=">25%,25%,50%"]
+[frame="topbot"]
+|===
+^|Name | Type ^| Description
+|===
+
+[[CellTower]]
+== CellTower
+
+
+[cols=">25%,25%,50%"]
+[frame="topbot"]
+|===
+^|Name | Type ^| Description
+|[[cellId]]`@cellId`|`Number (Long)`|-
+|[[locationAreaCode]]`@locationAreaCode`|`Number (Integer)`|-
+|[[mobileCountryCode]]`@mobileCountryCode`|`Number (Integer)`|-
+|[[mobileNetworkCode]]`@mobileNetworkCode`|`Number (Integer)`|-
+|[[radioType]]`@radioType`|`String`|-
+|[[signalStrength]]`@signalStrength`|`Number (Integer)`|-
+|===
+
+[[Command]]
+== Command
+
+
+[cols=">25%,25%,50%"]
+[frame="topbot"]
+|===
+^|Name | Type ^| Description
+|[[deviceId]]`@deviceId`|`link:dataobjects.html#UniqueID[UniqueID]`|-
+|[[type]]`@type`|`link:enums.html#CommandType[CommandType]`|-
+|===
+
+[[Device]]
+== Device
+
+
+[cols=">25%,25%,50%"]
+[frame="topbot"]
+|===
+^|Name | Type ^| Description
+|[[id]]`@id`|`link:dataobjects.html#UniqueID[UniqueID]`|-
+|[[model]]`@model`|`String`|-
+|[[protocol]]`@protocol`|`String`|-
+|===
+
+[[Event]]
+== Event
+
+
+[cols=">25%,25%,50%"]
+[frame="topbot"]
+|===
+^|Name | Type ^| Description
+|[[deviceId]]`@deviceId`|`link:dataobjects.html#UniqueID[UniqueID]`|-
+|[[positionId]]`@positionId`|`Number (long)`|-
+|[[type]]`@type`|`link:enums.html#EventType[EventType]`|-
+|===
+
+[[Network]]
+== Network
+
+
+[cols=">25%,25%,50%"]
+[frame="topbot"]
+|===
+^|Name | Type ^| Description
+|[[carrier]]`@carrier`|`String`|-
+|[[cellTowers]]`@cellTowers`|`Array of link:dataobjects.html#CellTower[CellTower]`|-
+|[[considerIp]]`@considerIp`|`Boolean`|-
+|[[mobileCountryCode]]`@mobileCountryCode`|`Number (Integer)`|-
+|[[mobileNetworkCode]]`@mobileNetworkCode`|`Number (Integer)`|-
+|[[radioType]]`@radioType`|`String`|-
+|[[wifiAccessPoints]]`@wifiAccessPoints`|`Array of link:dataobjects.html#WifiAccessPoint[WifiAccessPoint]`|-
+|===
+
+[[Position]]
+== Position
+
+
+[cols=">25%,25%,50%"]
+[frame="topbot"]
+|===
+^|Name | Type ^| Description
+|[[accuracy]]`@accuracy`|`Number (double)`|-
+|[[altitude]]`@altitude`|`Number (double)`|-
+|[[course]]`@course`|`Number (double)`|-
+|[[deviceId]]`@deviceId`|`link:dataobjects.html#UniqueID[UniqueID]`|-
+|[[id]]`@id`|`Number (Long)`|-
+|[[latitude]]`@latitude`|`Number (double)`|-
+|[[located]]`@located`|`Boolean`|-
+|[[longitude]]`@longitude`|`Number (double)`|-
+|[[network]]`@network`|`link:dataobjects.html#Network[Network]`|-
+|[[speed]]`@speed`|`Number (double)`|-
+|===
+
+[[UniqueID]]
+== UniqueID
+
+
+[cols=">25%,25%,50%"]
+[frame="topbot"]
+|===
+^|Name | Type ^| Description
+|[[type]]`@type`|`link:enums.html#UniqueType[UniqueType]`|-
+|[[value]]`@value`|`String`|-
+|===
+
+[[WifiAccessPoint]]
+== WifiAccessPoint
+
+
+[cols=">25%,25%,50%"]
+[frame="topbot"]
+|===
+^|Name | Type ^| Description
+|[[channel]]`@channel`|`Number (Integer)`|-
+|[[macAddress]]`@macAddress`|`String`|-
+|[[signalStrength]]`@signalStrength`|`Number (Integer)`|-
+|===
+

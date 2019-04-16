@@ -3,38 +3,30 @@ package pri.zhenhui.demo.tracer.domain.misc;
 
 import io.vertx.codegen.annotations.DataObject;
 import io.vertx.core.json.JsonObject;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import pri.zhenhui.demo.tracer.utils.JsonUtils;
 
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
 @SuppressWarnings("unused")
-@DataObject(generateConverter = true)
+@DataObject
+@Data
+@NoArgsConstructor
 public class Attributes implements Serializable {
 
     private static final long serialNumberUID = -1293043694567926L;
 
     protected Map<String, Object> attributes = new HashMap<>();
 
-    public Attributes() {
-    }
-
     public Attributes(JsonObject jsonObj) {
-        AttributesConverter.fromJson(jsonObj, this);
+        JsonUtils.fromJson(jsonObj, this);
     }
 
     public JsonObject toJson() {
-        JsonObject jsonObj = new JsonObject();
-        AttributesConverter.toJson(this, jsonObj);
-        return jsonObj;
-    }
-
-    public Map<String, Object> getAttributes() {
-        return attributes;
-    }
-
-    public void setAttributes(Map<String, Object> attributes) {
-        this.attributes = attributes;
+        return JsonUtils.toJson(this);
     }
 
     public boolean hasKey(String key) {
