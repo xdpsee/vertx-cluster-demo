@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface ServerConnector {
 
-    ServerContext context();
+    Context context();
 
     Configs configs();
 
@@ -15,8 +15,6 @@ public interface ServerConnector {
     List<Processor> processors();
 
     Encoder encoder();
-
-    ConnectionManager connectionManager();
 
 }
 

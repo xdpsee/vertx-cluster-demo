@@ -5,7 +5,7 @@ import pri.zhenhui.demo.tracer.server.Connection;
 import pri.zhenhui.demo.tracer.server.Protocol;
 import pri.zhenhui.demo.tracer.domain.Command;
 import pri.zhenhui.demo.tracer.enums.CommandType;
-import pri.zhenhui.demo.tracer.server.ServerContext;
+import pri.zhenhui.demo.tracer.support.server.ServerContext;
 import pri.zhenhui.demo.tracer.service.DeviceReadService;
 
 import java.util.Collection;
@@ -50,7 +50,7 @@ public abstract class AbstractProtocol implements Protocol {
                     connection.write(command);
                 } else if (command.getType().equals(CommandType.TYPE_CUSTOM)) {
                     String data = command.getString(Command.KEY_DATA);
-                    if (connection.getChannel().pipeline().get(StringEncoder.class) != null) {
+                    if (connection.channel().pipeline().get(StringEncoder.class) != null) {
                         connection.write(data);
                     } else {
                         connection.write(command);

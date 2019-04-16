@@ -40,7 +40,7 @@ public class UniqueID implements Serializable {
     }
 
 
-    public static UniqueID fromString(String unique) {
+    public static UniqueID valueOf(String unique) {
 
         int idx = unique.indexOf("-");
         if (idx > 0 && idx < unique.length()) {

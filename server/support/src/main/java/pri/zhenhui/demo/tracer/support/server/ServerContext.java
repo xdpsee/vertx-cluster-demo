@@ -1,4 +1,4 @@
-package pri.zhenhui.demo.tracer.server;
+package pri.zhenhui.demo.tracer.support.server;
 
 import io.reactivex.Maybe;
 import io.vertx.core.AsyncResult;
@@ -8,8 +8,9 @@ import io.vertx.reactivex.core.Vertx;
 import io.vertx.servicediscovery.ServiceDiscovery;
 import io.vertx.servicediscovery.ServiceReference;
 import io.vertx.servicediscovery.types.EventBusService;
+import pri.zhenhui.demo.tracer.server.Context;
 
-public final class ServerContext {
+public final class ServerContext implements Context {
 
     private final Vertx vertx;
 

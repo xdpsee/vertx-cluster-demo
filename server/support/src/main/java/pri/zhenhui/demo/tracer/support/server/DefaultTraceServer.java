@@ -15,15 +15,18 @@ import pri.zhenhui.demo.tracer.server.TraceServer;
 public final class DefaultTraceServer implements TraceServer {
 
     private final VertxInternal vertx;
-    private ContextInternal context;
+
+    private final ContextInternal context;
 
     private final ServerConnector connector;
 
     private ServerBootstrap bootstrap;
-    private Channel serverChannel;
+
+    private Channel channel;
 
     public DefaultTraceServer(Vertx vertx, ServerConnector connector) {
         this.vertx = (VertxInternal) vertx;
+        this.context = (ContextInternal) vertx.getOrCreateContext();
         this.connector = connector;
     }
 
@@ -34,27 +37,17 @@ public final class DefaultTraceServer implements TraceServer {
             throw new IllegalStateException("Already started");
         }
 
-        context = vertx.getOrCreateContext();
-
-        initBootstrap();
-
-        bind(host, port, listenHandler);
-    }
-
-    private void initBootstrap() {
         EventLoopGroup acceptorGroup = vertx.getAcceptorEventLoopGroup();
         EventLoop eventLoop = context.nettyEventLoop();
         bootstrap = new ServerBootstrap();
         bootstrap.channel(NioServerSocketChannel.class);
         bootstrap.group(acceptorGroup, eventLoop);
         bootstrap.childHandler(new PipelineInitializer<>(connector));
-    }
 
-    private void bind(String host, int port, Handler<AsyncResult<Void>> listenHandler) {
         ChannelFuture bindFuture = bootstrap.bind(host, port);
         bindFuture.addListener((ChannelFutureListener) future -> context.executeFromIO(v -> {
             if (future.isSuccess()) {
-                serverChannel = future.channel();
+                channel = future.channel();
                 listenHandler.handle(Future.succeededFuture(null));
             } else {
                 listenHandler.handle(Future.failedFuture(future.cause()));
@@ -64,9 +57,9 @@ public final class DefaultTraceServer implements TraceServer {
 
     @Override
     public void close() {
-        if (serverChannel != null) {
-            serverChannel.close();
-            serverChannel = null;
+        if (channel != null) {
+            channel.close();
+            channel = null;
         }
     }
 

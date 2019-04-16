@@ -47,9 +47,8 @@ public final class PipelineInitializer<C extends Channel> extends ChannelInitial
         @Override
         public void channelActive(ChannelHandlerContext ctx) {
             if (!(ctx.channel() instanceof DatagramChannel)) {
-                final Connection connection = new Connection(ctx.channel(), connector.protocol());
+                final Connection connection = new ConnectionImpl(ctx.channel(), connector.protocol());
                 ChannelAttributesUtils.set(ctx, ChannelAttribute.CONNECTION, connection);
-                this.connector.connectionManager().register(connection);
             }
         }
     }
