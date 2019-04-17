@@ -1,6 +1,7 @@
-package pri.zhenhui.demo.tracer.data.service;
+package pri.zhenhui.demo.tracer.data.verticles;
 
 import pri.zhenhui.demo.support.AbstractMicroServiceVerticle;
+import pri.zhenhui.demo.tracer.data.service.PositionWriteServiceImpl;
 import pri.zhenhui.demo.tracer.service.PositionWriteService;
 
 public class PositionWriteServiceVerticle extends AbstractMicroServiceVerticle<PositionWriteService> {

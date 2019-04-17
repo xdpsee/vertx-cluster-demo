@@ -1,48 +1,33 @@
 package pri.zhenhui.demo.tracer;
 
 import io.reactivex.Completable;
-import io.reactivex.Single;
+import io.vertx.core.Context;
+import io.vertx.core.Vertx;
 import io.vertx.reactivex.core.AbstractVerticle;
-import org.apache.ibatis.session.SqlSessionFactory;
-import pri.zhenhui.demo.support.DBUtils;
-import pri.zhenhui.demo.support.SqlSessionFactoryLoader;
-import pri.zhenhui.demo.tracer.data.service.DeviceReadServiceVerticle;
-import pri.zhenhui.demo.tracer.data.service.EventWriteServiceVerticle;
-import pri.zhenhui.demo.tracer.data.service.PositionReadServiceVerticle;
-import pri.zhenhui.demo.tracer.data.service.PositionWriteServiceVerticle;
+import io.vertx.servicediscovery.ServiceDiscovery;
+import pri.zhenhui.demo.tracer.mobile.MobileVerticle;
+import pri.zhenhui.demo.tracer.support.server.ServerContext;
 
 @SuppressWarnings("unused")
 public class MainVerticle extends AbstractVerticle {
 
+    private ServerContext context;
+
+    @Override
+    public void init(Vertx vertx, Context context) {
+        super.init(vertx, context);
+
+        this.context = new ServerContext(this.vertx, ServiceDiscovery.create(vertx));
+
+    }
+
     @Override
     public Completable rxStart() {
 
-        return initDB()
-                .ignoreElement()
-                .andThen(vertx.rxDeployVerticle(new EventWriteServiceVerticle()))
-                .doOnSuccess(ret -> System.out.println("Deploy EventWriteServiceVerticle Ok!"))
-                .ignoreElement()
-                .andThen(vertx.rxDeployVerticle(new DeviceReadServiceVerticle()))
-                .doOnSuccess(ret -> System.out.println("Deploy DeviceReadServiceVerticle Ok!"))
-                .ignoreElement()
-                .andThen(vertx.rxDeployVerticle(new PositionReadServiceVerticle()))
-                .doOnSuccess(ret -> System.out.println("Deploy PositionReadServiceVerticle Ok!"))
-                .ignoreElement()
-                .andThen(vertx.rxDeployVerticle(new PositionWriteServiceVerticle()))
-                .doOnSuccess(ret -> System.out.println("Deploy PositionWriteServiceVerticle Ok!"))
+        return vertx.rxDeployVerticle(new MobileVerticle(context))
                 .ignoreElement();
+
     }
 
-    private Single<String> initDB() {
-        return Single.create(emitter -> {
-            try {
-                SqlSessionFactory sqlSessionFactory = SqlSessionFactoryLoader.load();
-                DBUtils.initDatabase(sqlSessionFactory);
-                emitter.onSuccess("OK");
-            } catch (Throwable e) {
-                emitter.onError(e);
-            }
-        });
-    }
 }
 
