@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ehcache>
+    <diskStore path="java.io.tmpdir"/>
+
+    <cacheManagerPeerProviderFactory
+            class="net.sf.ehcache.distribution.jgroups.JGroupsCacheManagerPeerProviderFactory"
+            properties="jgroups_tcp.xml"/>
+
+    <defaultCache maxElementsInMemory="10000"
+                  overflowToDisk="false"
+                  eternal="false"
+                  memoryStoreEvictionPolicy="LRU"
+                  maxElementsOnDisk="10000000"
+                  diskExpiryThreadIntervalSeconds="600"
+                  timeToIdleSeconds="3600"
+                  timeToLiveSeconds="100000"
+                  diskPersistent="false"/>
+
+    <cache name="deviceCache"
+           maxElementsInMemory="10000"
+           eternal="true"
+           overflowToDisk="false"
+           timeToIdleSeconds="1"
+           timeToLiveSeconds="600"
+           memoryStoreEvictionPolicy="LRU">
+        <cacheEventListenerFactory
+                class="net.sf.ehcache.distribution.jgroups.JGroupsCacheReplicatorFactory"
+                properties="replicateAsynchronously=true, replicatePuts=true, replicateUpdates=true,
+        replicateUpdatesViaCopy=true, replicateRemovals=true "/>
+    </cache>
+
+    <cache name="positionCache"
+           maxElementsInMemory="10000"
+           eternal="true"
+           overflowToDisk="false"
+           timeToIdleSeconds="1"
+           timeToLiveSeconds="600"
+           memoryStoreEvictionPolicy="LRU">
+        <cacheEventListenerFactory
+                class="net.sf.ehcache.distribution.jgroups.JGroupsCacheReplicatorFactory"
+                properties="replicateAsynchronously=true, replicatePuts=true, replicateUpdates=true,
+        replicateUpdatesViaCopy=true, replicateRemovals=true "/>
+    </cache>
+
+    <cache name="lastPositionCache"
+           maxElementsInMemory="10000"
+           eternal="true"
+           overflowToDisk="false"
+           timeToIdleSeconds="1"
+           timeToLiveSeconds="600"
+           memoryStoreEvictionPolicy="LRU">
+        <cacheEventListenerFactory
+                class="net.sf.ehcache.distribution.jgroups.JGroupsCacheReplicatorFactory"
+                properties="replicateAsynchronously=true, replicatePuts=true, replicateUpdates=true,
+        replicateUpdatesViaCopy=true, replicateRemovals=true "/>
+    </cache>
+
+</ehcache>
+
+
+
+
+
+
+

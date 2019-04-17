@@ -36,6 +36,7 @@ public class EventWriteServiceImpl implements EventWriteService {
                     BeanUtils.copyProperties(eventDO, event);
                     mapper.insert(eventDO);
                 }
+                session.commit();
                 future.complete(true);
             } catch (Throwable e) {
                 session.rollback();

@@ -1,0 +1,11 @@
+<cacheManagerPeerProviderFactory
+        class="net.sf.ehcache.distribution.jgroups.JGroupsCacheManagerPeerProviderFactory"
+        properties="connect=TCP(bind_port=7777):
+               TCPPING(initial_hosts=127.0.0.1[7777];port_range=10;timeout=3000;
+               num_initial_members=3;up_thread=true;down_thread=true):
+               VERIFY_SUSPECT(timeout=1500;down_thread=false;up_thread=false):
+               pbcast.NAKACK(down_thread=true;up_thread=true;gc_lag=100;retransmit_timeout=3000):
+               pbcast.GMS(join_timeout=5000;join_retry_timeout=2000;shun=false;
+               print_local_addr=false;down_thread=true;up_thread=true)"
+        propertySeparator="::">
+</cacheManagerPeerProviderFactory>

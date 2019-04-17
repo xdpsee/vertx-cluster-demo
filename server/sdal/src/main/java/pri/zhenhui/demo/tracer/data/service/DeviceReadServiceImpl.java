@@ -7,6 +7,7 @@ import org.apache.commons.beanutils.BeanUtils;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import pri.zhenhui.demo.support.SqlSessionFactoryLoader;
+import pri.zhenhui.demo.tracer.data.cache.DeviceCache;
 import pri.zhenhui.demo.tracer.data.domain.DeviceDO;
 import pri.zhenhui.demo.tracer.data.mapper.DeviceMapper;
 import pri.zhenhui.demo.tracer.domain.Device;
@@ -17,24 +18,32 @@ public class DeviceReadServiceImpl implements DeviceReadService {
 
     private final Context context;
     private final SqlSessionFactory sqlSessionFactory;
+    private final DeviceCache deviceCache;
 
     public DeviceReadServiceImpl(Context context) {
         this.context = context;
         this.sqlSessionFactory = SqlSessionFactoryLoader.load();
+        this.deviceCache = new DeviceCache();
     }
 
     @Override
     public void queryDevice(UniqueID deviceId, Handler<AsyncResult<Device>> resultHandler) {
 
         context.<Device>executeBlocking(future -> {
-            try (SqlSession session = sqlSessionFactory.openSession()){
+            Device device = deviceCache.get(deviceId);
+            if (device != null) {
+                future.complete(device);
+            } else try (SqlSession session = sqlSessionFactory.openSession()) {
                 DeviceMapper deviceMapper = session.getMapper(DeviceMapper.class);
-                future.complete(convert(deviceMapper.selectById(deviceId)));
+                device = convert(deviceMapper.selectById(deviceId));
+                if (device != null) {
+                    deviceCache.put(deviceId, device);
+                }
+                future.complete(device);
             } catch (Throwable e) {
                 future.fail(e);
             }
         }, resultHandler);
-
     }
 
     private Device convert(DeviceDO deviceDO) throws Exception {

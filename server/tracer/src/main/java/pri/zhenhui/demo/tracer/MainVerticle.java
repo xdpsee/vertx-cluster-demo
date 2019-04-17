@@ -8,6 +8,7 @@ import pri.zhenhui.demo.support.DBUtils;
 import pri.zhenhui.demo.support.SqlSessionFactoryLoader;
 import pri.zhenhui.demo.tracer.data.service.DeviceReadServiceVerticle;
 import pri.zhenhui.demo.tracer.data.service.EventWriteServiceVerticle;
+import pri.zhenhui.demo.tracer.data.service.PositionReadServiceVerticle;
 import pri.zhenhui.demo.tracer.data.service.PositionWriteServiceVerticle;
 
 @SuppressWarnings("unused")
@@ -16,24 +17,32 @@ public class MainVerticle extends AbstractVerticle {
     @Override
     public Completable rxStart() {
 
-        return Single.create(emitter -> {
-            try {
-                SqlSessionFactory sqlSessionFactory = SqlSessionFactoryLoader.load();
-                DBUtils.initDatabase(sqlSessionFactory);
-                emitter.onSuccess(true);
-            } catch (Throwable e) {
-                emitter.onError(e);
-            }
-        }).ignoreElement()
+        return initDB()
+                .ignoreElement()
                 .andThen(vertx.rxDeployVerticle(new EventWriteServiceVerticle()))
                 .doOnSuccess(ret -> System.out.println("Deploy EventWriteServiceVerticle Ok!"))
                 .ignoreElement()
                 .andThen(vertx.rxDeployVerticle(new DeviceReadServiceVerticle()))
                 .doOnSuccess(ret -> System.out.println("Deploy DeviceReadServiceVerticle Ok!"))
                 .ignoreElement()
+                .andThen(vertx.rxDeployVerticle(new PositionReadServiceVerticle()))
+                .doOnSuccess(ret -> System.out.println("Deploy PositionReadServiceVerticle Ok!"))
+                .ignoreElement()
                 .andThen(vertx.rxDeployVerticle(new PositionWriteServiceVerticle()))
                 .doOnSuccess(ret -> System.out.println("Deploy PositionWriteServiceVerticle Ok!"))
                 .ignoreElement();
+    }
+
+    private Single<String> initDB() {
+        return Single.create(emitter -> {
+            try {
+                SqlSessionFactory sqlSessionFactory = SqlSessionFactoryLoader.load();
+                DBUtils.initDatabase(sqlSessionFactory);
+                emitter.onSuccess("OK");
+            } catch (Throwable e) {
+                emitter.onError(e);
+            }
+        });
     }
 }
 
