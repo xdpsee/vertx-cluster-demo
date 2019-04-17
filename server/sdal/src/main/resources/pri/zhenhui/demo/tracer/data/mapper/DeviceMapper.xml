@@ -19,13 +19,13 @@
 
     <insert id="insert" parameterType="pri.zhenhui.demo.tracer.data.domain.DeviceDO">
         insert into devices (
-          id,
-          model,
-          protocol,
-          attributes,
-          create_at,
-          update_at,
-          status
+          `id`,
+          `model`,
+          `protocol`,
+          `attributes`,
+          `create_at`,
+          `update_at`,
+          `status`
         ) values (
           #{id},
           #{model},

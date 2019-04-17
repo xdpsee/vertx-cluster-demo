@@ -59,6 +59,10 @@
           #{attributes}
         );
     </insert>
+    
+    <select id="selectLastPos" resultMap="positionMap">
+        select * from positions where device_id = #{deviceId} order by `time` desc llimit 1;
+    </select>
 
 </mapper>
 
