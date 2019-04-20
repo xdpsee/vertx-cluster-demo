@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import io.vertx.codegen.annotations.DataObject;
 import io.vertx.core.json.JsonObject;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import pri.zhenhui.demo.tracer.domain.misc.Attributes;
 import pri.zhenhui.demo.tracer.domain.misc.Network;
@@ -14,9 +15,11 @@ import java.util.Date;
 
 @DataObject
 @Data
+@EqualsAndHashCode(callSuper = false, onlyExplicitlyIncluded = true)
 @NoArgsConstructor
 public class Position extends Attributes implements Message {
-    // 属性
+
+    @EqualsAndHashCode.Include
     private Long id;
 
     private UniqueID deviceId;
@@ -41,9 +44,9 @@ public class Position extends Attributes implements Message {
     private Network network;
 
     // 扩展属性字段
+    public static final String KEY_ORIGINAL = "raw";
     public static final String KEY_OUTDATED = "outdated";
     public static final String KEY_UNIQUE_ID = "uniqueId";
-    public static final String KEY_ORIGINAL = "raw";
     public static final String KEY_INDEX = "index";
     public static final String KEY_HDOP = "hdop";
     public static final String KEY_SATELLITES = "sat";
@@ -136,7 +139,7 @@ public class Position extends Attributes implements Message {
 
     @Override
     public UniqueID deviceId() {
-        return null;
+        return deviceId;
     }
 
     @Override
@@ -144,6 +147,7 @@ public class Position extends Attributes implements Message {
         return new byte[0];
     }
 }
+
 
 
 

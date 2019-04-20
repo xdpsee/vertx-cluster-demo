@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import io.vertx.codegen.annotations.DataObject;
 import io.vertx.core.json.JsonObject;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import pri.zhenhui.demo.tracer.domain.misc.Attributes;
 import pri.zhenhui.demo.tracer.enums.EventType;
@@ -15,6 +16,7 @@ import java.util.Date;
 
 @DataObject
 @Data
+@EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 public class Event extends Attributes implements Serializable {
 

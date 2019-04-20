@@ -1,4 +1,4 @@
-package pri.zhenhui.demo.account;
+package pri.zhenhui.demo.account.service.impl;
 
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
@@ -8,6 +8,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import pri.zhenhui.demo.account.domain.User;
 import pri.zhenhui.demo.account.mapper.UserMapper;
+import pri.zhenhui.demo.account.service.AccountService;
 import pri.zhenhui.demo.support.SqlSessionFactoryLoader;
 
 public class AccountServiceImpl implements AccountService {
@@ -16,7 +17,7 @@ public class AccountServiceImpl implements AccountService {
 
     private final SqlSessionFactory sqlSessionFactory;
 
-    AccountServiceImpl(Context context) {
+    public AccountServiceImpl(Context context) {
         this.context = context;
         this.sqlSessionFactory = SqlSessionFactoryLoader.load();
     }

@@ -8,6 +8,8 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import pri.zhenhui.demo.account.domain.enums.AuthorityType;
 import pri.zhenhui.demo.account.domain.enums.RoleType;
 import pri.zhenhui.demo.account.mapper.AuthorityMapper;
+import pri.zhenhui.demo.account.verticles.AccountServiceVerticle;
+import pri.zhenhui.demo.account.verticles.AuthorityServiceVerticle;
 import pri.zhenhui.demo.support.DBUtils;
 import pri.zhenhui.demo.support.SqlSessionFactoryLoader;
 

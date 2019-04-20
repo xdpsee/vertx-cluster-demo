@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import io.vertx.codegen.annotations.DataObject;
 import io.vertx.core.json.JsonObject;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import pri.zhenhui.demo.tracer.domain.misc.Attributes;
 import pri.zhenhui.demo.tracer.enums.DeviceStatus;
@@ -14,9 +15,11 @@ import java.util.Date;
 
 @DataObject
 @Data
+@EqualsAndHashCode(callSuper = false, onlyExplicitlyIncluded = true)
 @NoArgsConstructor
 public class Device extends Attributes implements Serializable {
 
+    @EqualsAndHashCode.Include
     private UniqueID id;
 
     private String model;

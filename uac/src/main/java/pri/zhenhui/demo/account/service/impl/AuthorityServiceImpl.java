@@ -1,4 +1,4 @@
-package pri.zhenhui.demo.account;
+package pri.zhenhui.demo.account.service.impl;
 
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
@@ -10,6 +10,7 @@ import pri.zhenhui.demo.account.domain.Role;
 import pri.zhenhui.demo.account.domain.enums.AuthorityType;
 import pri.zhenhui.demo.account.domain.enums.RoleType;
 import pri.zhenhui.demo.account.mapper.AuthorityMapper;
+import pri.zhenhui.demo.account.service.AuthorityService;
 import pri.zhenhui.demo.support.SqlSessionFactoryLoader;
 
 import java.util.Arrays;
@@ -24,7 +25,7 @@ public class AuthorityServiceImpl implements AuthorityService {
 
     private final SqlSessionFactory sqlSessionFactory;
 
-    AuthorityServiceImpl(Context context) {
+    public AuthorityServiceImpl(Context context) {
         this.context = context;
         this.sqlSessionFactory = SqlSessionFactoryLoader.load();
     }

@@ -6,8 +6,6 @@ import pri.zhenhui.demo.tracer.support.codec.AbstractProtocolEncoder;
 
 public class MobileProtocolEncoder extends AbstractProtocolEncoder {
 
-
-
     @Override
     public byte[] encodeCommand(Command command) throws Exception {
         return new byte[0];

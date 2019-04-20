@@ -1,4 +1,4 @@
-package pri.zhenhui.demo.account;
+package pri.zhenhui.demo.account.service;
 
 import io.vertx.codegen.annotations.ProxyGen;
 import io.vertx.codegen.annotations.VertxGen;
