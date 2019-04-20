@@ -5,6 +5,7 @@ import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
 import io.vertx.reactivex.core.Future;
 import io.vertx.reactivex.core.Vertx;
+import io.vertx.reactivex.core.file.FileSystem;
 import io.vertx.servicediscovery.ServiceDiscovery;
 import io.vertx.servicediscovery.ServiceReference;
 import io.vertx.servicediscovery.types.EventBusService;
@@ -32,6 +33,10 @@ public final class ServerContext implements Context {
 
     public <T> void executeBlocking(Handler<Future<T>> blockingCodeHandler, Handler<AsyncResult<T>> resultHandler) {
         vertx.executeBlocking(blockingCodeHandler, resultHandler);
+    }
+
+    public FileSystem fileSystem() {
+        return vertx.fileSystem();
     }
 }
 

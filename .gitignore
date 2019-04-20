@@ -4,3 +4,6 @@
 *.log
 target
 db
+.settings
+.project
+.classpath

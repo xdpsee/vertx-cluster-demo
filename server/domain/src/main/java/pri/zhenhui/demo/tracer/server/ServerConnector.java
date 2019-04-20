@@ -1,8 +1,7 @@
 package pri.zhenhui.demo.tracer.server;
 
+import io.netty.channel.ChannelPipeline;
 import pri.zhenhui.demo.tracer.domain.Configs;
-
-import java.util.List;
 
 public interface ServerConnector {
 
@@ -12,9 +11,7 @@ public interface ServerConnector {
 
     Protocol protocol();
 
-    List<Processor> processors();
-
-    Encoder encoder();
+    void initPipeline(ChannelPipeline pipeline);
 
 }
 

@@ -10,14 +10,11 @@ import pri.zhenhui.demo.tracer.support.server.ServerContext;
 
 public class MobileVerticle extends AbstractVerticle {
 
-    private final ServerContext context;
-
     private final ServerConnector connector;
 
     private TraceServer server;
 
     public MobileVerticle(ServerContext context) {
-        this.context = context;
         this.connector = new MobileConnector(context);
     }
 
@@ -44,10 +41,14 @@ public class MobileVerticle extends AbstractVerticle {
     @Override
     public Completable rxStop() {
 
-        server.close();
+        if (server != null) {
+            server.close();
+        }
 
         return super.rxStop();
+
     }
+
 }
 
 

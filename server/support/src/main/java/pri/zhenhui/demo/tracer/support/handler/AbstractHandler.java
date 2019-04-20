@@ -2,6 +2,7 @@ package pri.zhenhui.demo.tracer.support.handler;
 
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.SimpleChannelInboundHandler;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
 import io.vertx.core.logging.Logger;
@@ -11,7 +12,6 @@ import pri.zhenhui.demo.tracer.domain.Device;
 import pri.zhenhui.demo.tracer.domain.Message;
 import pri.zhenhui.demo.tracer.domain.UniqueID;
 import pri.zhenhui.demo.tracer.server.Connection;
-import pri.zhenhui.demo.tracer.server.Processor;
 import pri.zhenhui.demo.tracer.server.ServerConnector;
 import pri.zhenhui.demo.tracer.service.DeviceReadService;
 import pri.zhenhui.demo.tracer.service.EventWriteService;
@@ -24,7 +24,7 @@ import pri.zhenhui.demo.tracer.utils.ChannelAttributesUtils;
 import java.io.IOException;
 import java.nio.channels.ClosedChannelException;
 
-public abstract class AbstractHandler<T extends Message> extends Processor<T> {
+public abstract class AbstractHandler<T extends Message> extends SimpleChannelInboundHandler<T> implements io.netty.channel.ChannelInboundHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(AbstractHandler.class);
 

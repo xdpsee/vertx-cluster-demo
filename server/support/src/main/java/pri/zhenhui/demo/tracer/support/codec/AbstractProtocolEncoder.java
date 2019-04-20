@@ -6,15 +6,14 @@ import io.netty.handler.codec.MessageToByteEncoder;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import pri.zhenhui.demo.tracer.domain.Command;
-import pri.zhenhui.demo.tracer.support.utils.ExceptionUtils;
-import pri.zhenhui.demo.tracer.domain.UniqueID;
+import pri.zhenhui.demo.tracer.server.Encoder;
 
-public abstract class AbstractProtocolEncoder extends MessageToByteEncoder<Command> {
+public abstract class AbstractProtocolEncoder extends MessageToByteEncoder<Command> implements Encoder {
 
-    private static final Logger logger = LoggerFactory.getLogger(AbstractProtocolEncoder.class);
+    private static final Logger logger = LoggerFactory.getLogger(Encoder.class);
 
     @Override
-    protected void encode(ChannelHandlerContext ctx, Command command, ByteBuf out) throws Exception {
+    protected final void encode(ChannelHandlerContext ctx, Command command, ByteBuf out) throws Exception {
         try {
             byte[] bytes = encodeCommand(ctx, command);
 
@@ -32,21 +31,11 @@ public abstract class AbstractProtocolEncoder extends MessageToByteEncoder<Comma
 
             out.writeBytes(bytes);
         } catch (Exception e) {
-            logger.error("AbstractProtocolEncoder.encode exception: {}", ExceptionUtils.getStackTrace(e));
+            logger.error("Encoder.encode exception", e);
         }
     }
 
     private byte[] encodeCommand(ChannelHandlerContext ctx, Command command) throws Exception {
         return encodeCommand(command);
     }
-
-    protected abstract byte[] encodeCommand(Command command) throws Exception;
-
-    protected abstract String encodeDeviceId(UniqueID deviceId);
 }
-
-
-
-
-
-

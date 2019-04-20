@@ -5,18 +5,15 @@ import pri.zhenhui.demo.tracer.domain.Command;
 import pri.zhenhui.demo.tracer.enums.CommandType;
 import pri.zhenhui.demo.tracer.server.Connection;
 import pri.zhenhui.demo.tracer.server.Protocol;
-import pri.zhenhui.demo.tracer.support.server.ServerContext;
 
 import java.util.HashSet;
 import java.util.Set;
 
 public abstract class AbstractProtocol implements Protocol {
 
-    private final ServerContext context;
     private final String name;
 
-    protected AbstractProtocol(ServerContext context, String name) {
-        this.context = context;
+    protected AbstractProtocol(String name) {
         this.name = name;
     }
 
@@ -48,7 +45,7 @@ public abstract class AbstractProtocol implements Protocol {
                 connection.write(command);
             }
         } else {
-            throw new RuntimeException("Command " + command.getType() + " is not supported in protocol " + getName());
+            throw new IllegalArgumentException("Command " + command.getType() + " is not supported in protocol " + getName());
         }
     }
 

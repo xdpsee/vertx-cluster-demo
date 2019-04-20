@@ -1,12 +1,14 @@
 package pri.zhenhui.demo.tracer.mobile;
 
-import pri.zhenhui.demo.tracer.server.Encoder;
-import pri.zhenhui.demo.tracer.server.Processor;
+import io.netty.channel.ChannelPipeline;
+import pri.zhenhui.demo.tracer.mobile.codec.MobileFrameDecoder;
+import pri.zhenhui.demo.tracer.mobile.codec.MobileProtocolDecoder;
+import pri.zhenhui.demo.tracer.mobile.codec.MobileProtocolEncoder;
 import pri.zhenhui.demo.tracer.server.Protocol;
+import pri.zhenhui.demo.tracer.support.handler.DefaultDataHandler;
+import pri.zhenhui.demo.tracer.support.handler.event.OverspeedEventHandler;
 import pri.zhenhui.demo.tracer.support.server.AbstractConnector;
 import pri.zhenhui.demo.tracer.support.server.ServerContext;
-
-import java.util.List;
 
 public class MobileConnector extends AbstractConnector {
 
@@ -16,16 +18,18 @@ public class MobileConnector extends AbstractConnector {
 
     @Override
     public Protocol protocol() {
-        return new MobileProtocol(context);
+        return new MobileProtocol();
     }
 
     @Override
-    public List<Processor> processors() {
-        return null;
-    }
+    public void initPipeline(ChannelPipeline pipeline) {
+        pipeline.addLast("frameDecoder", new MobileFrameDecoder())
+                .addLast("protocolDecoder", new MobileProtocolDecoder())
+                .addLast("dataHandler", new DefaultDataHandler(this))
+                .addLast("eventHandler", new OverspeedEventHandler(this));
 
-    @Override
-    public Encoder encoder() {
-        return null;
+        pipeline.addLast("protocolEncoder", new MobileProtocolEncoder());
     }
 }
+
+

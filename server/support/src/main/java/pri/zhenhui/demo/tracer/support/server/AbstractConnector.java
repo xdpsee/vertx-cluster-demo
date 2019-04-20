@@ -1,10 +1,10 @@
 package pri.zhenhui.demo.tracer.support.server;
 
+import io.vertx.core.json.JsonObject;
+import org.apache.commons.beanutils.BeanUtils;
 import pri.zhenhui.demo.tracer.domain.Configs;
 import pri.zhenhui.demo.tracer.server.Context;
 import pri.zhenhui.demo.tracer.server.ServerConnector;
-
-import java.io.InputStream;
 
 public abstract class AbstractConnector implements ServerConnector {
 
@@ -31,14 +31,17 @@ public abstract class AbstractConnector implements ServerConnector {
 
         final Configs configs = new Configs();
 
-        final InputStream inputStream = Thread.currentThread().getContextClassLoader()
-                .getResourceAsStream("conf/" + protocol().getName() + ".json");
-        if (null == inputStream) {
-            throw new IllegalStateException("No config file found for protocol: " + protocol().getName());
+        try {
+            JsonObject jsonObj = context.fileSystem().readFileBlocking(configFilePath()).toJsonObject();
+            BeanUtils.copyProperties(configs, jsonObj);
+        } catch (Throwable e) {
+            throw new IllegalStateException("Load config file: " + configFilePath() + " failed!", e);
         }
 
-        // TODO:
-
         return configs;
+    }
+
+    private String configFilePath() {
+        return String.format("conf/%s.json", protocol().getName());
     }
 }
