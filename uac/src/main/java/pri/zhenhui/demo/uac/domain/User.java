@@ -1,4 +1,4 @@
-package pri.zhenhui.demo.account.domain;
+package pri.zhenhui.demo.uac.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.vertx.codegen.annotations.DataObject;

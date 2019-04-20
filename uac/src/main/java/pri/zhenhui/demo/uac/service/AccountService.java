@@ -1,11 +1,11 @@
-package pri.zhenhui.demo.account.service;
+package pri.zhenhui.demo.uac.service;
 
 import io.vertx.codegen.annotations.ProxyGen;
 import io.vertx.codegen.annotations.VertxGen;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
 import io.vertx.core.json.JsonObject;
-import pri.zhenhui.demo.account.domain.User;
+import pri.zhenhui.demo.uac.domain.User;
 
 @ProxyGen
 @VertxGen

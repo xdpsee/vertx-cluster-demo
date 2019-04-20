@@ -1,16 +1,16 @@
-package pri.zhenhui.demo.account.service.impl;
+package pri.zhenhui.demo.uac.service.impl;
 
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
 import io.vertx.reactivex.core.Context;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
-import pri.zhenhui.demo.account.domain.Authority;
-import pri.zhenhui.demo.account.domain.Role;
-import pri.zhenhui.demo.account.domain.enums.AuthorityType;
-import pri.zhenhui.demo.account.domain.enums.RoleType;
-import pri.zhenhui.demo.account.mapper.AuthorityMapper;
-import pri.zhenhui.demo.account.service.AuthorityService;
+import pri.zhenhui.demo.uac.domain.Authority;
+import pri.zhenhui.demo.uac.domain.Role;
+import pri.zhenhui.demo.uac.domain.enums.AuthorityType;
+import pri.zhenhui.demo.uac.domain.enums.RoleType;
+import pri.zhenhui.demo.uac.mapper.AuthorityMapper;
+import pri.zhenhui.demo.uac.service.AuthorityService;
 import pri.zhenhui.demo.support.SqlSessionFactoryLoader;
 
 import java.util.Arrays;

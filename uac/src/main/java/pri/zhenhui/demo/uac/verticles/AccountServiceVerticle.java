@@ -1,7 +1,7 @@
-package pri.zhenhui.demo.account.verticles;
+package pri.zhenhui.demo.uac.verticles;
 
-import pri.zhenhui.demo.account.service.AccountService;
-import pri.zhenhui.demo.account.service.impl.AccountServiceImpl;
+import pri.zhenhui.demo.uac.service.AccountService;
+import pri.zhenhui.demo.uac.service.impl.AccountServiceImpl;
 import pri.zhenhui.demo.support.AbstractMicroServiceVerticle;
 
 public class AccountServiceVerticle extends AbstractMicroServiceVerticle<AccountService> {

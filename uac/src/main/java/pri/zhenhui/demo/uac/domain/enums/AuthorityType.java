@@ -1,4 +1,4 @@
-package pri.zhenhui.demo.account.domain.enums;
+package pri.zhenhui.demo.uac.domain.enums;
 
 import java.util.Arrays;
 

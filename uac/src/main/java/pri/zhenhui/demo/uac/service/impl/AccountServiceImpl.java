@@ -1,4 +1,4 @@
-package pri.zhenhui.demo.account.service.impl;
+package pri.zhenhui.demo.uac.service.impl;
 
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
@@ -6,9 +6,9 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.reactivex.core.Context;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
-import pri.zhenhui.demo.account.domain.User;
-import pri.zhenhui.demo.account.mapper.UserMapper;
-import pri.zhenhui.demo.account.service.AccountService;
+import pri.zhenhui.demo.uac.domain.User;
+import pri.zhenhui.demo.uac.mapper.UserMapper;
+import pri.zhenhui.demo.uac.service.AccountService;
 import pri.zhenhui.demo.support.SqlSessionFactoryLoader;
 
 public class AccountServiceImpl implements AccountService {

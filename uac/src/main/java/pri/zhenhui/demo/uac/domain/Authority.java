@@ -1,8 +1,8 @@
-package pri.zhenhui.demo.account.domain;
+package pri.zhenhui.demo.uac.domain;
 
 import io.vertx.codegen.annotations.DataObject;
 import io.vertx.core.json.JsonObject;
-import pri.zhenhui.demo.account.domain.enums.AuthorityType;
+import pri.zhenhui.demo.uac.domain.enums.AuthorityType;
 
 import java.io.Serializable;
 

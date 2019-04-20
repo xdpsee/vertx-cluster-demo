@@ -3,7 +3,7 @@ package pri.zhenhui.demo.webapi.handlers.todolist;
 import io.reactivex.Single;
 import io.vertx.reactivex.ext.web.RoutingContext;
 import org.apache.commons.lang3.StringUtils;
-import pri.zhenhui.demo.account.domain.enums.AuthorityType;
+import pri.zhenhui.demo.uac.domain.enums.AuthorityType;
 import pri.zhenhui.demo.todolist.TodolistService;
 import pri.zhenhui.demo.todolist.domain.Status;
 import pri.zhenhui.demo.todolist.domain.Todolist;

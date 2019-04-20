@@ -86,7 +86,7 @@
                                         implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                                     <manifestEntries>
                                         <Main-Class>io.vertx.core.Launcher</Main-Class>
-                                        <Main-Verticle>pri.zhenhui.demo.account.MainVerticle</Main-Verticle>
+                                        <Main-Verticle>pri.zhenhui.demo.uac.MainVerticle</Main-Verticle>
                                     </manifestEntries>
                                 </transformer>
                                 <transformer
@@ -121,7 +121,7 @@
                     <mainClass>io.vertx.core.Launcher</mainClass>
                     <arguments>
                         <argument>run</argument>
-                        <argument>pri.zhenhui.demo.account.MainVerticle</argument>
+                        <argument>pri.zhenhui.demo.uac.MainVerticle</argument>
                     </arguments>
                 </configuration>
             </plugin>

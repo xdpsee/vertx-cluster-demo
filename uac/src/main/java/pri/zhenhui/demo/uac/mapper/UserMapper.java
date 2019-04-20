@@ -1,7 +1,7 @@
-package pri.zhenhui.demo.account.mapper;
+package pri.zhenhui.demo.uac.mapper;
 
 import org.apache.ibatis.annotations.Param;
-import pri.zhenhui.demo.account.domain.User;
+import pri.zhenhui.demo.uac.domain.User;
 
 import java.util.Map;
 

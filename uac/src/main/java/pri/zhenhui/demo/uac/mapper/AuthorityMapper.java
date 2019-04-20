@@ -1,4 +1,4 @@
-package pri.zhenhui.demo.account.mapper;
+package pri.zhenhui.demo.uac.mapper;
 
 import org.apache.ibatis.annotations.Param;
 
