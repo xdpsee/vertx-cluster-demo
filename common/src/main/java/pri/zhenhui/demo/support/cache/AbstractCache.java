@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 import static java.util.stream.Collectors.toMap;
 
 @SuppressWarnings("unchecked,unused")
-public class AbstractCache<K extends Serializable, V extends Serializable> implements pri.zhenhui.demo.support.cache.Cache<K, V> {
+public abstract class AbstractCache<K extends Serializable, V extends Serializable> implements pri.zhenhui.demo.support.cache.Cache<K, V> {
 
     private final String cacheName;
 

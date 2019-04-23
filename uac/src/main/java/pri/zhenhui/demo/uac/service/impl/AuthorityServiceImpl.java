@@ -1,10 +1,9 @@
 package pri.zhenhui.demo.uac.service.impl;
 
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
 import io.vertx.reactivex.core.Context;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import pri.zhenhui.demo.support.db.mybatis.SqlSessionFactoryLoader;
@@ -20,7 +19,7 @@ import pri.zhenhui.demo.uac.service.AuthorityService;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toCollection;
@@ -36,16 +35,10 @@ public class AuthorityServiceImpl implements AuthorityService {
 
     private final RoleAuthorityCache roleAuthorityCache = new RoleAuthorityCache();
 
-    private final Cache<Long, List<Authority>> userAuthorityCache;
-
 
     public AuthorityServiceImpl(Context context) {
         this.context = context;
         this.sqlSessionFactory = SqlSessionFactoryLoader.load();
-        userAuthorityCache = CacheBuilder.newBuilder()
-                .expireAfterWrite(3, TimeUnit.MINUTES)
-                .maximumSize(10000)
-                .build();
     }
 
     @Override
@@ -102,25 +95,30 @@ public class AuthorityServiceImpl implements AuthorityService {
     @Override
     public void queryUserAuthorities(Long userId, Handler<AsyncResult<List<Authority>>> resultHandler) {
 
-        context.executeBlocking(future -> {
-            try {
-                future.complete(userAuthorityCache.get(userId, () -> {
-                    try (SqlSession session = sqlSessionFactory.openSession()) {
-                        AuthorityMapper roleMapper = session.getMapper(AuthorityMapper.class);
-                        List<Long> roles = roleMapper.selectUserRoles(userId);
-                        if (roles.isEmpty()) {
-                            roles.add(RoleType.USER.id);
+        context.<List<Authority>>executeBlocking(future -> queryUserRoles(userId, queryUserRoles -> {
+                    if (queryUserRoles.failed()) {
+                        future.fail(queryUserRoles.cause());
+                    } else {
+                        Set<Long> roleIds = queryUserRoles.result().stream().map(Role::getId).collect(Collectors.toSet());
+                        if (CollectionUtils.isEmpty(roleIds)) {
+                            roleIds.add(RoleType.USER.id);
                         }
 
-                        AuthorityMapper authorityMapper = session.getMapper(AuthorityMapper.class);
-                        List<Long> authorities = authorityMapper.selectMultiRoleAuthorities(roles);
-                        return authorities.stream().map(Authority::from).collect(toList());
+                        try {
+                            future.complete(roleAuthorityCache.getsOrLoad(roleIds, (absentRoleIds) -> {
+                                try (SqlSession session = sqlSessionFactory.openSession()) {
+                                    AuthorityMapper authorityMapper = session.getMapper(AuthorityMapper.class);
+                                    List<Long> authorities = authorityMapper.selectMultiRoleAuthorities(absentRoleIds);
+                                    return authorities.stream().map(Authority::from).collect(Collectors.toCollection(ArrayList::new));
+                                }
+                            }));
+                        } catch (Throwable e) {
+                            future.fail(e);
+                        }
                     }
-                }));
-            } catch (Throwable e) {
-                future.fail(e);
-            }
-        }, resultHandler);
+                })
+                , resultHandler);
+
     }
 
     @Override
