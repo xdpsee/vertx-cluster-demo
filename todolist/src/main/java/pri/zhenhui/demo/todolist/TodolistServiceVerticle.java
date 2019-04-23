@@ -1,9 +1,9 @@
 package pri.zhenhui.demo.todolist;
 
 import org.apache.ibatis.session.SqlSessionFactory;
-import pri.zhenhui.demo.support.AbstractMicroServiceVerticle;
-import pri.zhenhui.demo.support.DBUtils;
-import pri.zhenhui.demo.support.SqlSessionFactoryLoader;
+import pri.zhenhui.demo.support.microservice.AbstractMicroServiceVerticle;
+import pri.zhenhui.demo.support.db.DBUtils;
+import pri.zhenhui.demo.support.db.mybatis.SqlSessionFactoryLoader;
 
 public class TodolistServiceVerticle extends AbstractMicroServiceVerticle<TodolistService> {
 

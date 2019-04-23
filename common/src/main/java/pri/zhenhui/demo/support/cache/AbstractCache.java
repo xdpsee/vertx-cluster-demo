@@ -1,4 +1,4 @@
-package pri.zhenhui.demo.tracer.data.cache;
+package pri.zhenhui.demo.support.cache;
 
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 import static java.util.stream.Collectors.toMap;
 
 @SuppressWarnings("unchecked,unused")
-public class AbstractCache<K extends Serializable, V extends Serializable> {
+public class AbstractCache<K extends Serializable, V extends Serializable> implements pri.zhenhui.demo.support.cache.Cache<K, V> {
 
     private final String cacheName;
 
@@ -34,6 +34,7 @@ public class AbstractCache<K extends Serializable, V extends Serializable> {
         this.cache = this.cacheManager.getCache(this.cacheName);
     }
 
+    @Override
     public V get(K key) {
 
         final Element element = cache.get(key);
@@ -44,6 +45,7 @@ public class AbstractCache<K extends Serializable, V extends Serializable> {
         return null;
     }
 
+    @Override
     public Map<K, V> multiGet(Set<K> keys) {
 
         final Map<K, V> result = new HashMap<>();
@@ -62,6 +64,7 @@ public class AbstractCache<K extends Serializable, V extends Serializable> {
         return result;
     }
 
+    @Override
     public void put(K key, V value) {
         if (null == key || null == value) {
             throw new IllegalArgumentException("null == key || null == value");
@@ -71,6 +74,7 @@ public class AbstractCache<K extends Serializable, V extends Serializable> {
         cache.put(element);
     }
 
+    @Override
     public void multiPut(Map<K, V> elements) {
 
         if (!MapUtils.isEmpty(elements)) {
@@ -82,6 +86,7 @@ public class AbstractCache<K extends Serializable, V extends Serializable> {
         }
     }
 
+    @Override
     public void evict(K key) {
         cache.remove(key);
     }

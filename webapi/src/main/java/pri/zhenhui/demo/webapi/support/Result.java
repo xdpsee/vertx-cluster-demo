@@ -2,7 +2,7 @@ package pri.zhenhui.demo.webapi.support;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pri.zhenhui.demo.support.ExceptionUtils;
+import pri.zhenhui.demo.support.utils.ExceptionUtils;
 
 import java.io.Serializable;
 

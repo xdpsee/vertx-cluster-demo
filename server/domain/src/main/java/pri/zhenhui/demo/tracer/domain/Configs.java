@@ -8,4 +8,13 @@ public class Configs extends JsonObject {
     public static String EVENT_MOTION_SPEED_THRESHOLD = "event.motion.speedThreshold";
 
 
+    
+    public Configs() {
+        super();
+    }
+
+    public Configs(String json) {
+        super(json);
+    }
+
 }

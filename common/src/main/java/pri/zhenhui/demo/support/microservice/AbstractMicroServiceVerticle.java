@@ -1,4 +1,4 @@
-package pri.zhenhui.demo.support;
+package pri.zhenhui.demo.support.microservice;
 
 import io.reactivex.Completable;
 import io.vertx.core.eventbus.MessageConsumer;
@@ -29,7 +29,6 @@ public abstract class AbstractMicroServiceVerticle<S> extends AbstractVerticle {
         this.serviceClass = serviceClass;
         this.serviceRecord = EventBusService.createRecord(serviceName, serviceAddress, serviceClass);
     }
-
 
     @Override
     public Completable rxStart() {

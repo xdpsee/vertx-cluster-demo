@@ -2,7 +2,7 @@ package pri.zhenhui.demo.uac.verticles;
 
 import pri.zhenhui.demo.uac.service.AuthorityService;
 import pri.zhenhui.demo.uac.service.impl.AuthorityServiceImpl;
-import pri.zhenhui.demo.support.AbstractMicroServiceVerticle;
+import pri.zhenhui.demo.support.microservice.AbstractMicroServiceVerticle;
 
 public class AuthorityServiceVerticle extends AbstractMicroServiceVerticle<AuthorityService> {
 

@@ -10,8 +10,8 @@ import pri.zhenhui.demo.uac.domain.enums.RoleType;
 import pri.zhenhui.demo.uac.mapper.AuthorityMapper;
 import pri.zhenhui.demo.uac.verticles.AccountServiceVerticle;
 import pri.zhenhui.demo.uac.verticles.AuthorityServiceVerticle;
-import pri.zhenhui.demo.support.DBUtils;
-import pri.zhenhui.demo.support.SqlSessionFactoryLoader;
+import pri.zhenhui.demo.support.db.DBUtils;
+import pri.zhenhui.demo.support.db.mybatis.SqlSessionFactoryLoader;
 
 import java.util.Arrays;
 import java.util.HashMap;

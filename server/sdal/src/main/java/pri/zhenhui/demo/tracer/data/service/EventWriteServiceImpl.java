@@ -6,7 +6,7 @@ import io.vertx.reactivex.core.Context;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
-import pri.zhenhui.demo.support.SqlSessionFactoryLoader;
+import pri.zhenhui.demo.support.db.mybatis.SqlSessionFactoryLoader;
 import pri.zhenhui.demo.tracer.data.domain.EventDO;
 import pri.zhenhui.demo.tracer.data.mapper.EventMapper;
 import pri.zhenhui.demo.tracer.domain.Event;

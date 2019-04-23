@@ -11,12 +11,12 @@
     <modules>
         <module>common</module>
         <module>uac</module>
-        <module>todolist</module>
         <module>webapi</module>
         <module>server/domain</module>
         <module>server/sdal</module>
         <module>server/support</module>
         <module>server/tracer</module>
+        <module>todolist</module>
     </modules>
 
     <properties>

@@ -5,7 +5,7 @@ import io.vertx.core.Handler;
 import io.vertx.reactivex.core.Context;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
-import pri.zhenhui.demo.support.SqlSessionFactoryLoader;
+import pri.zhenhui.demo.support.db.mybatis.SqlSessionFactoryLoader;
 import pri.zhenhui.demo.todolist.domain.Todolist;
 import pri.zhenhui.demo.todolist.mapper.TodolistMapper;
 

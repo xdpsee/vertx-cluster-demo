@@ -1,12 +1,16 @@
 package pri.zhenhui.demo.tracer.support.server;
 
-import io.vertx.core.json.JsonObject;
-import org.apache.commons.beanutils.BeanUtils;
+import io.vertx.core.logging.Logger;
+import io.vertx.core.logging.LoggerFactory;
 import pri.zhenhui.demo.tracer.domain.Configs;
 import pri.zhenhui.demo.tracer.server.Context;
 import pri.zhenhui.demo.tracer.server.ServerConnector;
 
+import java.nio.charset.Charset;
+
 public abstract class AbstractConnector implements ServerConnector {
+
+    private static final Logger logger = LoggerFactory.getLogger(AbstractConnector.class);
 
     protected final ServerContext context;
 
@@ -29,16 +33,20 @@ public abstract class AbstractConnector implements ServerConnector {
 
     private Configs loadConfigs() {
 
-        final Configs configs = new Configs();
-
         try {
-            JsonObject jsonObj = context.fileSystem().readFileBlocking(configFilePath()).toJsonObject();
-            BeanUtils.copyProperties(configs, jsonObj);
+            final String path = configFilePath();
+            String json = context.fileSystem().readFileBlocking(path).toString(Charset.forName("UTF-8"));
+
+            try {
+                return new Configs(json);
+            } finally {
+                logger.info("loading config file: " + path + "\r\n" + json);
+            }
+
         } catch (Throwable e) {
             throw new IllegalStateException("Load config file: " + configFilePath() + " failed!", e);
         }
 
-        return configs;
     }
 
     private String configFilePath() {
