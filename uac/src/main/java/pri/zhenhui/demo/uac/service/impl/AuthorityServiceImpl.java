@@ -49,6 +49,13 @@ public class AuthorityServiceImpl implements AuthorityService {
     }
 
     @Override
+    public void queryAuthorities(Handler<AsyncResult<List<Authority>>> resultHandler) {
+        context.<List<Authority>>executeBlocking(future -> {
+            future.complete(Arrays.stream(AuthorityType.values()).map(Authority::from).collect(toList()));
+        }, resultHandler);
+    }
+
+    @Override
     public void queryUserRoles(Long userId, Handler<AsyncResult<List<Role>>> resultHandler) {
 
         context.<List<Role>>executeBlocking(future -> {
@@ -65,13 +72,6 @@ public class AuthorityServiceImpl implements AuthorityService {
             }
         }, resultHandler);
 
-    }
-
-    @Override
-    public void queryAuthorities(Handler<AsyncResult<List<Authority>>> resultHandler) {
-        context.<List<Authority>>executeBlocking(future -> {
-            future.complete(Arrays.stream(AuthorityType.values()).map(Authority::from).collect(toList()));
-        }, resultHandler);
     }
 
     @Override

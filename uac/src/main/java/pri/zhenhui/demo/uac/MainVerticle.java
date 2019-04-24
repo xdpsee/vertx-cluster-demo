@@ -5,13 +5,13 @@ import io.reactivex.Single;
 import io.vertx.reactivex.core.AbstractVerticle;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
+import pri.zhenhui.demo.support.db.DBUtils;
+import pri.zhenhui.demo.support.db.mybatis.SqlSessionFactoryLoader;
 import pri.zhenhui.demo.uac.domain.enums.AuthorityType;
 import pri.zhenhui.demo.uac.domain.enums.RoleType;
 import pri.zhenhui.demo.uac.mapper.AuthorityMapper;
 import pri.zhenhui.demo.uac.verticles.AccountServiceVerticle;
 import pri.zhenhui.demo.uac.verticles.AuthorityServiceVerticle;
-import pri.zhenhui.demo.support.db.DBUtils;
-import pri.zhenhui.demo.support.db.mybatis.SqlSessionFactoryLoader;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 
 public class MainVerticle extends AbstractVerticle {
 
-    private static Map<RoleType, List<AuthorityType>> ROLE_AUTHORITIES = new HashMap<>();
+    public static Map<RoleType, List<AuthorityType>> ROLE_AUTHORITIES = new HashMap<>();
 
     static {
         ROLE_AUTHORITIES.put(RoleType.USER, Arrays.asList(

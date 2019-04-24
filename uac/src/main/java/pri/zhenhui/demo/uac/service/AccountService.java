@@ -21,7 +21,7 @@ public interface AccountService {
 
     void queryUserByPhone(String phone, Handler<AsyncResult<User>> resultHandler);
 
-    void createUser(User user, Handler<AsyncResult<Boolean>> resultHandler);
+    void createUser(User user, Handler<AsyncResult<Long>> resultHandler);
 
     void updateUser(JsonObject fields, Handler<AsyncResult<Boolean>> resultHandler);
 }

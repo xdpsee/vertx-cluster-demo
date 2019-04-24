@@ -10,16 +10,18 @@
         <result property="password" column="password"/>
         <result property="avatar" column="avatar"/>
         <result property="email" column="email"/>
+        <result property="phone" column="phone"/>
         <result property="createAt" column="create_at"/>
         <result property="updateAt" column="update_at"/>
     </resultMap>
 
-    <insert id="insert" parameterType="pri.zhenhui.demo.uac.domain.User">
+    <insert id="insert" parameterType="pri.zhenhui.demo.uac.domain.User" useGeneratedKeys="true" keyProperty="id">
         insert into users (
           username,
           password,
           avatar,
           email,
+          phone,
           create_at,
           update_at
         ) values (
@@ -27,6 +29,7 @@
           #{password},
           #{avatar},
           #{email},
+          #{phone},
           #{createAt},
           #{updateAt}
         );

@@ -19,9 +19,9 @@ public interface AuthorityService {
 
     void queryRoles(Handler<AsyncResult<List<Role>>> resultHandler);
 
-    void queryUserRoles(Long userId, Handler<AsyncResult<List<Role>>> resultHandler);
-
     void queryAuthorities(Handler<AsyncResult<List<Authority>>> resultHandler);
+
+    void queryUserRoles(Long userId, Handler<AsyncResult<List<Role>>> resultHandler);
 
     void queryRoleAuthorities(Long roleId, Handler<AsyncResult<List<Authority>>> resultHandler);
 

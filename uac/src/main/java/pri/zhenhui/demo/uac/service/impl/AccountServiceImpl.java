@@ -80,15 +80,15 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public void createUser(User user, Handler<AsyncResult<Boolean>> resultHandler) {
+    public void createUser(User user, Handler<AsyncResult<Long>> resultHandler) {
 
-        context.<Boolean>executeBlocking(future -> {
+        context.<Long>executeBlocking(future -> {
             final SqlSession session = sqlSessionFactory.openSession();
             try {
                 UserMapper userMapper = session.getMapper(UserMapper.class);
                 int rows = userMapper.insert(user);
                 session.commit();
-                future.complete(rows > 0);
+                future.complete(rows > 0 ? user.getId() : 0L);
             } catch (Throwable e) {
                 session.rollback();
                 future.fail(e);

@@ -1,6 +1,6 @@
 package pri.zhenhui.demo.uac.cache;
 
-import pri.zhenhui.demo.support.cache.AbstractCache;
+import pri.zhenhui.demo.support.cache.AbstractEhcache;
 import pri.zhenhui.demo.uac.domain.Authority;
 
 import java.util.*;
@@ -9,7 +9,7 @@ import java.util.function.Function;
 
 import static java.util.stream.Collectors.toSet;
 
-public class RoleAuthorityCache extends AbstractCache<Long, ArrayList<Authority>> {
+public class RoleAuthorityCache extends AbstractEhcache<Long, ArrayList<Authority>> {
 
     public RoleAuthorityCache() {
         super(CacheName.ROLE_AUTHORITY_CACHE);

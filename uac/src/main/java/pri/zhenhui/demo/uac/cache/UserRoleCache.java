@@ -1,12 +1,12 @@
 package pri.zhenhui.demo.uac.cache;
 
-import pri.zhenhui.demo.support.cache.AbstractCache;
+import pri.zhenhui.demo.support.cache.AbstractEhcache;
 import pri.zhenhui.demo.uac.domain.Role;
 
 import java.util.ArrayList;
 import java.util.concurrent.Callable;
 
-public class UserRoleCache extends AbstractCache<Long, ArrayList<Role>> {
+public class UserRoleCache extends AbstractEhcache<Long, ArrayList<Role>> {
 
     public UserRoleCache() {
         super(CacheName.USER_ROLE_CACHE);

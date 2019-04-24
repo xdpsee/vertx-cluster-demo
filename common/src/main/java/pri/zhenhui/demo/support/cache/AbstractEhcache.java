@@ -6,7 +6,6 @@ import net.sf.ehcache.Element;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 
-import javax.annotation.PostConstruct;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
@@ -16,7 +15,7 @@ import java.util.stream.Collectors;
 import static java.util.stream.Collectors.toMap;
 
 @SuppressWarnings("unchecked,unused")
-public abstract class AbstractCache<K extends Serializable, V extends Serializable> implements pri.zhenhui.demo.support.cache.Cache<K, V> {
+public abstract class AbstractEhcache<K extends Serializable, V extends Serializable> implements pri.zhenhui.demo.support.cache.Cache<K, V> {
 
     private final String cacheName;
 
@@ -24,13 +23,13 @@ public abstract class AbstractCache<K extends Serializable, V extends Serializab
 
     private Cache cache;
 
-    public AbstractCache(String cacheName) {
+    public AbstractEhcache(String cacheName) {
         this.cacheName = cacheName;
+        init();
     }
 
-    @PostConstruct
     private void init() {
-        this.cacheManager = CacheManager.newInstance("ehcache.xml");
+        this.cacheManager = CacheManager.newInstance();
         this.cache = this.cacheManager.getCache(this.cacheName);
     }
 

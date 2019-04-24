@@ -1,6 +1,6 @@
 package pri.zhenhui.demo.uac.cache;
 
-import pri.zhenhui.demo.support.cache.AbstractCache;
+import pri.zhenhui.demo.support.cache.AbstractEhcache;
 import pri.zhenhui.demo.support.cache.Cache;
 import pri.zhenhui.demo.uac.domain.User;
 
@@ -16,11 +16,11 @@ public class UserCache {
     private final Cache<String, User> cacheByPhone;
 
     public UserCache() {
-        cacheById = new AbstractCache<Long, User>(CacheName.USER_CACHE_BY_ID){};
+        cacheById = new AbstractEhcache<Long, User>(CacheName.USER_CACHE_BY_ID){};
 
-        cacheByName = new AbstractCache<String, User>(CacheName.USER_CACHE_BY_NAME){};
+        cacheByName = new AbstractEhcache<String, User>(CacheName.USER_CACHE_BY_NAME){};
 
-        cacheByPhone = new AbstractCache<String, User>(CacheName.USER_CACHE_BY_PHONE){};
+        cacheByPhone = new AbstractEhcache<String, User>(CacheName.USER_CACHE_BY_PHONE){};
     }
 
     public User getUserById(Long userId, Callable<User> loader) throws Exception {
