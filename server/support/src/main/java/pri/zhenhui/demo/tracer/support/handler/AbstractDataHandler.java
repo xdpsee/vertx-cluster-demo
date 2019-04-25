@@ -3,11 +3,15 @@ package pri.zhenhui.demo.tracer.support.handler;
 import io.netty.channel.ChannelHandlerContext;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
+import io.vertx.core.logging.Logger;
+import io.vertx.core.logging.LoggerFactory;
 import pri.zhenhui.demo.tracer.domain.Position;
 import pri.zhenhui.demo.tracer.server.Connection;
 import pri.zhenhui.demo.tracer.server.ServerConnector;
 
 public abstract class AbstractDataHandler extends AbstractHandler<Position> {
+
+    private static final Logger logger = LoggerFactory.getLogger(DefaultDataHandler.class);
 
     public AbstractDataHandler(ServerConnector connector) {
         super(connector);
@@ -23,6 +27,7 @@ public abstract class AbstractDataHandler extends AbstractHandler<Position> {
             }
 
             if (handlePosition.failed()) {
+                logger.error("AbstractDataHandler.handlePosition exception.", handlePosition.cause());
                 ctx.close();
             }
         });

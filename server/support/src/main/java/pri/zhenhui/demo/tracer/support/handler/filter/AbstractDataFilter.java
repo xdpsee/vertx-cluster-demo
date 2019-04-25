@@ -5,9 +5,9 @@ import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
-import pri.zhenhui.demo.tracer.support.handler.AbstractDataHandler;
 import pri.zhenhui.demo.tracer.domain.Position;
 import pri.zhenhui.demo.tracer.server.ServerConnector;
+import pri.zhenhui.demo.tracer.support.handler.AbstractDataHandler;
 
 public abstract class AbstractDataFilter extends AbstractDataHandler {
 
@@ -24,32 +24,25 @@ public abstract class AbstractDataFilter extends AbstractDataHandler {
     protected void handlePosition(Position position, Handler<AsyncResult<Position>> resultHandler) {
 
         connector.context().executeBlocking(future -> {
-
-            try {
-                if (filterPolicy != null) {
-                    positionReadService().queryLastPosition(position.deviceId(), queryLastPosition -> {
-                        if (queryLastPosition.failed()) {
-                            future.fail(queryLastPosition.cause());
-                        } else {
-                            try {
-                                if (!filterPolicy.accept(position, queryLastPosition.result())) {
-                                    future.complete(null);
-                                } else {
-                                    future.complete(position);
-                                }
-                            } catch (Exception e) {
-                                future.fail(e);
+            if (filterPolicy != null) {
+                positionReadService().queryLastPosition(position.deviceId(), queryLastPos -> {
+                    if (queryLastPos.failed()) {
+                        future.fail(queryLastPos.cause());
+                    } else {
+                        try {
+                            if (!filterPolicy.accept(position, queryLastPos.result())) {
+                                future.complete(null);
+                            } else {
+                                future.complete(position);
                             }
+                        } catch (Exception e) {
+                            future.fail(e);
                         }
-                    });
-                } else {
-                    future.complete(position);
-                }
-
-            } catch (Exception e) {
-                future.fail(e);
+                    }
+                });
+            } else {
+                future.complete(position);
             }
-
         }, resultHandler);
     }
 

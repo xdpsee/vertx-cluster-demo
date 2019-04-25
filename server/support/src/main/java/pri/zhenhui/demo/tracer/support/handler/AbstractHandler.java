@@ -11,13 +11,13 @@ import pri.zhenhui.demo.tracer.domain.Configs;
 import pri.zhenhui.demo.tracer.domain.Device;
 import pri.zhenhui.demo.tracer.domain.Message;
 import pri.zhenhui.demo.tracer.domain.UniqueID;
+import pri.zhenhui.demo.tracer.exception.DeviceException;
 import pri.zhenhui.demo.tracer.server.Connection;
 import pri.zhenhui.demo.tracer.server.ServerConnector;
 import pri.zhenhui.demo.tracer.service.DeviceReadService;
 import pri.zhenhui.demo.tracer.service.EventWriteService;
 import pri.zhenhui.demo.tracer.service.PositionReadService;
 import pri.zhenhui.demo.tracer.service.PositionWriteService;
-import pri.zhenhui.demo.tracer.exception.DeviceException;
 import pri.zhenhui.demo.tracer.utils.ChannelAttribute;
 import pri.zhenhui.demo.tracer.utils.ChannelAttributesUtils;
 

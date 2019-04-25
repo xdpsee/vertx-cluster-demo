@@ -20,18 +20,18 @@ public abstract class AbstractEventHandler extends AbstractDataHandler {
     protected void handlePosition(Position position, Handler<AsyncResult<Position>> resultHandler) {
 
         analyzeEvent(position, analyzeEvent -> {
-            // analyze event 不影响 现有position
-            resultHandler.handle(Future.succeededFuture(position));
-
             if (analyzeEvent.failed()) {
-                analyzeEvent.cause().printStackTrace();
-            } else {
-                eventWriteService().saveEvent(analyzeEvent.result(), saveEvent -> {
-                    if (saveEvent.failed()) {
-                        saveEvent.cause().printStackTrace();
-                    }
-                });
+                resultHandler.handle(Future.failedFuture(analyzeEvent.cause()));
+                return;
             }
+
+            eventWriteService().saveEvent(analyzeEvent.result(), saveEvent -> {
+                if (saveEvent.failed()) {
+                    resultHandler.handle(Future.failedFuture(saveEvent.cause()));
+                } else {
+                    resultHandler.handle(Future.succeededFuture(position));
+                }
+            });
         });
     }
 

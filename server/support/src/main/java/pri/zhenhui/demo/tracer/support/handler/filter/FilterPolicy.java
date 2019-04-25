@@ -5,6 +5,6 @@ import pri.zhenhui.demo.tracer.domain.Position;
 
 public interface FilterPolicy {
 
-    boolean accept(Position currPos, Position lastPos);
+    boolean accept(Position newPos, Position lastPos);
 
 }
