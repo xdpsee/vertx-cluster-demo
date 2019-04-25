@@ -4,10 +4,19 @@ package pri.zhenhui.demo.tracer.data;
 import io.reactivex.Completable;
 import io.reactivex.Single;
 import io.vertx.reactivex.core.AbstractVerticle;
+import org.apache.ibatis.exceptions.PersistenceException;
+import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
+import org.h2.jdbc.JdbcSQLIntegrityConstraintViolationException;
 import pri.zhenhui.demo.support.db.DBUtils;
 import pri.zhenhui.demo.support.db.mybatis.SqlSessionFactoryLoader;
+import pri.zhenhui.demo.tracer.data.domain.DeviceDO;
+import pri.zhenhui.demo.tracer.data.mapper.DeviceMapper;
 import pri.zhenhui.demo.tracer.data.verticles.*;
+import pri.zhenhui.demo.tracer.domain.UniqueID;
+import pri.zhenhui.demo.tracer.enums.DeviceStatus;
+
+import java.util.Date;
 
 @SuppressWarnings("unused")
 public class MainVerticle extends AbstractVerticle {
@@ -16,6 +25,8 @@ public class MainVerticle extends AbstractVerticle {
     public Completable rxStart() {
 
         return initDB()
+                .ignoreElement()
+                .andThen(presetDevice())
                 .ignoreElement()
                 .andThen(vertx.rxDeployVerticle(new EventWriteServiceVerticle()))
                 .doOnSuccess(ret -> System.out.println("Deploy EventWriteServiceVerticle Ok!"))
@@ -42,6 +53,37 @@ public class MainVerticle extends AbstractVerticle {
                 emitter.onSuccess("OK");
             } catch (Throwable e) {
                 emitter.onError(e);
+            }
+        });
+    }
+
+    private Single<String> presetDevice() {
+        return Single.create(emitter -> {
+
+            SqlSessionFactory sqlSessionFactory = SqlSessionFactoryLoader.load();
+            try (SqlSession session = sqlSessionFactory.openSession()) {
+                DeviceMapper mapper = session.getMapper(DeviceMapper.class);
+
+                DeviceDO deviceDO = new DeviceDO();
+                deviceDO.setId(UniqueID.valueOf("IMEI-888888888888888"));
+                deviceDO.setModel("mobile-test");
+                deviceDO.setProtocol("mobile");
+                deviceDO.setStatus(DeviceStatus.NORMAL);
+                deviceDO.setCreateAt(new Date());
+                deviceDO.setUpdateAt(new Date());
+
+                mapper.insert(deviceDO);
+
+                session.commit();
+
+                emitter.onSuccess("Ok");
+            } catch (Throwable e) {
+                if (e instanceof PersistenceException
+                        && e.getCause() instanceof JdbcSQLIntegrityConstraintViolationException) {
+                    emitter.onSuccess("Ok");
+                } else {
+                    emitter.onError(e);
+                }
             }
         });
     }

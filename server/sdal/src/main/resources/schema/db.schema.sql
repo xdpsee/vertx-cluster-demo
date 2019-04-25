@@ -35,13 +35,3 @@ create table if not exists events(
   `position_id` bigint not null,
   `attributes` varchar(65535)
 );
-
-insert into devices(id,model,protocol,attributes,status,create_at, update_at) values (
-  'IMEI-888888888888888',
-  'mobile-test',
-  'mobile',
-  '{}',
-  1,
-  current_timestamp(),
-  current_timestamp()
-);

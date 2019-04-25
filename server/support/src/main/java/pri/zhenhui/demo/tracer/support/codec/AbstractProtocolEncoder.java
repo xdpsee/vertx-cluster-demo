@@ -19,7 +19,7 @@ public abstract class AbstractProtocolEncoder extends MessageToByteEncoder<Comma
 
             StringBuilder s = new StringBuilder();
             s.append(String.format("[%s] ", ctx.channel().id()));
-            s.append("ID: ").append(encodeDeviceId(command.getDeviceId())).append(", ");
+            s.append("ID: ").append(command.getDeviceId().toString()).append(", ");
             s.append("CMD: ").append(command.getType()).append(" ");
             if (bytes != null) {
                 s.append("SENT");
@@ -36,6 +36,6 @@ public abstract class AbstractProtocolEncoder extends MessageToByteEncoder<Comma
     }
 
     private byte[] encodeCommand(ChannelHandlerContext ctx, Command command) throws Exception {
-        return encodeCommand(command);
+        return encode(command);
     }
 }

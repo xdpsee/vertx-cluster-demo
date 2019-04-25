@@ -1,6 +1,8 @@
 package pri.zhenhui.demo.tracer.mobile.handler;
 
 import io.netty.channel.ChannelHandlerContext;
+import pri.zhenhui.demo.tracer.domain.Command;
+import pri.zhenhui.demo.tracer.enums.CommandType;
 import pri.zhenhui.demo.tracer.mobile.message.RegistryMessage;
 import pri.zhenhui.demo.tracer.server.Connection;
 import pri.zhenhui.demo.tracer.server.ServerConnector;
@@ -15,7 +17,12 @@ public class RegistryHandler extends AbstractHandler<RegistryMessage> {
     @Override
     protected void messageReceived(ChannelHandlerContext ctx, Connection connection, RegistryMessage msg) throws Exception {
 
-        connection.write("HAHAHAHA");
+        Command command = new Command();
+        command.setType(CommandType.TYPE_CUSTOM);
+        command.setDeviceId(msg.deviceId());
+        command.set(Command.KEY_DATA, String.valueOf(System.currentTimeMillis()));
+
+        connection.send(command);
 
     }
 }
