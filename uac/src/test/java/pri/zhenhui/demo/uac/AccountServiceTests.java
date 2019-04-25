@@ -12,7 +12,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mindrot.jbcrypt.BCrypt;
-import pri.zhenhui.demo.support.test.StackTrace;
 import pri.zhenhui.demo.uac.domain.User;
 import pri.zhenhui.demo.uac.service.AccountService;
 import pri.zhenhui.demo.uac.utils.DBUtils;
@@ -55,10 +54,10 @@ public class AccountServiceTests {
 
             accountService.createUser(user, create -> {
                 try {
-                    StackTrace.printIfErr(create);
                     assertTrue(create.succeeded());
-                } finally {
                     context.completeNow();
+                } catch (Throwable e) {
+                    context.failNow(e);
                 }
             });
 
@@ -84,15 +83,18 @@ public class AccountServiceTests {
 
 
             accountService.createUser(user, create -> {
-                assertTrue(create.succeeded());
-                accountService.queryUserById(create.result(), queryUserById -> {
-                    StackTrace.printIfErr(queryUserById);
-                    try {
-                        assertTrue(queryUserById.succeeded());
-                    } finally {
-                        context.completeNow();
-                    }
-                });
+                if (!create.succeeded()) {
+                    context.failNow(create.cause());
+                } else {
+                    accountService.queryUserById(create.result(), queryUserById -> {
+                        try {
+                            assertTrue(queryUserById.succeeded() && queryUserById.result() != null);
+                            context.completeNow();
+                        } catch (Throwable e) {
+                            context.failNow(e);
+                        }
+                    });
+                }
             });
 
         } finally {
@@ -117,14 +119,19 @@ public class AccountServiceTests {
 
             accountService.createUser(user, create -> {
                 assertTrue(create.succeeded());
-                accountService.queryUserByName("ling2", queryUserByName -> {
-                    StackTrace.printIfErr(queryUserByName);
-                    try {
-                        assertTrue(queryUserByName.succeeded());
-                    } finally {
-                        context.completeNow();
-                    }
-                });
+
+                if (create.failed()) {
+                    context.failNow(create.cause());
+                } else {
+                    accountService.queryUserByName("ling2", queryUserByName -> {
+                        try {
+                            assertTrue(queryUserByName.succeeded() && queryUserByName.result() != null);
+                            context.completeNow();
+                        } catch (Throwable e) {
+                            context.failNow(e);
+                        }
+                    });
+                }
             });
 
         } finally {
@@ -147,15 +154,18 @@ public class AccountServiceTests {
             user.setPassword(BCrypt.hashpw("12345678", BCrypt.gensalt()));
 
             accountService.createUser(user, create -> {
-                assertTrue(create.succeeded());
-                accountService.queryUserByPhone("13402022083", queryUserByPhone -> {
-                    StackTrace.printIfErr(queryUserByPhone);
-                    try {
-                        assertTrue(queryUserByPhone.succeeded());
-                    } finally {
-                        context.completeNow();
-                    }
-                });
+                if (create.failed()) {
+                    context.failNow(create.cause());
+                } else {
+                    accountService.queryUserByPhone("13402022083", queryUserByPhone -> {
+                        try {
+                            assertTrue(queryUserByPhone.succeeded() && queryUserByPhone.result() != null);
+                            context.completeNow();
+                        } catch (Throwable e) {
+                            context.failNow(e);
+                        }
+                    });
+                }
             });
         } finally {
             reference.release();
@@ -178,7 +188,10 @@ public class AccountServiceTests {
 
 
             accountService.createUser(user, create -> {
-                assertTrue(create.succeeded());
+                if (create.failed()) {
+                    context.failNow(create.cause());
+                    return;
+                }
 
                 JsonObject params = new JsonObject()
                         .put("id", create.result())
@@ -188,11 +201,11 @@ public class AccountServiceTests {
                 accountService.updateUser(params, updateUser -> {
                     try {
                         assertTrue(updateUser.succeeded() && updateUser.result());
-
-                    } finally {
                         context.completeNow();
+                    } catch (Throwable e){
+                        context.failNow(e);
                     }
-                }) ;
+                });
 
             });
         } finally {

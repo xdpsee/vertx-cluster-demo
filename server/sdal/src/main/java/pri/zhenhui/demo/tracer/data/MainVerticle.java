@@ -7,10 +7,7 @@ import io.vertx.reactivex.core.AbstractVerticle;
 import org.apache.ibatis.session.SqlSessionFactory;
 import pri.zhenhui.demo.support.db.DBUtils;
 import pri.zhenhui.demo.support.db.mybatis.SqlSessionFactoryLoader;
-import pri.zhenhui.demo.tracer.data.verticles.DeviceReadServiceVerticle;
-import pri.zhenhui.demo.tracer.data.verticles.EventWriteServiceVerticle;
-import pri.zhenhui.demo.tracer.data.verticles.PositionReadServiceVerticle;
-import pri.zhenhui.demo.tracer.data.verticles.PositionWriteServiceVerticle;
+import pri.zhenhui.demo.tracer.data.verticles.*;
 
 @SuppressWarnings("unused")
 public class MainVerticle extends AbstractVerticle {
@@ -31,6 +28,9 @@ public class MainVerticle extends AbstractVerticle {
                 .ignoreElement()
                 .andThen(vertx.rxDeployVerticle(new PositionWriteServiceVerticle()))
                 .doOnSuccess(ret -> System.out.println("Deploy PositionWriteServiceVerticle Ok!"))
+                .ignoreElement()
+                .andThen(vertx.rxDeployVerticle(new DeviceWriteServiceVerticle()))
+                .doOnSuccess(ret -> System.out.println("Deploy DeviceWriteServiceVerticle Ok!"))
                 .ignoreElement();
     }
 

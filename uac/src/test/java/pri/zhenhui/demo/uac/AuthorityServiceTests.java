@@ -54,8 +54,9 @@ public class AuthorityServiceTests {
                 try {
                     assertTrue(queryRoles.succeeded()
                             && queryRoles.result().size() == RoleType.values().length);
-                } finally {
                     context.completeNow();
+                } catch (Throwable e) {
+                    context.failNow(e);
                 }
             });
 
@@ -77,8 +78,9 @@ public class AuthorityServiceTests {
                 try {
                     assertTrue(queryAuthorities.succeeded()
                             && queryAuthorities.result().size() == AuthorityType.values().length);
-                } finally {
                     context.completeNow();
+                } catch (Throwable e) {
+                    context.failNow(e);
                 }
             });
 
@@ -104,8 +106,9 @@ public class AuthorityServiceTests {
                 authorityService.queryUserRoles(2L, queryUserRoles -> {
                     try {
                         assertTrue(queryUserRoles.succeeded() && !queryUserRoles.result().isEmpty());
-                    } finally {
                         context.completeNow();
+                    } catch (Throwable e) {
+                        context.failNow(e);
                     }
                 });
             });
@@ -127,14 +130,25 @@ public class AuthorityServiceTests {
             roles.add(Role.from(RoleType.ADMIN));
 
             authorityService.createUserRoles(2L, roles, createUserRoles -> {
-                assertTrue(createUserRoles.succeeded());
+                if (createUserRoles.failed()) {
+                    context.failNow(createUserRoles.cause());
+                    return;
+                }
 
                 authorityService.queryUserAuthorities(2L, queryUserAuthorities -> {
-                    assertTrue(queryUserAuthorities.succeeded()
-                            && CollectionUtils.isNotEmpty(queryUserAuthorities.result()));
+                    try {
+                        assertTrue(queryUserAuthorities.succeeded()
+                                && CollectionUtils.isNotEmpty(queryUserAuthorities.result()));
+                    } catch (Exception e) {
+                        context.failNow(e);
+                        return;
+                    }
 
                     authorityService.deleteUserRoles(2L, roles, deleteUserRoles -> {
-                        assertTrue(deleteUserRoles.succeeded());
+                        if (deleteUserRoles.failed()) {
+                            context.failNow(deleteUserRoles.cause());
+                            return;
+                        }
 
                         authorityService.queryUserAuthorities(2L, queryUserAuthorities2 -> {
 
@@ -147,8 +161,9 @@ public class AuthorityServiceTests {
                                                 .collect(Collectors.toList()))
                                         )
                                 );
-                            } finally {
                                 context.completeNow();
+                            } catch (Throwable e){
+                                context.failNow(e);
                             }
                         });
                     });

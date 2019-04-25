@@ -10,15 +10,20 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
+import pri.zhenhui.demo.support.test.StackTrace;
 import pri.zhenhui.demo.tracer.data.utils.DBUtils;
+import pri.zhenhui.demo.tracer.domain.Device;
 import pri.zhenhui.demo.tracer.domain.UniqueID;
-import pri.zhenhui.demo.tracer.service.DeviceReadService;
+import pri.zhenhui.demo.tracer.enums.DeviceStatus;
+import pri.zhenhui.demo.tracer.service.DeviceWriteService;
+
+import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith(VertxExtension.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class DeviceReadServiceTests {
+public class DeviceWriteServiceTests {
 
     private ServiceDiscovery serviceDiscovery;
 
@@ -33,17 +38,25 @@ public class DeviceReadServiceTests {
     }
 
     @Test
-    public void testQueryDevice(VertxTestContext context) {
+    public void testCreateDevice(VertxTestContext context) {
 
-        ServiceReference reference = serviceDiscovery.getReference(EventBusService.createRecord(DeviceReadService.SERVICE_NAME, DeviceReadService.SERVICE_ADDRESS, DeviceReadService.class));
+        ServiceReference reference = serviceDiscovery.getReference(EventBusService.createRecord(DeviceWriteService.SERVICE_NAME, DeviceWriteService.SERVICE_ADDRESS, DeviceWriteService.class));
 
         try {
+            DeviceWriteService deviceWriteService = reference.getAs(DeviceWriteService.class);
 
-            DeviceReadService deviceReadService = reference.getAs(DeviceReadService.class);
-            deviceReadService.queryDevice(UniqueID.valueOf("IMEI-888888888888888"), queryDevice -> {
+            Device device = new Device();
+            device.setId(UniqueID.valueOf("IMEI-888888888888888"));
+            device.setModel("mobile-test");
+            device.setProtocol("mobile");
+            device.setStatus(DeviceStatus.NORMAL);
+            device.setCreateAt(new Date());
+            device.setUpdateAt(new Date());
 
+            deviceWriteService.createDevice(device, createDevice -> {
                 try {
-                    assertTrue(queryDevice.succeeded());
+                    StackTrace.printIfErr(createDevice);
+                    assertTrue(createDevice.succeeded());
                     context.completeNow();
                 } catch (Throwable e) {
                     context.failNow(e);
@@ -53,5 +66,8 @@ public class DeviceReadServiceTests {
         } finally {
             reference.release();
         }
+
     }
 }
+
+

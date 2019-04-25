@@ -1,7 +1,6 @@
 package pri.zhenhui.demo.tracer.domain;
 
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import io.vertx.codegen.annotations.DataObject;
 import io.vertx.core.json.JsonObject;
 import lombok.Data;
@@ -9,12 +8,12 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import pri.zhenhui.demo.tracer.domain.misc.Attributes;
 import pri.zhenhui.demo.tracer.enums.EventType;
-import pri.zhenhui.demo.tracer.utils.JsonUtils;
+import pri.zhenhui.demo.tracer.utils.time.DateUtils;
 
 import java.io.Serializable;
 import java.util.Date;
 
-@DataObject
+@DataObject(generateConverter = true, inheritConverter = true)
 @Data
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
@@ -28,7 +27,6 @@ public class Event extends Attributes implements Serializable {
 
     private long positionId;
 
-    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ")
     private Date time;
 
     public Event(EventType type, UniqueID deviceId, long positionId) {
@@ -39,11 +37,18 @@ public class Event extends Attributes implements Serializable {
     }
 
     public Event(JsonObject jsonObj) {
-        JsonUtils.fromJson(jsonObj, this);
+        EventConverter.fromJson(jsonObj, this);
+        setDeviceId(UniqueID.valueOf(jsonObj.getString("deviceId")));
+        setTime(DateUtils.parse(jsonObj.getString("time")));
     }
 
     public JsonObject toJson() {
-        return JsonUtils.toJson(this);
+        JsonObject jsonObj = new JsonObject();
+        EventConverter.toJson(this, jsonObj);
+        jsonObj.put("deviceId", deviceId.toString());
+        jsonObj.put("time", DateUtils.format(time));
+
+        return jsonObj;
     }
 
     // 扩展属性

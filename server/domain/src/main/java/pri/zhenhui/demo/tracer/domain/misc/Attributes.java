@@ -5,14 +5,13 @@ import io.vertx.codegen.annotations.DataObject;
 import io.vertx.core.json.JsonObject;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import pri.zhenhui.demo.tracer.utils.JsonUtils;
 
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
 @SuppressWarnings("unused")
-@DataObject
+@DataObject(generateConverter = true)
 @Data
 @NoArgsConstructor
 public class Attributes implements Serializable {
@@ -22,11 +21,13 @@ public class Attributes implements Serializable {
     protected Map<String, Object> attributes = new HashMap<>();
 
     public Attributes(JsonObject jsonObj) {
-        JsonUtils.fromJson(jsonObj, this);
+        AttributesConverter.fromJson(jsonObj, this);
     }
 
     public JsonObject toJson() {
-        return JsonUtils.toJson(this);
+        JsonObject jsonObj = new JsonObject();
+        AttributesConverter.toJson(this, jsonObj);
+        return jsonObj;
     }
 
     public boolean hasKey(String key) {

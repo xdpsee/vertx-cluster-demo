@@ -1,7 +1,6 @@
 package pri.zhenhui.demo.tracer.domain;
 
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import io.vertx.codegen.annotations.DataObject;
 import io.vertx.core.json.JsonObject;
 import lombok.Data;
@@ -24,7 +23,6 @@ public class Position extends Attributes implements Message {
 
     private UniqueID deviceId;
 
-    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ")
     private Date time;
 
     private boolean located;
