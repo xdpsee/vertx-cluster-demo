@@ -13,6 +13,8 @@ import pri.zhenhui.demo.tracer.data.mapper.PositionMapper;
 import pri.zhenhui.demo.tracer.domain.Position;
 import pri.zhenhui.demo.tracer.service.PositionWriteService;
 
+import java.util.Date;
+
 public class PositionWriteServiceImpl implements PositionWriteService {
 
     private final Context context;
@@ -26,15 +28,13 @@ public class PositionWriteServiceImpl implements PositionWriteService {
     }
 
     @Override
-    public void savePosition(Position position, Handler<AsyncResult<Boolean>> resultHandler) {
+    public void savePosition(Position position, Handler<AsyncResult<Long>> resultHandler) {
 
-        context.executeBlocking(future -> {
+        context.<Long>executeBlocking(future -> {
             final SqlSession session = sqlSessionFactory.openSession();
             try {
                 PositionMapper mapper = session.getMapper(PositionMapper.class);
-
-                PositionDO positionDO = new PositionDO();
-                BeanUtils.copyProperties(positionDO, position);
+                PositionDO positionDO = convert(position);
                 int rows = mapper.insert(positionDO);
                 if (rows > 0) {
                     position.setId(positionDO.getId());
@@ -43,7 +43,7 @@ public class PositionWriteServiceImpl implements PositionWriteService {
                     }
                 }
                 session.commit();
-                future.complete(rows > 0);
+                future.complete(rows > 0 ? positionDO.getId() : 0L);
             } catch (Throwable e) {
                 session.rollback();
                 future.fail(e);
@@ -52,6 +52,21 @@ public class PositionWriteServiceImpl implements PositionWriteService {
             }
         }, resultHandler);
 
+    }
+
+    private PositionDO convert(Position position) throws Exception {
+
+        if (position != null) {
+            PositionDO positionDO = new PositionDO();
+            BeanUtils.copyProperties(positionDO, position);
+            Date now = new Date();
+            positionDO.setCreateAt(now);
+            positionDO.setUpdateAt(now);
+
+            return positionDO;
+        }
+
+        return null;
     }
 }
 

@@ -8,11 +8,11 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import pri.zhenhui.demo.tracer.domain.misc.Attributes;
 import pri.zhenhui.demo.tracer.domain.misc.Network;
-import pri.zhenhui.demo.tracer.utils.JsonUtils;
+import pri.zhenhui.demo.tracer.utils.time.DateUtils;
 
 import java.util.Date;
 
-@DataObject
+@DataObject(generateConverter = true, inheritConverter = true)
 @Data
 @EqualsAndHashCode(callSuper = false, onlyExplicitlyIncluded = true)
 @NoArgsConstructor
@@ -128,11 +128,18 @@ public class Position extends Attributes implements Message {
 
 
     public Position(JsonObject jsonObj) {
-        JsonUtils.fromJson(jsonObj, this);
+        PositionConverter.fromJson(jsonObj, this);
+
+        setTime(DateUtils.parse(jsonObj.getString("time")));
+
     }
 
     public JsonObject toJson() {
-        return JsonUtils.toJson(this);
+        JsonObject jsonObj = new JsonObject();
+        PositionConverter.toJson(this, jsonObj);
+        jsonObj.put("time", DateUtils.format(time));
+
+        return jsonObj;
     }
 
     @Override

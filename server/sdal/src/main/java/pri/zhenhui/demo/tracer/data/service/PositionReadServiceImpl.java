@@ -30,16 +30,15 @@ public class PositionReadServiceImpl implements PositionReadService {
     public void queryLastPosition(UniqueID deviceId, Handler<AsyncResult<Position>> resultHandler) {
 
         context.executeBlocking(future -> {
-            Position lastPos = deviceLastPosCache.get(deviceId);
-            if (lastPos != null) {
-                future.complete(lastPos);
-            } else try (SqlSession session = sqlSessionFactory.openSession()) {
-                PositionMapper mapper = session.getMapper(PositionMapper.class);
-                lastPos = convert(mapper.selectLastPos(deviceId));
-                if (lastPos != null) {
-                    deviceLastPosCache.put(deviceId, lastPos);
-                }
-                future.complete(lastPos);
+            try {
+                future.complete(deviceLastPosCache.get(deviceId, () -> {
+                    try (SqlSession session = sqlSessionFactory.openSession()) {
+                        PositionMapper mapper = session.getMapper(PositionMapper.class);
+                        return convert(mapper.selectLastPos(deviceId));
+                    } catch (Throwable e) {
+                        throw new RuntimeException(e);
+                    }
+                }));
             } catch (Throwable e) {
                 future.fail(e);
             }
@@ -48,17 +47,18 @@ public class PositionReadServiceImpl implements PositionReadService {
 
     @Override
     public void isLastPosition(Position position, Handler<AsyncResult<Boolean>> resultHandler) {
-        context.executeBlocking(future -> {
-            Position lastPos = deviceLastPosCache.get(position.getDeviceId());
-            if (lastPos != null) {
-                future.complete(lastPos.getId().equals(position.getId()));
-            } else try (SqlSession session = sqlSessionFactory.openSession()) {
-                PositionMapper mapper = session.getMapper(PositionMapper.class);
-                lastPos = convert(mapper.selectLastPos(position.getDeviceId()));
-                if (lastPos != null) {
-                    deviceLastPosCache.put(position.getDeviceId(), lastPos);
-                }
-                future.complete(lastPos.getId().equals(position.getId()));
+        context.<Boolean>executeBlocking(future -> {
+            try {
+                final UniqueID deviceId = position.getDeviceId();
+                Position lastPos = deviceLastPosCache.get(deviceId, () -> {
+                    try (SqlSession session = sqlSessionFactory.openSession()) {
+                        PositionMapper mapper = session.getMapper(PositionMapper.class);
+                        return convert(mapper.selectLastPos(deviceId));
+                    } catch (Throwable e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+                future.complete(lastPos != null && lastPos.getId().equals(position.getId()));
             } catch (Throwable e) {
                 future.fail(e);
             }

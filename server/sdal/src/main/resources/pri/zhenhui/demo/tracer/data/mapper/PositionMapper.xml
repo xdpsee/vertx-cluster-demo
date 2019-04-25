@@ -26,7 +26,7 @@
                 typeHandler="pri.zhenhui.demo.tracer.data.type.handler.NetworkTypeHandler"/>
     </resultMap>
 
-    <insert id="insert" parameterType="pri.zhenhui.demo.tracer.data.domain.PositionDO">
+    <insert id="insert" parameterType="pri.zhenhui.demo.tracer.data.domain.PositionDO" useGeneratedKeys="true" keyProperty="id">
         insert into positions (
           `id`,
           `device_id`,
@@ -61,7 +61,7 @@
     </insert>
     
     <select id="selectLastPos" resultMap="positionMap">
-        select * from positions where device_id = #{deviceId} order by `time` desc llimit 1;
+        select * from positions where device_id = #{deviceId} order by `time` desc limit 1;
     </select>
 
 </mapper>

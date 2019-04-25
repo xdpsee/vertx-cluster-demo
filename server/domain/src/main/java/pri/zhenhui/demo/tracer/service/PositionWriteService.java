@@ -14,6 +14,6 @@ public interface PositionWriteService {
 
     String SERVICE_ADDRESS = "address.service.position.data.write";
 
-    void savePosition(Position position, Handler<AsyncResult<Boolean>> resultHandler);
+    void savePosition(Position position, Handler<AsyncResult<Long>> resultHandler);
 
 }
