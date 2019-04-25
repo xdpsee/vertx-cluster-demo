@@ -2,6 +2,7 @@ package pri.zhenhui.demo.tracer.mobile.codec;
 
 import io.netty.channel.ChannelHandlerContext;
 import pri.zhenhui.demo.tracer.domain.Message;
+import pri.zhenhui.demo.tracer.exception.DecodecException;
 import pri.zhenhui.demo.tracer.mobile.message.RegistryMessage;
 import pri.zhenhui.demo.tracer.support.codec.AbstractProtocolDecoder;
 
@@ -14,15 +15,19 @@ public class MobileProtocolDecoder extends AbstractProtocolDecoder<String, Messa
     @Override
     public List<Message> decode(ChannelHandlerContext ctx, String message) throws Exception {
 
-        if (message.startsWith("##1,")) {
-            return Collections.singletonList(new RegistryMessage(message));
+        try {
+            if (message.startsWith("##1,")) {
+                return Collections.singletonList(new RegistryMessage(message));
+            }
+
+            if (message.startsWith("##2,")) {
+
+            }
+
+            return new ArrayList<>();
+        } catch (Throwable e) {
+            throw new DecodecException(String.format("MobileProtocolDecoder.decode message: %s exception", message), e);
         }
-
-        if (message.startsWith("##2,")) {
-
-        }
-
-        return new ArrayList<>();
     }
 
 }
