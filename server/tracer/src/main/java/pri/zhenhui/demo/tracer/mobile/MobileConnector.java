@@ -4,6 +4,7 @@ import io.netty.channel.ChannelPipeline;
 import pri.zhenhui.demo.tracer.mobile.codec.MobileFrameDecoder;
 import pri.zhenhui.demo.tracer.mobile.codec.MobileProtocolDecoder;
 import pri.zhenhui.demo.tracer.mobile.codec.MobileProtocolEncoder;
+import pri.zhenhui.demo.tracer.mobile.handler.RegistryHandler;
 import pri.zhenhui.demo.tracer.server.Protocol;
 import pri.zhenhui.demo.tracer.support.handler.DefaultDataHandler;
 import pri.zhenhui.demo.tracer.support.handler.event.OverspeedEventHandler;
@@ -25,6 +26,7 @@ public class MobileConnector extends AbstractConnector {
     public void initPipeline(ChannelPipeline pipeline) {
         pipeline.addLast("frameDecoder", new MobileFrameDecoder())
                 .addLast("protocolDecoder", new MobileProtocolDecoder())
+                .addLast("registryHandler", new RegistryHandler(this))
                 .addLast("dataHandler", new DefaultDataHandler(this))
                 .addLast("eventHandler", new OverspeedEventHandler(this));
 

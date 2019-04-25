@@ -5,12 +5,11 @@ import io.vertx.codegen.annotations.DataObject;
 import io.vertx.core.json.JsonObject;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import pri.zhenhui.demo.tracer.utils.JsonUtils;
 
 import java.io.Serializable;
 import java.util.Arrays;
 
-@DataObject
+@DataObject(generateConverter = true)
 @Data
 @NoArgsConstructor
 public class UniqueID implements Serializable {
@@ -27,11 +26,15 @@ public class UniqueID implements Serializable {
     }
 
     public UniqueID(JsonObject jsonObj) {
-        JsonUtils.fromJson(jsonObj, this);
+        UniqueIDConverter.fromJson(jsonObj, this);
     }
 
     public JsonObject toJson() {
-        return JsonUtils.toJson(this);
+
+        JsonObject jsonObj = new JsonObject();
+        UniqueIDConverter.toJson(this, jsonObj);
+        return jsonObj;
+
     }
 
     @Override

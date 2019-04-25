@@ -30,16 +30,18 @@ public class DeviceReadServiceImpl implements DeviceReadService {
     public void queryDevice(UniqueID deviceId, Handler<AsyncResult<Device>> resultHandler) {
 
         context.<Device>executeBlocking(future -> {
-            Device device = deviceCache.get(deviceId);
-            if (device != null) {
-                future.complete(device);
-            } else try (SqlSession session = sqlSessionFactory.openSession()) {
-                DeviceMapper deviceMapper = session.getMapper(DeviceMapper.class);
-                device = convert(deviceMapper.selectById(deviceId));
-                if (device != null) {
-                    deviceCache.put(deviceId, device);
-                }
-                future.complete(device);
+            try {
+                future.complete(deviceCache.get(deviceId, () -> {
+                    try (SqlSession session = sqlSessionFactory.openSession()) {
+                        DeviceMapper deviceMapper = session.getMapper(DeviceMapper.class);
+                        try {
+                            Device device = convert(deviceMapper.selectById(deviceId));
+                            return device;
+                        } catch (Exception e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                }));
             } catch (Throwable e) {
                 future.fail(e);
             }

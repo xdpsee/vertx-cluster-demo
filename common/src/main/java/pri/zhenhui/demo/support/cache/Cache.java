@@ -8,9 +8,13 @@ public interface Cache<K extends Serializable, V extends Serializable> {
 
     V get(K key);
 
+    V get(K key, CacheLoader<V> loader) throws Exception;
+
     void put(K key, V value);
 
     Map<K, V> multiGet(Set<K> keys);
+
+    Map<K, V> multiGet(Set<K> keys, CacheBatchLoader<K, V> loader);
 
     void multiPut(Map<K, V> elements);
 

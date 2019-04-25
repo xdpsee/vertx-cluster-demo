@@ -1,5 +1,5 @@
 create table if not exists devices(
-  `id` varchar(64) not null primary key,
+  `id` varchar(64) primary key not null,
   `create_at` timestamp not null,
   `update_at` timestamp default current_timestamp,
   `model` varchar(32) not null,
@@ -34,4 +34,14 @@ create table if not exists events(
   `type` integer not null,
   `position_id` bigint not null,
   `attributes` varchar(65535)
+);
+
+insert into devices(id,model,protocol,attributes,status,create_at, update_at) values (
+  'IMEI-888888888888888',
+  'mobile-test',
+  'mobile',
+  '{}',
+  1,
+  current_timestamp(),
+  current_timestamp()
 );

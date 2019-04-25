@@ -8,6 +8,7 @@ import org.apache.commons.collections.MapUtils;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -45,6 +46,23 @@ public abstract class AbstractEhcache<K extends Serializable, V extends Serializ
     }
 
     @Override
+    public V get(K key, CacheLoader<V> loader) {
+
+        final Element element = cache.get(key);
+        if (element != null && !element.isExpired()) {
+            return (V) element.getObjectValue();
+        }
+
+        V value = loader.call();
+        if (value != null) {
+            Element e = new Element(key, value);
+            cache.put(e);
+        }
+
+        return value;
+    }
+
+    @Override
     public Map<K, V> multiGet(Set<K> keys) {
 
         final Map<K, V> result = new HashMap<>();
@@ -61,6 +79,22 @@ public abstract class AbstractEhcache<K extends Serializable, V extends Serializ
         );
 
         return result;
+    }
+
+    @Override
+    public Map<K, V> multiGet(Set<K> keys, CacheBatchLoader<K, V> loader) {
+        Map<K, V> results = multiGet(keys);
+
+        final Set<K> absentKeys = new HashSet<>(keys);
+        absentKeys.removeAll(results.keySet());
+
+        if (!absentKeys.isEmpty()) {
+            Map<K, V> absentMap = loader.call(absentKeys);
+            results.putAll(absentMap);
+            multiPut(absentMap);
+        }
+
+        return results;
     }
 
     @Override

@@ -1,56 +1,46 @@
 package pri.zhenhui.demo.uac;
 
 import io.vertx.core.Vertx;
-import io.vertx.core.VertxOptions;
 import io.vertx.core.json.JsonObject;
-import io.vertx.ext.unit.Async;
-import io.vertx.ext.unit.TestContext;
-import io.vertx.ext.unit.junit.VertxUnitRunner;
+import io.vertx.junit5.VertxExtension;
+import io.vertx.junit5.VertxTestContext;
 import io.vertx.servicediscovery.ServiceDiscovery;
 import io.vertx.servicediscovery.ServiceReference;
 import io.vertx.servicediscovery.types.EventBusService;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mindrot.jbcrypt.BCrypt;
+import pri.zhenhui.demo.support.test.StackTrace;
 import pri.zhenhui.demo.uac.domain.User;
 import pri.zhenhui.demo.uac.service.AccountService;
 import pri.zhenhui.demo.uac.utils.DBUtils;
-import pri.zhenhui.demo.uac.utils.StackTrace;
 
 import java.util.Date;
 
-import static junit.framework.TestCase.assertNotNull;
+import static org.jgroups.util.Util.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@RunWith(VertxUnitRunner.class)
+
+@ExtendWith(VertxExtension.class)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class AccountServiceTests {
 
-    private static Vertx vertx;
+    private ServiceDiscovery serviceDiscovery;
 
-    private static ServiceDiscovery serviceDiscovery;
+    @BeforeAll
+    public void setup(Vertx vertx, VertxTestContext context) {
 
-    @BeforeClass
-    public static void setup(TestContext context) {
-        Async async = context.async();
+        serviceDiscovery = ServiceDiscovery.create(vertx);
 
-        vertx = Vertx.vertx(new VertxOptions());
         DBUtils.clearDB(vertx);
 
-        vertx.deployVerticle(new MainVerticle(), deploy -> {
-            serviceDiscovery = ServiceDiscovery.create(vertx);
-            async.complete();
-        });
-    }
-
-    @AfterClass
-    public static void tearDown(TestContext context) {
-        serviceDiscovery.close();
-        vertx.close();
+        vertx.deployVerticle(new MainVerticle(), context.completing());
     }
 
     @Test
-    public void testCreateUser(TestContext context) {
+    public void testCreateUser(VertxTestContext context) {
         ServiceReference reference = serviceDiscovery.getReference(EventBusService.createRecord(AccountService.SERVICE_NAME, AccountService.SERVICE_ADDRESS, AccountService.class));
         try {
             AccountService accountService = reference.getAs(AccountService.class);
@@ -62,14 +52,13 @@ public class AccountServiceTests {
             user.setCreateAt(new Date());
             user.setPassword(BCrypt.hashpw("12345678", BCrypt.gensalt()));
 
-            final Async async = context.async();
 
             accountService.createUser(user, create -> {
                 try {
-                    StackTrace.print(create);
-                    context.assertTrue(create.succeeded());
+                    StackTrace.printIfErr(create);
+                    assertTrue(create.succeeded());
                 } finally {
-                    async.complete();
+                    context.completeNow();
                 }
             });
 
@@ -80,7 +69,7 @@ public class AccountServiceTests {
     }
 
     @Test
-    public void testSelectUserById(TestContext context) {
+    public void testSelectUserById(VertxTestContext context) {
 
         ServiceReference reference = serviceDiscovery.getReference(EventBusService.createRecord(AccountService.SERVICE_NAME, AccountService.SERVICE_ADDRESS, AccountService.class));
         try {
@@ -93,16 +82,15 @@ public class AccountServiceTests {
             user.setCreateAt(new Date());
             user.setPassword(BCrypt.hashpw("12345678", BCrypt.gensalt()));
 
-            final Async async = context.async();
 
             accountService.createUser(user, create -> {
-                context.assertTrue(create.succeeded());
+                assertTrue(create.succeeded());
                 accountService.queryUserById(create.result(), queryUserById -> {
-                    StackTrace.print(queryUserById);
+                    StackTrace.printIfErr(queryUserById);
                     try {
-                        context.assertTrue(queryUserById.succeeded());
+                        assertTrue(queryUserById.succeeded());
                     } finally {
-                        async.complete();
+                        context.completeNow();
                     }
                 });
             });
@@ -113,7 +101,7 @@ public class AccountServiceTests {
     }
 
     @Test
-    public void testSelectUserByName(TestContext context) {
+    public void testSelectUserByName(VertxTestContext context) {
 
         ServiceReference reference = serviceDiscovery.getReference(EventBusService.createRecord(AccountService.SERVICE_NAME, AccountService.SERVICE_ADDRESS, AccountService.class));
         try {
@@ -126,16 +114,15 @@ public class AccountServiceTests {
             user.setCreateAt(new Date());
             user.setPassword(BCrypt.hashpw("12345678", BCrypt.gensalt()));
 
-            final Async async = context.async();
 
             accountService.createUser(user, create -> {
-                context.assertTrue(create.succeeded());
+                assertTrue(create.succeeded());
                 accountService.queryUserByName("ling2", queryUserByName -> {
-                    StackTrace.print(queryUserByName);
+                    StackTrace.printIfErr(queryUserByName);
                     try {
-                        context.assertTrue(queryUserByName.succeeded());
+                        assertTrue(queryUserByName.succeeded());
                     } finally {
-                        async.complete();
+                        context.completeNow();
                     }
                 });
             });
@@ -146,7 +133,7 @@ public class AccountServiceTests {
     }
 
     @Test
-    public void testSelectUserByPhone(TestContext context) {
+    public void testSelectUserByPhone(VertxTestContext context) {
 
         ServiceReference reference = serviceDiscovery.getReference(EventBusService.createRecord(AccountService.SERVICE_NAME, AccountService.SERVICE_ADDRESS, AccountService.class));
         try {
@@ -159,16 +146,14 @@ public class AccountServiceTests {
             user.setCreateAt(new Date());
             user.setPassword(BCrypt.hashpw("12345678", BCrypt.gensalt()));
 
-            final Async async = context.async();
-
             accountService.createUser(user, create -> {
-                context.assertTrue(create.succeeded());
+                assertTrue(create.succeeded());
                 accountService.queryUserByPhone("13402022083", queryUserByPhone -> {
-                    StackTrace.print(queryUserByPhone);
+                    StackTrace.printIfErr(queryUserByPhone);
                     try {
-                        context.assertTrue(queryUserByPhone.succeeded());
+                        assertTrue(queryUserByPhone.succeeded());
                     } finally {
-                        async.complete();
+                        context.completeNow();
                     }
                 });
             });
@@ -178,7 +163,7 @@ public class AccountServiceTests {
     }
 
     @Test
-    public void testUpdateUser(TestContext context) {
+    public void testUpdateUser(VertxTestContext context) {
 
         ServiceReference reference = serviceDiscovery.getReference(EventBusService.createRecord(AccountService.SERVICE_NAME, AccountService.SERVICE_ADDRESS, AccountService.class));
         try {
@@ -191,10 +176,9 @@ public class AccountServiceTests {
             user.setCreateAt(new Date());
             user.setPassword(BCrypt.hashpw("12345678", BCrypt.gensalt()));
 
-            final Async async = context.async();
 
             accountService.createUser(user, create -> {
-                context.assertTrue(create.succeeded());
+                assertTrue(create.succeeded());
 
                 JsonObject params = new JsonObject()
                         .put("id", create.result())
@@ -203,10 +187,10 @@ public class AccountServiceTests {
 
                 accountService.updateUser(params, updateUser -> {
                     try {
-                        context.assertTrue(updateUser.succeeded() && updateUser.result());
+                        assertTrue(updateUser.succeeded() && updateUser.result());
 
                     } finally {
-                        async.complete();
+                        context.completeNow();
                     }
                 }) ;
 

@@ -5,9 +5,9 @@ import pri.zhenhui.demo.tracer.domain.Message;
 
 import java.util.List;
 
-public interface Decoder<T extends Message>  {
+public interface Decoder<I, T extends Message>  {
 
-    List<T> decode(ChannelHandlerContext ctx, Object msg) throws Exception;
+    List<T> decode(ChannelHandlerContext ctx, I in) throws Exception;
 
 }
 

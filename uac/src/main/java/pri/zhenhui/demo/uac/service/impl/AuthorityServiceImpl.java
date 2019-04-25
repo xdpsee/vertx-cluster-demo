@@ -1,5 +1,6 @@
 package pri.zhenhui.demo.uac.service.impl;
 
+import com.google.common.collect.Maps;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
 import io.vertx.reactivex.core.Context;
@@ -11,19 +12,16 @@ import pri.zhenhui.demo.uac.cache.RoleAuthorityCache;
 import pri.zhenhui.demo.uac.cache.UserRoleCache;
 import pri.zhenhui.demo.uac.domain.Authority;
 import pri.zhenhui.demo.uac.domain.Role;
+import pri.zhenhui.demo.uac.domain.RoleAuthorityBind;
 import pri.zhenhui.demo.uac.domain.enums.AuthorityType;
 import pri.zhenhui.demo.uac.domain.enums.RoleType;
 import pri.zhenhui.demo.uac.mapper.AuthorityMapper;
 import pri.zhenhui.demo.uac.service.AuthorityService;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
-import static java.util.stream.Collectors.toCollection;
-import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.*;
 
 public class AuthorityServiceImpl implements AuthorityService {
 
@@ -60,7 +58,7 @@ public class AuthorityServiceImpl implements AuthorityService {
 
         context.<List<Role>>executeBlocking(future -> {
             try {
-                future.complete(userRoleCache.getOrLoad(userId, () -> {
+                future.complete(userRoleCache.get(userId, () -> {
                     try (SqlSession session = sqlSessionFactory.openSession()) {
                         AuthorityMapper authorityMapper = session.getMapper(AuthorityMapper.class);
                         List<Long> roles = authorityMapper.selectUserRoles(userId);
@@ -78,7 +76,7 @@ public class AuthorityServiceImpl implements AuthorityService {
     public void queryRoleAuthorities(Long roleId, Handler<AsyncResult<List<Authority>>> resultHandler) {
         context.<List<Authority>>executeBlocking(future -> {
             try {
-                future.complete(roleAuthorityCache.getOrLoad(roleId, () -> {
+                future.complete(roleAuthorityCache.get(roleId, () -> {
                     try (SqlSession session = sqlSessionFactory.openSession()) {
                         AuthorityMapper authorityMapper = session.getMapper(AuthorityMapper.class);
                         return authorityMapper.selectRoleAuthorities(roleId).stream()
@@ -96,28 +94,35 @@ public class AuthorityServiceImpl implements AuthorityService {
     public void queryUserAuthorities(Long userId, Handler<AsyncResult<List<Authority>>> resultHandler) {
 
         context.<List<Authority>>executeBlocking(future -> queryUserRoles(userId, queryUserRoles -> {
-                    if (queryUserRoles.failed()) {
-                        future.fail(queryUserRoles.cause());
-                    } else {
-                        Set<Long> roleIds = queryUserRoles.result().stream().map(Role::getId).collect(Collectors.toSet());
-                        if (CollectionUtils.isEmpty(roleIds)) {
-                            roleIds.add(RoleType.USER.id);
-                        }
+            if (queryUserRoles.failed()) {
+                future.fail(queryUserRoles.cause());
+            } else {
+                Set<Long> roleIds = queryUserRoles.result().stream().map(Role::getId).collect(Collectors.toSet());
+                if (CollectionUtils.isEmpty(roleIds)) {
+                    roleIds.add(RoleType.USER.id);
+                }
 
-                        try {
-                            future.complete(roleAuthorityCache.getsOrLoad(roleIds, (absentRoleIds) -> {
-                                try (SqlSession session = sqlSessionFactory.openSession()) {
-                                    AuthorityMapper authorityMapper = session.getMapper(AuthorityMapper.class);
-                                    List<Long> authorities = authorityMapper.selectMultiRoleAuthorities(absentRoleIds);
-                                    return authorities.stream().map(Authority::from).collect(Collectors.toCollection(ArrayList::new));
-                                }
-                            }));
-                        } catch (Throwable e) {
-                            future.fail(e);
+                try {
+                    Map<Long, ArrayList<Authority>> arrayListMap = roleAuthorityCache.multiGet(roleIds, (absentRoleIds) -> {
+                        try (SqlSession session = sqlSessionFactory.openSession()) {
+                            AuthorityMapper authorityMapper = session.getMapper(AuthorityMapper.class);
+                            List<RoleAuthorityBind> authorities = authorityMapper.selectMultiRoleAuthorities(new ArrayList<>(absentRoleIds));
+                            return authorities.stream()
+                                    .collect(groupingBy(RoleAuthorityBind::getRoleId))
+                                    .entrySet()
+                                    .stream()
+                                    .map(e -> Maps.immutableEntry(e.getKey(), e.getValue().stream().map(v -> Authority.from(v.getAuthorityId())).collect(Collectors.toCollection(ArrayList::new))))
+                                    .collect(toMap(Map.Entry::getKey, Map.Entry::getValue));
                         }
-                    }
-                })
-                , resultHandler);
+                    });
+
+                    List<Authority> authorities = new ArrayList<>(arrayListMap.values().stream().flatMap(ArrayList::stream).collect(Collectors.toSet()));
+                    future.complete(authorities);
+                } catch (Throwable e) {
+                    future.fail(e);
+                }
+            }
+        }), resultHandler);
 
     }
 

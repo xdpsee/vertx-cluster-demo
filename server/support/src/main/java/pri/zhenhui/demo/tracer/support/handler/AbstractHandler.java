@@ -40,6 +40,7 @@ public abstract class AbstractHandler<T extends Message> extends SimpleChannelIn
 
         checkDevice(ctx, msg, checkDevice -> {
             if (checkDevice.failed()) {
+                checkDevice.cause().printStackTrace();
                 ctx.close();
             } else {
                 try {
@@ -78,26 +79,30 @@ public abstract class AbstractHandler<T extends Message> extends SimpleChannelIn
     private void checkDevice(ChannelHandlerContext ctx, T msg, Handler<AsyncResult<Void>> resultHandler) throws Exception {
 
         connector.context().executeBlocking(future -> {
-            if (null == ChannelAttributesUtils.get(ctx, ChannelAttribute.DEVICE_ID)) {
-                final UniqueID deviceId = msg.deviceId();
-                if (deviceId != null) {
-                    deviceReadService().queryDevice(deviceId, queryDevice -> {
-                        if (queryDevice.failed()) {
-                            future.fail(queryDevice.cause());
-                        } else {
-                            Device device = queryDevice.result();
-                            if (device != null) {
-                                ChannelAttributesUtils.setIfAbsent(ctx, ChannelAttribute.DEVICE_ID, device.getId());
-                                future.complete();
-                            } else {
-                                future.fail(new DeviceException(String.format("device: %s not found", deviceId)));
-                            }
-                        }
-                    });
-                }
-            } else {
+            if (null != ChannelAttributesUtils.get(ctx, ChannelAttribute.DEVICE_ID)) {
                 future.complete();
+                return;
             }
+
+            final UniqueID deviceId = msg.deviceId();
+            if (null == deviceId) {
+                future.complete();
+                return;
+            }
+
+            deviceReadService().queryDevice(deviceId, queryDevice -> {
+                if (queryDevice.failed()) {
+                    future.fail(queryDevice.cause());
+                } else {
+                    Device device = queryDevice.result();
+                    if (device != null) {
+                        ChannelAttributesUtils.setIfAbsent(ctx, ChannelAttribute.DEVICE_ID, device.getId());
+                        future.complete();
+                    } else {
+                        future.fail(new DeviceException(String.format("device: %s not found", deviceId)));
+                    }
+                }
+            });
         }, resultHandler);
     }
 

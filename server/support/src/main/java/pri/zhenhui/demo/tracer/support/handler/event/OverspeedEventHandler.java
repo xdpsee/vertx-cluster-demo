@@ -33,7 +33,7 @@ public class OverspeedEventHandler extends AbstractEventHandler {
 
     public OverspeedEventHandler(ServerConnector connector) {
         super(connector);
-        notRepeat = configs().getBoolean(Configs.EVENT_OVERSPEED_NOT_REPEAT);
+        notRepeat = configs().getBoolean(Configs.EVENT_OVERSPEED_NOT_REPEAT, false);
     }
 
     @Override

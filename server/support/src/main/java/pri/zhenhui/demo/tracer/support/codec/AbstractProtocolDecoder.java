@@ -12,10 +12,10 @@ import javax.xml.bind.DatatypeConverter;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
-public abstract class AbstractProtocolDecoder<T extends Message> extends MessageToMessageDecoder<T> implements Decoder<T> {
+public abstract class AbstractProtocolDecoder<I, T extends Message> extends MessageToMessageDecoder<I> implements Decoder<I, T> {
 
     @Override
-    protected final void decode(ChannelHandlerContext ctx, T msg, List<Object> out) throws Exception {
+    protected final void decode(ChannelHandlerContext ctx, I msg, List<Object> out) throws Exception {
 
         final List<T> results = decode(ctx, msg);
 

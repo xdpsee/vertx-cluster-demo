@@ -74,16 +74,12 @@
         </dependency>
         <!-- Testing -->
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.12</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>io.vertx</groupId>
-            <artifactId>vertx-unit</artifactId>
+            <artifactId>vertx-junit5</artifactId>
+            <version>${vertx.version}</version>
             <scope>test</scope>
         </dependency>
+
     </dependencies>
 
     <build>

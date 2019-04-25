@@ -1,6 +1,7 @@
 package pri.zhenhui.demo.uac.mapper;
 
 import org.apache.ibatis.annotations.Param;
+import pri.zhenhui.demo.uac.domain.RoleAuthorityBind;
 
 import java.util.List;
 
@@ -14,7 +15,7 @@ public interface AuthorityMapper {
 
     List<Long> selectRoleAuthorities(@Param("roleId") Long roleId);
 
-    List<Long> selectMultiRoleAuthorities(@Param("roleIds") List<Long> roleId);
+    List<RoleAuthorityBind> selectMultiRoleAuthorities(@Param("roleIds") List<Long> roleId);
 
     int insertRoleAuthorities(@Param("roleId") Long roleId, @Param("authorityIds") List<Long> authorityIds);
 
