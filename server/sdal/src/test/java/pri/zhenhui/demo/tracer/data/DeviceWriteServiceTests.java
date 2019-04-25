@@ -46,7 +46,7 @@ public class DeviceWriteServiceTests {
             DeviceWriteService deviceWriteService = reference.getAs(DeviceWriteService.class);
 
             Device device = new Device();
-            device.setId(UniqueID.valueOf("IMEI-888888888888888"));
+            device.setId(UniqueID.valueOf("IMEI-888888888888889"));
             device.setModel("mobile-test");
             device.setProtocol("mobile");
             device.setStatus(DeviceStatus.NORMAL);
@@ -56,7 +56,7 @@ public class DeviceWriteServiceTests {
             deviceWriteService.createDevice(device, createDevice -> {
                 try {
                     StackTrace.printIfErr(createDevice);
-                    assertTrue(createDevice.succeeded());
+                    assertTrue(createDevice.succeeded() && createDevice.result());
                     context.completeNow();
                 } catch (Throwable e) {
                     context.failNow(e);
