@@ -12,11 +12,9 @@ public final class RegistryMessage implements Message {
 
     private final UniqueID deviceId;
 
-    public RegistryMessage(String body) {
+    public RegistryMessage(String body, UniqueID deviceId) {
         this.raw = body;
-        String[] components = body.split("[#|,]");
-        String imei = components[3];
-        deviceId = new UniqueID(UniqueType.IMEI, imei);
+        this.deviceId = deviceId;
     }
 
     @Override
