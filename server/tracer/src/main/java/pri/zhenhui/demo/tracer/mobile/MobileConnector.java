@@ -7,7 +7,7 @@ import pri.zhenhui.demo.tracer.mobile.codec.MobileProtocolEncoder;
 import pri.zhenhui.demo.tracer.mobile.handler.RegistryHandler;
 import pri.zhenhui.demo.tracer.server.Protocol;
 import pri.zhenhui.demo.tracer.support.handler.DefaultDataHandler;
-import pri.zhenhui.demo.tracer.support.handler.event.OverspeedEventHandler;
+import pri.zhenhui.demo.tracer.support.handler.event.AlertEventHandler;
 import pri.zhenhui.demo.tracer.support.server.AbstractConnector;
 import pri.zhenhui.demo.tracer.support.server.ServerContext;
 
@@ -28,7 +28,7 @@ public class MobileConnector extends AbstractConnector {
                 .addLast("protocolDecoder", new MobileProtocolDecoder())
                 .addLast("registryHandler", new RegistryHandler(this))
                 .addLast("dataHandler", new DefaultDataHandler(this))
-                .addLast("eventHandler", new OverspeedEventHandler(this));
+                .addLast("eventHandler", new AlertEventHandler(this));
 
         pipeline.addLast("protocolEncoder", new MobileProtocolEncoder());
     }

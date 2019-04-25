@@ -29,11 +29,12 @@ public class Event extends Attributes implements Serializable {
 
     private Date time;
 
-    public Event(EventType type, UniqueID deviceId, long positionId) {
+    public Event(EventType type, UniqueID deviceId, long positionId, Date time) {
         this.type = type;
         this.positionId = positionId;
         this.time = new Date();
         this.deviceId = deviceId;
+        this.time = time;
     }
 
     public Event(JsonObject jsonObj) {

@@ -41,7 +41,10 @@ public class AlertEventHandler extends AbstractEventHandler {
                 final List<Event> events = new ArrayList<>();
                 String alarm = position.getString(Position.KEY_ALARM);
                 if (alarm != null) {
-                    Event event = new Event(EventType.TYPE_ALARM, position.getDeviceId(), position.getId());
+                    Event event = new Event(EventType.TYPE_ALARM
+                            , position.getDeviceId()
+                            , position.getId()
+                            , position.getTime());
                     event.set(Position.KEY_ALARM, alarm);
                     events.add(event);
                 }

@@ -70,10 +70,10 @@ public class MobileProtocolDecoder extends AbstractProtocolDecoder<String, Messa
         if (StringUtils.isNotBlank(alarms)) {
             Arrays.stream(alarms.split("\\|")).forEach(alarm -> {
                 if ("sos".equalsIgnoreCase(alarm)) {
-                    position.set(Position.ALARM_SOS, 1);
+                    position.set(Position.KEY_ALARM, Position.ALARM_SOS);
                 }
                 if ("low_battery".equalsIgnoreCase(alarm)) {
-                    position.set(Position.ALARM_LOW_BATTERY, 1);
+                    position.set(Position.KEY_ALARM, Position.ALARM_LOW_BATTERY);
                 }
             });
         }
