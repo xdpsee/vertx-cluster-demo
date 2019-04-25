@@ -1,4 +1,4 @@
-package pri.zhenhui.demo.tracer.support.exception;
+package pri.zhenhui.demo.tracer.exception;
 
 public class DecodeException extends Exception {
 

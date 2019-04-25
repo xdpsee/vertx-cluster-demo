@@ -1,7 +1,7 @@
 package pri.zhenhui.demo.tracer.data.verticles;
 
 import pri.zhenhui.demo.support.microservice.AbstractMicroServiceVerticle;
-import pri.zhenhui.demo.tracer.data.service.impl.DeviceReadServiceImpl;
+import pri.zhenhui.demo.tracer.data.service.DeviceReadServiceImpl;
 import pri.zhenhui.demo.tracer.service.DeviceReadService;
 
 public class DeviceReadServiceVerticle extends AbstractMicroServiceVerticle<DeviceReadService> {

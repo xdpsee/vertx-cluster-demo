@@ -1,4 +1,4 @@
-package pri.zhenhui.demo.tracer.data.service.impl;
+package pri.zhenhui.demo.tracer.data.service;
 
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;

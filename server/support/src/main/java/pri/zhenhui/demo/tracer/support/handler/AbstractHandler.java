@@ -17,7 +17,7 @@ import pri.zhenhui.demo.tracer.service.DeviceReadService;
 import pri.zhenhui.demo.tracer.service.EventWriteService;
 import pri.zhenhui.demo.tracer.service.PositionReadService;
 import pri.zhenhui.demo.tracer.service.PositionWriteService;
-import pri.zhenhui.demo.tracer.support.exception.DeviceException;
+import pri.zhenhui.demo.tracer.exception.DeviceException;
 import pri.zhenhui.demo.tracer.utils.ChannelAttribute;
 import pri.zhenhui.demo.tracer.utils.ChannelAttributesUtils;
 
