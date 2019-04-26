@@ -25,6 +25,7 @@ import pri.zhenhui.demo.tracer.server.ServerConnector;
 import pri.zhenhui.demo.tracer.support.handler.AbstractEventHandler;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class AlertEventHandler extends AbstractEventHandler {
@@ -39,14 +40,14 @@ public class AlertEventHandler extends AbstractEventHandler {
         connector.context().executeBlocking(future -> {
             try {
                 final List<Event> events = new ArrayList<>();
-                String alarm = position.getString(Position.KEY_ALARM);
-                if (alarm != null) {
-                    Event event = new Event(EventType.TYPE_ALARM
-                            , position.getDeviceId()
-                            , position.getId()
-                            , position.getTime());
-                    event.set(Position.KEY_ALARM, alarm);
-                    events.add(event);
+                String alarms = position.getString(Position.KEY_ALARM);
+                if (alarms != null) {
+                    String[] alerts = alarms.split(","); // 多值用逗号分隔
+                    Arrays.stream(alerts).forEach(alarm -> {
+                        Event event = new Event(EventType.TYPE_ALARM, position);
+                        event.set(Position.KEY_ALARM, alarm);
+                        events.add(event);
+                    });
                 }
 
                 future.complete(events);

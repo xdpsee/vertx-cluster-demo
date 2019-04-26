@@ -41,7 +41,7 @@ public class CommandResultEventHandler extends AbstractEventHandler {
 
                 String commandResult = position.getString(Position.KEY_RESULT);
                 if (commandResult != null) {
-                    Event event = new Event(EventType.TYPE_COMMAND_RESULT, position.getDeviceId(), position.getId());
+                    Event event = new Event(EventType.TYPE_COMMAND_RESULT, position);
                     event.set(Position.KEY_RESULT, commandResult);
                     events.add(event);
                 }

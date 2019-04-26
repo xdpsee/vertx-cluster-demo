@@ -7,7 +7,6 @@ import io.vertx.reactivex.core.AbstractVerticle;
 import org.apache.ibatis.exceptions.PersistenceException;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
-import org.h2.jdbc.JdbcSQLIntegrityConstraintViolationException;
 import pri.zhenhui.demo.support.db.DBUtils;
 import pri.zhenhui.demo.support.db.mybatis.SqlSessionFactoryLoader;
 import pri.zhenhui.demo.tracer.data.domain.DeviceDO;
@@ -78,8 +77,7 @@ public class MainVerticle extends AbstractVerticle {
 
                 emitter.onSuccess("Ok");
             } catch (Throwable e) {
-                if (e instanceof PersistenceException
-                        && e.getCause() instanceof JdbcSQLIntegrityConstraintViolationException) {
+                if (e instanceof PersistenceException) {
                     emitter.onSuccess("Ok");
                 } else {
                     emitter.onError(e);

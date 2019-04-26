@@ -66,11 +66,9 @@ public class MotionEventHandler extends AbstractEventHandler {
                     }
 
                     if (speed > speedThreshold && oldSpeed <= speedThreshold) {
-                        events.add(
-                                new Event(EventType.TYPE_DEVICE_MOVING, position.getDeviceId(), position.getId()));
+                        events.add(new Event(EventType.TYPE_DEVICE_MOVING, position));
                     } else if (speed <= speedThreshold && oldSpeed > speedThreshold) {
-                        events.add(
-                                new Event(EventType.TYPE_DEVICE_STOPPED, position.getDeviceId(), position.getId()));
+                        events.add(new Event(EventType.TYPE_DEVICE_STOPPED, position));
                     }
 
                     resultHandler.handle(Future.succeededFuture(events));

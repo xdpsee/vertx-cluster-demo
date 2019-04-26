@@ -46,6 +46,7 @@ public class PositionWriteServiceTests {
             PositionWriteService positionWriteService = reference.getAs(PositionWriteService.class);
 
             Position position = new Position();
+            position.setId(1L);
             position.setDeviceId(UniqueID.valueOf("IMEI-888888888888888"));
             position.setTime(new Date());
             position.setLocated(true);

@@ -10,6 +10,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
+import pri.zhenhui.demo.support.test.StackTrace;
 import pri.zhenhui.demo.tracer.data.utils.DBUtils;
 import pri.zhenhui.demo.tracer.domain.UniqueID;
 import pri.zhenhui.demo.tracer.service.DeviceReadService;
@@ -43,6 +44,7 @@ public class DeviceReadServiceTests {
             deviceReadService.queryDevice(UniqueID.valueOf("IMEI-888888888888888"), queryDevice -> {
 
                 try {
+                    StackTrace.printIfErr(queryDevice);
                     assertTrue(queryDevice.succeeded());
                     context.completeNow();
                 } catch (Throwable e) {

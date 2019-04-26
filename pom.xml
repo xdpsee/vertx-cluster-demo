@@ -16,7 +16,6 @@
         <module>server/sdal</module>
         <module>server/support</module>
         <module>server/tracer</module>
-        <module>todolist</module>
     </modules>
 
     <properties>

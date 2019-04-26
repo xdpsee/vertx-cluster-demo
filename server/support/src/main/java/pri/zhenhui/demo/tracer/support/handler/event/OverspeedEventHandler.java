@@ -73,8 +73,8 @@ public class OverspeedEventHandler extends AbstractEventHandler {
                                 && speed > speedLimit
                                 && oldSpeed <= speedLimit)
                         ) {
-                            Event event = new Event(EventType.TYPE_DEVICE_OVERSPEED, currPos.getDeviceId(), currPos.getId());
-                            event.set(Event.SPEED, speed);
+                            Event event = new Event(EventType.TYPE_DEVICE_OVERSPEED, currPos);
+                            event.set(Event.KEY_SPEED, speed);
                             event.set(Device.KEY_SPEED_LIMIT, speedLimit);
                             events.add(event);
                         }

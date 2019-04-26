@@ -29,24 +29,21 @@ public class Event extends Attributes implements Serializable {
 
     private Date time;
 
-    public Event(EventType type, UniqueID deviceId, long positionId, Date time) {
+    public Event(EventType type, Position position) {
         this.type = type;
-        this.positionId = positionId;
-        this.time = new Date();
-        this.deviceId = deviceId;
-        this.time = time;
+        this.positionId = position.getId();
+        this.time = position.getTime();
+        this.deviceId = position.getDeviceId();
     }
 
     public Event(JsonObject jsonObj) {
         EventConverter.fromJson(jsonObj, this);
-        setDeviceId(UniqueID.valueOf(jsonObj.getString("deviceId")));
         setTime(DateUtils.parse(jsonObj.getString("time")));
     }
 
     public JsonObject toJson() {
         JsonObject jsonObj = new JsonObject();
         EventConverter.toJson(this, jsonObj);
-        jsonObj.put("deviceId", deviceId.toString());
         jsonObj.put("time", DateUtils.format(time));
 
         return jsonObj;
@@ -54,7 +51,7 @@ public class Event extends Attributes implements Serializable {
 
     // 扩展属性
 
-    public static final String SPEED = "speed";
+    public static final String KEY_SPEED = "speed";
 
 }
 

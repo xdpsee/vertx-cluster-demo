@@ -12,6 +12,7 @@ import pri.zhenhui.demo.tracer.data.mapper.EventMapper;
 import pri.zhenhui.demo.tracer.domain.Event;
 import pri.zhenhui.demo.tracer.service.EventWriteService;
 
+import java.util.Date;
 import java.util.List;
 
 public class EventWriteServiceImpl implements EventWriteService {
@@ -32,14 +33,13 @@ public class EventWriteServiceImpl implements EventWriteService {
             try {
                 EventMapper mapper = session.getMapper(EventMapper.class);
                 for (Event event : events) {
-                    EventDO eventDO = new EventDO();
-                    BeanUtils.copyProperties(eventDO, event);
-                    mapper.insert(eventDO);
+                    mapper.insert(convert(event));
                 }
                 session.commit();
                 future.complete(true);
             } catch (Throwable e) {
                 session.rollback();
+                future.fail(e);
             } finally {
                 session.close();
             }
@@ -47,6 +47,16 @@ public class EventWriteServiceImpl implements EventWriteService {
 
     }
 
+    private EventDO convert(Event event) throws Exception {
 
+        EventDO eventDO = new EventDO();
+        BeanUtils.copyProperties(eventDO, event);
+
+        Date now = new Date();
+        eventDO.setCreateAt(now);
+        eventDO.setUpdateAt(now);
+
+        return eventDO;
+    }
 }
 

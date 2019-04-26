@@ -61,15 +61,14 @@ public class IgnitionEventHandler extends AbstractEventHandler {
                     if (lastPos != null && lastPos.getId().equals(position.getId()) && lastPos.hasKey(Position.KEY_IGNITION)) {
                         boolean oldIgnition = lastPos.getBoolean(Position.KEY_IGNITION);
                         if (ignition && !oldIgnition) {
-                            events.add(new Event(EventType.TYPE_IGNITION_ON, deviceId, position.getId()));
+                            events.add(new Event(EventType.TYPE_IGNITION_ON, position));
                         } else if (!ignition && oldIgnition) {
-                            events.add(new Event(EventType.TYPE_IGNITION_OFF, deviceId, position.getId()));
+                            events.add(new Event(EventType.TYPE_IGNITION_OFF, position));
                         }
                     }
 
                     resultHandler.handle(Future.succeededFuture(events));
                 });
-
             });
         } catch (Throwable e) {
             resultHandler.handle(Future.failedFuture(e));

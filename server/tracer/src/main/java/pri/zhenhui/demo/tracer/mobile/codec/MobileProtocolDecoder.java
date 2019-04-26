@@ -7,10 +7,13 @@ import pri.zhenhui.demo.tracer.domain.Position;
 import pri.zhenhui.demo.tracer.domain.UniqueID;
 import pri.zhenhui.demo.tracer.domain.UniqueType;
 import pri.zhenhui.demo.tracer.exception.DecodecException;
+import pri.zhenhui.demo.tracer.idgen.PositionIdGen;
 import pri.zhenhui.demo.tracer.mobile.message.RegistryMessage;
 import pri.zhenhui.demo.tracer.support.codec.AbstractProtocolDecoder;
 
 import java.util.*;
+
+import static pri.zhenhui.demo.tracer.domain.Position.KEY_ALARM;
 
 public class MobileProtocolDecoder extends AbstractProtocolDecoder<String, Message> {
 
@@ -51,13 +54,18 @@ public class MobileProtocolDecoder extends AbstractProtocolDecoder<String, Messa
      * @param message frame message
      * @return Position
      */
-    private Position decodePosition(String message) {
+    private Position decodePosition(String message) throws DecodecException{
 
         Position position = new Position();
 
-        String[] components = message.split("[#|,]");
+        String[] components = message.split("[#,]");
+        if (components.length != 11 && components.length != 12) {
+            throw new DecodecException("invalid message: " + message);
+        }
 
+        position.setId(PositionIdGen.next());
         position.setDeviceId(new UniqueID(UniqueType.IMEI, components[3]));
+        position.setLocated(true);
         position.setLatitude(Double.parseDouble(components[4]));
         position.setLongitude(Double.parseDouble(components[5]));
         position.setAltitude(Double.parseDouble(components[6]));
@@ -66,16 +74,23 @@ public class MobileProtocolDecoder extends AbstractProtocolDecoder<String, Messa
         position.setTime(new Date(Long.parseLong(components[9])));
         position.set(Position.KEY_OUTDATED, "1".equals(components[10]));
 
-        final String alarms = components[11];
-        if (StringUtils.isNotBlank(alarms)) {
-            Arrays.stream(alarms.split("\\|")).forEach(alarm -> {
-                if ("sos".equalsIgnoreCase(alarm)) {
-                    position.set(Position.KEY_ALARM, Position.ALARM_SOS);
+        if (components.length == 12) {
+            final String alarms = components[11];
+            if (StringUtils.isNotBlank(alarms)) {
+                final List<String> alerts = new ArrayList<>();
+                Arrays.stream(alarms.split("\\|")).forEach(alarm -> {
+                    if ("sos".equalsIgnoreCase(alarm)) {
+                        alerts.add(Position.ALARM_SOS);
+                    }
+                    if ("low_battery".equalsIgnoreCase(alarm)) {
+                        alerts.add(Position.ALARM_LOW_BATTERY);
+                    }
+                });
+
+                if (!alerts.isEmpty()) {
+                    position.set(KEY_ALARM, StringUtils.join(alerts, ","));
                 }
-                if ("low_battery".equalsIgnoreCase(alarm)) {
-                    position.set(Position.KEY_ALARM, Position.ALARM_LOW_BATTERY);
-                }
-            });
+            }
         }
 
         return position;

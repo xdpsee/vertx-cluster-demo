@@ -26,7 +26,7 @@
                 typeHandler="pri.zhenhui.demo.tracer.data.type.handler.NetworkTypeHandler"/>
     </resultMap>
 
-    <insert id="insert" parameterType="pri.zhenhui.demo.tracer.data.domain.PositionDO" useGeneratedKeys="true" keyProperty="id">
+    <insert id="insert" parameterType="pri.zhenhui.demo.tracer.data.domain.PositionDO">
         insert into positions (
           `id`,
           `device_id`,

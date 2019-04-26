@@ -1,7 +1,7 @@
 create table if not exists devices(
   `id` varchar(64) primary key not null,
   `create_at` timestamp not null,
-  `update_at` timestamp default current_timestamp,
+  `update_at` timestamp not null,
   `model` varchar(32) not null,
   `protocol` varchar(32) not null,
   `attributes` varchar(65535),
@@ -9,11 +9,11 @@ create table if not exists devices(
 );
 
 create table if not exists positions (
-  `id` bigint not null primary key auto_increment,
+  `id` bigint not null primary key,
   `device_id` varchar(64) not null,
   `create_at` timestamp not null,
-  `update_at` timestamp default current_timestamp,
-  `time` timestamp  not null,
+  `update_at` timestamp not null,
+  `time` timestamp not null,
   `located` tinyint not null,
   `latitude` double not null,
   `longitude` double not null,
@@ -29,7 +29,7 @@ create table if not exists positions (
 create table if not exists events(
   `device_id` varchar(64) not null,
   `create_at` timestamp not null,
-  `update_at` timestamp default current_timestamp,
+  `update_at` timestamp not null,
   `time` timestamp not null,
   `type` integer not null,
   `position_id` bigint not null,

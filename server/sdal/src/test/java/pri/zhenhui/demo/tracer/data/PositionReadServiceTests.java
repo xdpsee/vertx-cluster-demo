@@ -48,6 +48,7 @@ public class PositionReadServiceTests {
             PositionReadService positionReadService = rdReference.getAs(PositionReadService.class);
 
             Position position = new Position();
+            position.setId(2L);
             position.setDeviceId(UniqueID.valueOf("IMEI-888888888888888"));
             position.setTime(new Date());
             position.setLocated(true);
@@ -100,6 +101,7 @@ public class PositionReadServiceTests {
             PositionReadService positionReadService = rdReference.getAs(PositionReadService.class);
 
             Position position = new Position();
+            position.setId(3L);
             position.setDeviceId(UniqueID.valueOf("IMEI-888888888888888"));
             position.setTime(new Date());
             position.setLocated(true);
@@ -118,8 +120,6 @@ public class PositionReadServiceTests {
                 }
 
                 Position currPos = position;
-                currPos.setId(save.result());
-
                 positionReadService.isLastPosition(currPos, queryIsLastPos -> {
                     if (queryIsLastPos.failed()) {
                         context.failNow(queryIsLastPos.cause());
