@@ -37,7 +37,8 @@ public class PositionWriteServiceImpl implements PositionWriteService {
                 PositionDO positionDO = convert(position);
                 int rows = mapper.insert(positionDO);
                 if (rows > 0) {
-                    if (position.isLocated()) {
+                    if (position.isLocated()
+                            && "1".equals(position.getString(Position.KEY_OUTDATED))) {
                         deviceLastPosCache.put(position.deviceId(), position);
                     }
                 }

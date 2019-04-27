@@ -27,20 +27,15 @@ public class MainVerticle extends AbstractVerticle {
                 .ignoreElement()
                 .andThen(presetDevice())
                 .ignoreElement()
-                .andThen(vertx.rxDeployVerticle(new EventWriteServiceVerticle()))
-                .doOnSuccess(ret -> System.out.println("Deploy EventWriteServiceVerticle Ok!"))
-                .ignoreElement()
                 .andThen(vertx.rxDeployVerticle(new DeviceReadServiceVerticle()))
-                .doOnSuccess(ret -> System.out.println("Deploy DeviceReadServiceVerticle Ok!"))
                 .ignoreElement()
                 .andThen(vertx.rxDeployVerticle(new PositionReadServiceVerticle()))
-                .doOnSuccess(ret -> System.out.println("Deploy PositionReadServiceVerticle Ok!"))
                 .ignoreElement()
                 .andThen(vertx.rxDeployVerticle(new PositionWriteServiceVerticle()))
-                .doOnSuccess(ret -> System.out.println("Deploy PositionWriteServiceVerticle Ok!"))
+                .ignoreElement()
+                .andThen(vertx.rxDeployVerticle(new EventWriteServiceVerticle()))
                 .ignoreElement()
                 .andThen(vertx.rxDeployVerticle(new DeviceWriteServiceVerticle()))
-                .doOnSuccess(ret -> System.out.println("Deploy DeviceWriteServiceVerticle Ok!"))
                 .ignoreElement();
     }
 
