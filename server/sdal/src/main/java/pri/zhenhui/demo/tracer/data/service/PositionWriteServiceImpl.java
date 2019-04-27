@@ -35,15 +35,16 @@ public class PositionWriteServiceImpl implements PositionWriteService {
             try {
                 PositionMapper mapper = session.getMapper(PositionMapper.class);
                 PositionDO positionDO = convert(position);
-                int rows = mapper.insert(positionDO);
-                if (rows > 0) {
-                    if (position.isLocated()
-                            && !position.getBoolean(Position.KEY_OUTDATED)) {
-                        deviceLastPosCache.put(position.deviceId(), position);
-                    }
+                mapper.insert(positionDO);
+
+                if (position.isLocated()
+                        && !position.getBoolean(Position.KEY_OUTDATED)) {
+                    deviceLastPosCache.put(position.deviceId(), position);
                 }
+
                 session.commit();
-                future.complete(rows > 0 ? positionDO.getId() : 0L);
+
+                future.complete(positionDO.getId());
             } catch (Throwable e) {
                 session.rollback();
                 future.fail(e);

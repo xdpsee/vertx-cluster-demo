@@ -15,6 +15,7 @@ import pri.zhenhui.demo.tracer.data.verticles.*;
 import pri.zhenhui.demo.tracer.domain.UniqueID;
 import pri.zhenhui.demo.tracer.enums.DeviceStatus;
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.Date;
 
 @SuppressWarnings("unused")
@@ -71,7 +72,8 @@ public class MainVerticle extends AbstractVerticle {
 
                 emitter.onSuccess("Ok");
             } catch (Throwable e) {
-                if (e instanceof PersistenceException) {
+                if (e instanceof PersistenceException
+                        && e.getCause() instanceof SQLIntegrityConstraintViolationException) {
                     emitter.onSuccess("Ok");
                 } else {
                     emitter.onError(e);
