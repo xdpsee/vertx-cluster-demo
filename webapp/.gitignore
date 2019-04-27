@@ -1,14 +1,4 @@
 .DS_Store
-.idea
-*.iml
-*.log
-target
-db
-.vertx
-.settings
-.project
-.classpath
-
 node_modules/
 /dist/
 npm-debug.log*
