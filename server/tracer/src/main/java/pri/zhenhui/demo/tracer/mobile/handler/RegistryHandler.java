@@ -20,7 +20,7 @@ public class RegistryHandler extends AbstractHandler<RegistryMessage> {
         Command command = new Command();
         command.setType(CommandType.TYPE_CUSTOM);
         command.setDeviceId(msg.deviceId());
-        command.set(Command.KEY_DATA, String.valueOf(System.currentTimeMillis()));
+        command.set(Command.KEY_DATA, "OK");
 
         connection.send(command);
 
