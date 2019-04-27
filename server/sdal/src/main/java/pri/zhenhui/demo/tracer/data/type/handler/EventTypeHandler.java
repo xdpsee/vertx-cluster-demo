@@ -13,7 +13,7 @@ public class EventTypeHandler extends BaseTypeHandler<EventType> {
 
     @Override
     public void setNonNullParameter(PreparedStatement ps, int i, EventType parameter, JdbcType jdbcType) throws SQLException {
-        ps.setInt(1, parameter.code);
+        ps.setInt(i, parameter.code);
     }
 
     @Override
