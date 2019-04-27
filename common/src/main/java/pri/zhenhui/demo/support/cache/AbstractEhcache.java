@@ -30,7 +30,7 @@ public abstract class AbstractEhcache<K extends Serializable, V extends Serializ
     }
 
     private void init() {
-        this.cacheManager = CacheManager.newInstance();
+        this.cacheManager = CacheManager.getInstance();
         this.cache = this.cacheManager.getCache(this.cacheName);
     }
 

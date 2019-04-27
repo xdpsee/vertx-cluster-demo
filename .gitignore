@@ -4,6 +4,7 @@
 *.log
 target
 db
+.vertx
 .settings
 .project
 .classpath

@@ -58,7 +58,6 @@ public class MainVerticle extends AbstractVerticle {
 
     private Single<String> presetDevice() {
         return Single.create(emitter -> {
-
             SqlSessionFactory sqlSessionFactory = SqlSessionFactoryLoader.load();
             try (SqlSession session = sqlSessionFactory.openSession()) {
                 DeviceMapper mapper = session.getMapper(DeviceMapper.class);
