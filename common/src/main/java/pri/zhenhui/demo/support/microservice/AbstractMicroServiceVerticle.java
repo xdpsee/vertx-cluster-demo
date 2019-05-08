@@ -6,6 +6,7 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.reactivex.core.AbstractVerticle;
 import io.vertx.servicediscovery.Record;
 import io.vertx.servicediscovery.ServiceDiscovery;
+import io.vertx.servicediscovery.ServiceReference;
 import io.vertx.servicediscovery.types.EventBusService;
 import io.vertx.serviceproxy.ServiceBinder;
 
@@ -78,4 +79,14 @@ public abstract class AbstractMicroServiceVerticle<S> extends AbstractVerticle {
     }
 
     protected abstract S serviceImpl();
+
+    protected final ServiceDiscovery serviceDiscovery() {
+        return serviceDiscovery;
+    }
+
+    protected final ServiceReference getServiceReference(String name, String address, Class<S> serviceClass) {
+
+        return serviceDiscovery.getReference(EventBusService.createRecord(name, address, serviceClass));
+
+    }
 }

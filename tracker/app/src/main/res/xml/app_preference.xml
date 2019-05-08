@@ -1,0 +1,42 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--<SwitchPreference-->
+        <!--android:icon="@null"-->
+        <!--android:defaultValue="true"-->
+        <!--android:key="trace_switch"-->
+        <!--android:summary="位置追踪运行中"-->
+        <!--android:title="位置追踪" />-->
+
+    <!--<EditTextPreference-->
+        <!--android:icon="@null"-->
+        <!--android:capitalize="words"-->
+        <!--android:defaultValue="192.168.0.1"-->
+        <!--android:inputType="textCapWords"-->
+        <!--android:key="server_host"-->
+        <!--android:maxLines="1"-->
+        <!--android:selectAllOnFocus="true"-->
+        <!--android:singleLine="true"-->
+        <!--android:title="服务器" />-->
+
+    <!--<EditTextPreference-->
+        <!--android:icon="@null"-->
+        <!--android:capitalize="words"-->
+        <!--android:defaultValue="8991"-->
+        <!--android:inputType="number"-->
+        <!--android:key="server_port"-->
+        <!--android:maxLines="1"-->
+        <!--android:selectAllOnFocus="true"-->
+        <!--android:singleLine="true"-->
+        <!--android:title="端口" />-->
+
+    <!--<ListPreference-->
+        <!--android:icon="@null"-->
+        <!--android:defaultValue="-1"-->
+        <!--android:entries="@array/location_interval_list_titles"-->
+        <!--android:entryValues="@array/location_interval_list_values"-->
+        <!--android:key="location_interval"-->
+        <!--android:negativeButtonText="@null"-->
+        <!--android:positiveButtonText="@null"-->
+        <!--android:title="采集间隔(单位:秒)" />-->
+
+</PreferenceScreen>

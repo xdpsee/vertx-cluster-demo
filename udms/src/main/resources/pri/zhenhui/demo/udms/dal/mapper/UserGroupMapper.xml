@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pri.zhenhui.demo.udms.dal.mapper.UserGroupMapper">
+
+    <resultMap id="userGroupMap" type="pri.zhenhui.demo.udms.dal.domain.UserGroupDO">
+        <result property="id" column="id"/>
+        <result property="userId" column="user_id"/>
+        <result property="title" column="title"/>
+        <result property="createAt" column="create_at"/>
+        <result property="updateAt" column="update_at"/>
+    </resultMap>
+
+    <resultMap id="userGroupMemberMap" type="pri.zhenhui.demo.udms.dal.domain.UserGroupMemberDO">
+        <result property="groupId" column="group_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="createAt" column="create_at"/>
+        <result property="updateAt" column="update_at"/>
+    </resultMap>
+
+    <resultMap id="userGroupPermissionMap" type="pri.zhenhui.demo.udms.dal.domain.UserGroupPermissionDO">
+        <result property="groupId" column="group_id"/>
+        <result property="permissionId" column="permission_id"/>
+        <result property="createAt" column="create_at"/>
+        <result property="updateAt" column="update_at"/>
+    </resultMap>
+
+    <insert id="insertGroup" parameterType="pri.zhenhui.demo.udms.dal.domain.UserGroupDO" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into user_groups (
+          user_id,
+          title,
+          create_at,
+          update_at
+        ) values (
+          #{userId},
+          #{title},
+          current_timestamp(),
+          current_timestamp()
+        );
+    </insert>
+
+    <select id="selectGroups" resultMap="userGroupMap">
+        select * from user_groups where user_id = #{userId}
+    </select>
+
+    <delete id="deleteGroup">
+        delete from user_groups where user_id = #{userId} and id = #{groupId}
+    </delete>
+
+
+    <insert id="insertGroupMember" parameterType="pri.zhenhui.demo.udms.dal.domain.UserGroupMemberDO">
+        insert ignore into user_group_members(
+          group_id,
+          user_id,
+          create_at,
+          update_at
+        ) values (
+          #{groupId},
+          #{userId},
+          current_timestamp(),
+          current_timestamp()
+        );
+    </insert>
+
+    <select id="selectGroupMembers" resultMap="userGroupMemberMap">
+        select * from user_group_members where group_id = #{groupId}
+    </select>
+
+    <delete id="deleteGroupMember">
+        delete from user_group_members where group_id = #{groupId} and user_id = #{userId}
+    </delete>
+
+    <insert id="insertGroupPermission" parameterType="pri.zhenhui.demo.udms.dal.domain.UserGroupPermissionDO">
+        insert ignore into user_group_permissions(
+          group_id,
+          permission_id,
+          create_at,
+          update_at
+        ) values (
+          #{groupId},
+          #{permissionId},
+          current_timestamp(),
+          current_timestamp()
+        );
+    </insert>
+
+    <select id="selectGroupPermissions" resultMap="userGroupPermissionMap">
+        select * from user_group_permissions where group_id = #{groupId}
+    </select>
+
+    <delete id="deleteGroupPermissions">
+        delete from user_group_permissions where group_id = #{groupId} and permission_id = #{permissionId}
+    </delete>
+
+</mapper>

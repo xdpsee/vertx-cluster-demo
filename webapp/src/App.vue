@@ -1,17 +1,13 @@
 <template>
-    <div id="app">
-        <router-view/>
-    </div>
+  <div class="container center-content">
+    <RouterView />
+  </div>
 </template>
 
-<script>
-    export default {
-        name: 'App'
-    }
-</script>
+<style lang="stylus" scoped>
 
-<style>
-    #app {
+.container
+  font-family 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif
+  max-width 1200px
 
-    }
 </style>

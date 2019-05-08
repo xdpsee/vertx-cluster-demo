@@ -11,7 +11,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toMap;
 
@@ -103,19 +102,34 @@ public abstract class AbstractEhcache<K extends Serializable, V extends Serializ
             throw new IllegalArgumentException("null == key || null == value");
         }
 
-        Element element = new Element(key, value);
-        cache.put(element);
+        cache.acquireWriteLockOnKey(key);
+        try {
+            Element element = new Element(key, value);
+            cache.put(element);
+        } finally {
+            cache.releaseWriteLockOnKey(key);
+        }
     }
 
     @Override
     public void multiPut(Map<K, V> elements) {
 
         if (!MapUtils.isEmpty(elements)) {
-            cache.putAll(elements.entrySet()
-                    .stream()
-                    .map(e -> new Element(e.getKey(), e.getValue()))
-                    .collect(Collectors.toList())
-            );
+//            cache.putAll(elements.entrySet()
+//                    .stream()
+//                    .map(e -> new Element(e.getKey(), e.getValue()))
+//                    .collect(Collectors.toList())
+//            );
+
+            elements.forEach((key, value) -> {
+                cache.acquireWriteLockOnKey(key);
+                try {
+                    Element element = new Element(key, value);
+                    cache.put(element);
+                } finally {
+                    cache.releaseWriteLockOnKey(key);
+                }
+            });
         }
     }
 

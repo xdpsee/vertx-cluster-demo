@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pri.zhenhui.demo.udms.dal.mapper.UserMapper">
+
+    <resultMap id="userMap" type="pri.zhenhui.demo.udms.dal.domain.UserDO">
+        <result property="id" column="id"/>
+        <result property="parentId" column="parent_id"/>
+        <result property="username" column="username"/>
+        <result property="password" column="password"/>
+        <result property="avatar" column="avatar"/>
+        <result property="email" column="email"/>
+        <result property="phone" column="phone"/>
+        <result property="createAt" column="create_at"/>
+        <result property="updateAt" column="update_at"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="pri.zhenhui.demo.udms.dal.domain.UserDO" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into users (
+          parent_id,
+          username,
+          password,
+          avatar,
+          email,
+          phone,
+          create_at,
+          update_at
+        ) values (
+          #{parentId},
+          #{username},
+          #{password},
+          #{avatar},
+          #{email},
+          #{phone},
+          #{createAt},
+          #{updateAt}
+        );
+    </insert>
+
+    <select id="selectById" resultMap="userMap">
+        select * from users where id = #{userId}
+    </select>
+
+    <select id="selectByIds" resultMap="userMap">
+        select * from users where id in
+        <foreach collection="userIds" open="(" close=")" separator="," item="userId">
+            #{userId}
+        </foreach>
+    </select>
+
+    <select id="selectByName" resultMap="userMap">
+        select * from users where username = #{username}
+    </select>
+
+    <select id="selectByPhone" resultMap="userMap">
+        select * from users where phone = #{phone}
+    </select>
+
+    <select id="selectByParent" resultMap="userMap">
+        select * from users where parent_id = #{parentId}
+    </select>
+
+    <update id="update" parameterType="java.util.Map">
+        update users set update_at = current_timestamp()
+        <if test="avatar!=null">
+            , avatar = #{avatar}
+        </if>
+        <if test="email!=null">
+            , email = #{email}
+        </if>
+        <if test="password!=null">
+            , password = #{password}
+        </if>
+        where id = #{id}
+    </update>
+</mapper>

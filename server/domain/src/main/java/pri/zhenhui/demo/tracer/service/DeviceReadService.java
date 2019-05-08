@@ -7,6 +7,8 @@ import io.vertx.core.Handler;
 import pri.zhenhui.demo.tracer.domain.Device;
 import pri.zhenhui.demo.tracer.domain.UniqueID;
 
+import java.util.List;
+
 @VertxGen
 @ProxyGen
 public interface DeviceReadService {
@@ -17,6 +19,7 @@ public interface DeviceReadService {
 
     void queryDevice(UniqueID deviceId, Handler<AsyncResult<Device>> resultHandler);
 
+    void queryDevices(List<UniqueID> deviceIds, Handler<AsyncResult<List<Device>>> resultHandler);
 }
 
 

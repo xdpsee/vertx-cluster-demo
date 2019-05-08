@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pri.zhenhui.demo.udms.dal.mapper.DeviceGroupMapper">
+
+    <resultMap id="deviceGroupMap" type="pri.zhenhui.demo.udms.dal.domain.DeviceGroupDO">
+        <result property="id" column="id"/>
+        <result property="userId" column="user_id"/>
+        <result property="title" column="title"/>
+        <result property="createAt" column="create_at"/>
+        <result property="updateAt" column="update_at"/>
+    </resultMap>
+
+    <resultMap id="deviceGroupMemberMap" type="pri.zhenhui.demo.udms.dal.domain.DeviceGroupMemberDO">
+        <result property="groupId" column="group_id"/>
+        <result property="deviceId" column="device_id"
+                typeHandler="pri.zhenhui.demo.tracer.data.type.handler.UniqueIDTypeHandler"/>
+        <result property="createAt" column="create_at"/>
+        <result property="updateAt" column="update_at"/>
+    </resultMap>
+
+    <resultMap id="userDeviceMap" type="pri.zhenhui.demo.udms.dal.domain.UserDeviceBindDO">
+        <result property="userId" column="user_id"/>
+        <result property="deviceId" column="device_id"
+                typeHandler="pri.zhenhui.demo.tracer.data.type.handler.UniqueIDTypeHandler" />
+        <result property="createAt" column="create_at"/>
+        <result property="updateAt" column="update_at"/>
+    </resultMap>
+
+    <insert id="insertGroup" parameterType="pri.zhenhui.demo.udms.dal.domain.DeviceGroupDO" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into device_groups (
+          user_id,
+          title,
+          create_at,
+          update_at
+        ) values (
+          #{userId},
+          #{title},
+          current_timestamp(),
+          current_timestamp()
+        );
+    </insert>
+
+    <select id="selectGroups" resultMap="deviceGroupMap">
+        select * from device_groups where user_id = #{userId}
+    </select>
+
+    <select id="selectGroup" resultMap="deviceGroupMap">
+        select * from device_groups where id = #{groupId}
+    </select>
+
+    <delete id="deleteGroup">
+        delete from device_groups where user_id = #{userId} and id = #{groupId}
+    </delete>
+
+    <insert id="insertGroupMember" parameterType="pri.zhenhui.demo.udms.dal.domain.DeviceGroupMemberDO">
+        insert ignore into device_group_members(
+          group_id,
+          device_id,
+          create_at,
+          update_at
+        ) values (
+          #{groupId},
+          #{deviceId},
+          current_timestamp(),
+          current_timestamp()
+        );
+    </insert>
+
+    <select id="selectGroupMembers" resultMap="deviceGroupMemberMap">
+        select * from device_group_members where group_id = #{groupId}
+    </select>
+
+    <delete id="deleteGroupMember">
+        delete from device_group_members where group_id = #{groupId} and device_id = #{deviceId}
+    </delete>
+
+    <insert id="insertUserDevice" parameterType="pri.zhenhui.demo.udms.dal.domain.UserDeviceBindDO">
+        insert ignore into user_device_binds(
+          user_id,
+          device_id,
+          create_at,
+          update_at
+        ) values (
+          #{userId},
+          #{deviceId},
+          current_timestamp(),
+          current_timestamp()
+        );
+    </insert>
+
+    <select id="selectUserDevice" resultMap="userDeviceMap">
+        select * from user_device_binds where user_id = #{userId}
+    </select>
+
+    <delete id="deleteUserDevice">
+        delete from user_device_binds where user_id = #{userId} and device_id = #{deviceId}
+    </delete>
+</mapper>

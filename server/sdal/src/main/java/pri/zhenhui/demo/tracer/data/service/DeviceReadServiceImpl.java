@@ -14,6 +14,14 @@ import pri.zhenhui.demo.tracer.domain.Device;
 import pri.zhenhui.demo.tracer.domain.UniqueID;
 import pri.zhenhui.demo.tracer.service.DeviceReadService;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
+import java.util.function.Function;
+
+import static java.util.stream.Collectors.toMap;
+
 public class DeviceReadServiceImpl implements DeviceReadService {
 
     private final Context context;
@@ -48,11 +56,37 @@ public class DeviceReadServiceImpl implements DeviceReadService {
         }, resultHandler);
     }
 
-    private Device convert(DeviceDO deviceDO) throws Exception {
+    @Override
+    public void queryDevices(List<UniqueID> deviceIds, Handler<AsyncResult<List<Device>>> resultHandler) {
+
+        context.<List<Device>>executeBlocking(future -> {
+            try {
+                future.complete(new ArrayList<>(deviceCache.multiGet(new HashSet<>(deviceIds), (absentIds) -> {
+                    try (SqlSession session = sqlSessionFactory.openSession()) {
+                        DeviceMapper deviceMapper = session.getMapper(DeviceMapper.class);
+                        return deviceMapper.selectByIds(new ArrayList<>(absentIds))
+                                .stream()
+                                .map(this::convert)
+                                .filter(Objects::nonNull)
+                                .collect(toMap(Device::getId, Function.identity()));
+                    }
+                }).values()));
+            } catch (Throwable e) {
+                future.fail(e);
+            }
+        }, resultHandler);
+
+    }
+
+    private Device convert(DeviceDO deviceDO) {
         if (null != deviceDO) {
-            Device device = new Device();
-            BeanUtils.copyProperties(device, deviceDO);
-            return device;
+            try {
+                Device device = new Device();
+                BeanUtils.copyProperties(device, deviceDO);
+                return device;
+            } catch (Throwable e) {
+                throw new RuntimeException(e);
+            }
         }
 
         return null;

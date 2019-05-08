@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ehcache>
+    <diskStore path="java.io.tmpdir"/>
+
+    <cacheManagerPeerProviderFactory
+            class="net.sf.ehcache.distribution.jgroups.JGroupsCacheManagerPeerProviderFactory"
+            properties="jgroups_tcp.xml"/>
+
+    <defaultCache maxElementsInMemory="10000"
+                  eternal="false"
+                  overflowToDisk="false"
+                  memoryStoreEvictionPolicy="LRU"
+                  maxElementsOnDisk="10000000"
+                  diskExpiryThreadIntervalSeconds="600"
+                  timeToIdleSeconds="3600"
+                  timeToLiveSeconds="100000"
+                  diskPersistent="false"/>
+
+    <cache name="userCacheById"
+           maxElementsInMemory="10000"
+           eternal="true"
+           overflowToDisk="false"
+           timeToIdleSeconds="1"
+           timeToLiveSeconds="600"
+           memoryStoreEvictionPolicy="LRU">
+        <cacheEventListenerFactory
+                class="net.sf.ehcache.distribution.jgroups.JGroupsCacheReplicatorFactory"
+                properties="replicateAsynchronously=true, replicatePuts=true, replicateUpdates=true,
+        replicateUpdatesViaCopy=true, replicateRemovals=true "/>
+    </cache>
+
+    <cache name="userCacheByName"
+           maxElementsInMemory="10000"
+           eternal="true"
+           overflowToDisk="false"
+           timeToIdleSeconds="1"
+           timeToLiveSeconds="600"
+           memoryStoreEvictionPolicy="LRU">
+        <cacheEventListenerFactory
+                class="net.sf.ehcache.distribution.jgroups.JGroupsCacheReplicatorFactory"
+                properties="replicateAsynchronously=true, replicatePuts=true, replicateUpdates=true,
+        replicateUpdatesViaCopy=true, replicateRemovals=true "/>
+    </cache>
+
+    <cache name="userCacheByPhone"
+           maxElementsInMemory="10000"
+           eternal="true"
+           overflowToDisk="false"
+           timeToIdleSeconds="1"
+           timeToLiveSeconds="600"
+           memoryStoreEvictionPolicy="LRU">
+        <cacheEventListenerFactory
+                class="net.sf.ehcache.distribution.jgroups.JGroupsCacheReplicatorFactory"
+                properties="replicateAsynchronously=true, replicatePuts=true, replicateUpdates=true,
+        replicateUpdatesViaCopy=true, replicateRemovals=true "/>
+    </cache>
+
+    <cache name="userRolesCache"
+           maxElementsInMemory="100"
+           eternal="true"
+           overflowToDisk="false"
+           timeToIdleSeconds="1"
+           timeToLiveSeconds="600"
+           memoryStoreEvictionPolicy="LRU">
+        <cacheEventListenerFactory
+                class="net.sf.ehcache.distribution.jgroups.JGroupsCacheReplicatorFactory"
+                properties="replicateAsynchronously=true, replicatePuts=true, replicateUpdates=true,
+        replicateUpdatesViaCopy=true, replicateRemovals=true "/>
+    </cache>
+
+    <cache name="roleAuthorityCache"
+           maxElementsInMemory="100"
+           eternal="true"
+           overflowToDisk="false"
+           timeToIdleSeconds="1"
+           timeToLiveSeconds="600"
+           memoryStoreEvictionPolicy="LRU">
+        <cacheEventListenerFactory
+                class="net.sf.ehcache.distribution.jgroups.JGroupsCacheReplicatorFactory"
+                properties="replicateAsynchronously=true, replicatePuts=true, replicateUpdates=true,
+        replicateUpdatesViaCopy=true, replicateRemovals=true "/>
+    </cache>
+
+    <cache name="userGroupCache"
+           maxElementsInMemory="10000"
+           eternal="true"
+           overflowToDisk="false"
+           timeToIdleSeconds="1"
+           timeToLiveSeconds="600"
+           memoryStoreEvictionPolicy="LRU">
+        <cacheEventListenerFactory
+                class="net.sf.ehcache.distribution.jgroups.JGroupsCacheReplicatorFactory"
+                properties="replicateAsynchronously=true, replicatePuts=true, replicateUpdates=true,
+        replicateUpdatesViaCopy=true, replicateRemovals=true "/>
+    </cache>
+
+    <cache name="userGroupMemberCache"
+           maxElementsInMemory="10000"
+           eternal="true"
+           overflowToDisk="false"
+           timeToIdleSeconds="1"
+           timeToLiveSeconds="600"
+           memoryStoreEvictionPolicy="LRU">
+        <cacheEventListenerFactory
+                class="net.sf.ehcache.distribution.jgroups.JGroupsCacheReplicatorFactory"
+                properties="replicateAsynchronously=true, replicatePuts=true, replicateUpdates=true,
+        replicateUpdatesViaCopy=true, replicateRemovals=true "/>
+    </cache>
+
+    <cache name="userDeviceIdCache"
+           maxElementsInMemory="10000"
+           eternal="true"
+           overflowToDisk="false"
+           timeToIdleSeconds="1"
+           timeToLiveSeconds="600"
+           memoryStoreEvictionPolicy="LRU">
+        <cacheEventListenerFactory
+                class="net.sf.ehcache.distribution.jgroups.JGroupsCacheReplicatorFactory"
+                properties="replicateAsynchronously=true, replicatePuts=true, replicateUpdates=true,
+        replicateUpdatesViaCopy=true, replicateRemovals=true "/>
+    </cache>
+
+    <cache name="userGroupPermissionCache"
+           maxElementsInMemory="10000"
+           eternal="true"
+           overflowToDisk="false"
+           timeToIdleSeconds="1"
+           timeToLiveSeconds="600"
+           memoryStoreEvictionPolicy="LRU">
+        <cacheEventListenerFactory
+                class="net.sf.ehcache.distribution.jgroups.JGroupsCacheReplicatorFactory"
+                properties="replicateAsynchronously=true, replicatePuts=true, replicateUpdates=true,
+        replicateUpdatesViaCopy=true, replicateRemovals=true "/>
+    </cache>
+
+</ehcache>
+
+
+
+
+
+
+

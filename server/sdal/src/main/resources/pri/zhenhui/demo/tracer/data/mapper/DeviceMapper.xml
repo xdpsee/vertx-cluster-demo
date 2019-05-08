@@ -41,6 +41,13 @@
         select * from devices where id = #{deviceId}
     </select>
 
+    <select id="selectByIds" resultMap="deviceMap">
+        select * from devices where id in
+        <foreach collection="deviceIds" open="(" close=")" separator="," item="deviceId">
+            #{deviceId}
+        </foreach>
+    </select>
+
     <update id="updateAttrs">
         update devices set update_at = current_timestamp(), attributes = #{attributes} where id = #{id}
     </update>
