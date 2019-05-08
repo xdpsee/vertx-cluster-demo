@@ -1,16 +1,16 @@
 <template>
   <div class="full-width center-content">
     <img src="static/img/logo.png">
-    <WelcomeMessage name="World"/>
+    <LoginForm name="World"/>
   </div>
 </template>
 
 <script>
-import WelcomeMessage from 'components/Home/WelcomeMessage'
+import LoginForm from 'components/Login/LoginForm'
 
 export default {
   components: {
-    WelcomeMessage
+    LoginForm
   }
 }
 </script>
