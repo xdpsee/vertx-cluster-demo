@@ -60,6 +60,7 @@ export default {
       }
     }
   },
+
   methods: {
     handleSubmit (name) {
       this.$refs[name].validate(valid => {
