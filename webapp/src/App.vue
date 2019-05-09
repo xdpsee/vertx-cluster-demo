@@ -1,12 +1,11 @@
 <template>
-  <div class="container center-content">
+  <div class="container">
     <RouterView/>
   </div>
 </template>
 
 <style lang="stylus" scoped>
 .container {
-  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-  max-width: 1200px;
+  font-family: Arial, Helvetica, sans-serif;
 }
 </style>
