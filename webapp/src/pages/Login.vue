@@ -1,7 +1,7 @@
 <template>
-  <div class="center-content">
-    <Form name="World"/>
-  </div>
+  <v-app>
+    <Form/>
+  </v-app>
 </template>
 
 <script>

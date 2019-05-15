@@ -16,6 +16,7 @@
         <module>server/sdal</module>
         <module>server/support</module>
         <module>server/tracer</module>
+        <module>website</module>
     </modules>
 
     <properties>

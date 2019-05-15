@@ -3,6 +3,7 @@ package pri.zhenhui.demo.webapi;
 import io.reactivex.Completable;
 import io.reactivex.Single;
 import io.vertx.reactivex.core.AbstractVerticle;
+import io.vertx.reactivex.core.RxHelper;
 import io.vertx.reactivex.ext.web.Router;
 import io.vertx.reactivex.ext.web.handler.BodyHandler;
 import pri.zhenhui.demo.webapi.handlers.security.AuthenticationHandler;
@@ -32,7 +33,8 @@ public class MainVerticle extends AbstractVerticle {
         }).flatMap(router -> vertx.createHttpServer()
                 .requestHandler(router)
                 .rxListen(8080)
-        ).ignoreElement();
+        ).subscribeOn(RxHelper.scheduler(vertx))
+                .ignoreElement();
 
     }
 

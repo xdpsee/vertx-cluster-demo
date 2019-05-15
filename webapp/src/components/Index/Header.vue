@@ -6,11 +6,15 @@
       </div>
       <div class="login-layout">
         <div>
-          <Button type="info" icon="ios-man" shape="circle" @click="onLogin"></Button>
+          <v-btn flat icon @click="onLogin">
+            <v-icon>account_circle</v-icon>
+          </v-btn>
           <a @click="onLogin">{{loginText}}</a>
         </div>
-        <Divider type="vertical" />
-        <Icon type="md-more" size="24"></Icon>
+        <v-divider type="vertical" />
+        <v-btn flat icon>
+          <v-icon>more_vert</v-icon>
+        </v-btn>
       </div>
     </div>
   </div>
@@ -48,7 +52,7 @@ export default {
   }
   .login-layout {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
     align-items: center;
     margin-right: 10px;
     a {

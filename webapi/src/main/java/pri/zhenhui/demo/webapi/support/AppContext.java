@@ -1,6 +1,5 @@
 package pri.zhenhui.demo.webapi.support;
 
-import io.vertx.core.Handler;
 import io.vertx.ext.auth.PubSecKeyOptions;
 import io.vertx.ext.auth.jwt.JWTAuthOptions;
 import io.vertx.reactivex.core.Vertx;
@@ -35,10 +34,6 @@ public final class AppContext {
     }
 
     public Vertx vertx() {return vertx;}
-
-    public void runOnContext(Handler<Void> action) {
-        vertx.runOnContext(action);
-    }
 
     public JWTAuth jwtAuth() {
         return this.jwtAuth;

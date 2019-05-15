@@ -1,90 +1,58 @@
 <template>
-  <div class="login-panel">
-    <Form ref="form" :model="form" :rules="rule">
-      <FormItem class="center-content">
-        <Avatar icon="ios-person" size="large"></Avatar>
-      </FormItem>
-      <FormItem prop="user">
-        <Input type="text" v-model="form.user" size="large" placeholder="Username">
-          <Icon type="md-person" slot="prepend"/>
-        </Input>
-      </FormItem>
-      <FormItem prop="password">
-        <Input type="password" v-model="form.password" size="large" placeholder="Password">
-          <Icon type="md-key" slot="prepend"/>
-        </Input>
-      </FormItem>
-      <FormItem>
-        <Button type="success" @click="handleSubmit('form')" long>Signin</Button>
-      </FormItem>
-      <Divider />
-      <FormItem class="center-content">
-        <a>Forget password?</a>&nbsp;or&nbsp;<a>create an account</a>
-      </FormItem>
-    </Form>
+  <div class="login-form-wrapper">
+    <v-form ref="form" v-model="valid" lazy-validation>
+      <v-flex align-center justify-center layout text-xs-center>
+        <v-avatar :size="70" color="green lighten-4">
+          <img src="https://vuetifyjs.com/apple-touch-icon-180x180.png" alt="avatar">
+        </v-avatar>
+      </v-flex>
+      <v-text-field v-model="username" :rules="[rules.required]" label="用户名" required></v-text-field>
+      <v-text-field v-model="password"
+        :append-icon="show1 ? 'visibility' : 'visibility_off'"
+        :rules="[rules.required, rules.min]"
+        :type="show1 ? 'text' : 'password'"
+        label="密码"
+        @click:append="show1 = !show1"
+      ></v-text-field>
+      <v-btn :disabled="!valid" block color="success" @click="validate">登 录</v-btn>
+      <v-flex align-center justify-center layout text-xs-center>
+        <v-btn flat color="primary">忘记密码？</v-btn>
+        <v-btn flat color="primary">注册新用户</v-btn>
+      </v-flex>
+    </v-form>
   </div>
 </template>
 
 <script>
-import store from '../../store/index'
-import router from '../../router/index'
-
 export default {
-  data () {
-    return {
-      form: {
-        user: '',
-        password: ''
-      },
-      rule: {
-        user: [
-          {
-            required: true,
-            message: 'Please fill in the user name',
-            trigger: 'blur'
-          }
-        ],
-        password: [
-          {
-            required: true,
-            message: 'Please fill in the password.',
-            trigger: 'blur'
-          },
-          {
-            type: 'string',
-            min: 6,
-            message: 'The password length cannot be less than 6 bits',
-            trigger: 'blur'
-          }
-        ]
-      }
+  data: () => ({
+    valid: false,
+    username: '',
+    show1: false,
+    password: '',
+    rules: {
+      required: value => !!value || '该项不能为空，请填写.',
+      min: v => v.length >= 8 || '至少8个字符'
     }
-  },
+  }),
 
   methods: {
-    handleSubmit (name) {
-      this.$refs[name].validate(valid => {
-        if (valid) {
-          this.$Message.success('Success!')
-          store.commit('LOGIN', '123456789012345678901234567890')
-          router.replace({
-            path: '/home'
-          })
-        } else {
-          this.$Message.error('Fail!')
-        }
-      })
+    validate () {
+      if (this.$refs.form.validate()) {
+        this.snackbar = true
+      }
     }
   }
 }
 </script>
 
 <style lang='stylus' scoped>
-.login-panel {
+.login-form-wrapper {
   position: absolute;
+  left: 50%;
   top: 50%;
-  transform: translateY(-50%);
-  width: 360px;
+  transform: translate(-50%,-50%);
+  width: 400px;
   padding: 30px;
   box-shadow: 2px 2px 5px #cdcdcd;
 }

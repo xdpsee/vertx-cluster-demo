@@ -1,7 +1,7 @@
 <template>
-  <div class="full-width">
+  <v-app>
     <Header login-text="登录" :on-login="onLogin"></Header>
-  </div>
+  </v-app>
 </template>
 
 <script>
