@@ -1,9 +1,6 @@
 package pri.zhenhui.demo.webapi.support;
 
-import io.vertx.ext.auth.PubSecKeyOptions;
-import io.vertx.ext.auth.jwt.JWTAuthOptions;
 import io.vertx.reactivex.core.Vertx;
-import io.vertx.reactivex.ext.auth.jwt.JWTAuth;
 import io.vertx.servicediscovery.ServiceDiscovery;
 import io.vertx.servicediscovery.ServiceReference;
 import io.vertx.servicediscovery.types.EventBusService;
@@ -14,18 +11,9 @@ public final class AppContext {
 
     private final ServiceDiscovery serviceDiscovery;
 
-    private final JWTAuth jwtAuth;
-
     public static AppContext create(Vertx vertx) {
 
-        return new AppContext(vertx
-                , ServiceDiscovery.create(vertx.getDelegate())
-                , JWTAuth.create(vertx, new JWTAuthOptions()
-                .addPubSecKey(new PubSecKeyOptions()
-                        .setAlgorithm("HS256")
-                        .setPublicKey("XmaDFytPLM4C@6MJ")
-                        .setSymmetric(true))
-        ));
+        return new AppContext(vertx, ServiceDiscovery.create(vertx.getDelegate()));
 
     }
 
@@ -35,9 +23,6 @@ public final class AppContext {
 
     public Vertx vertx() {return vertx;}
 
-    public JWTAuth jwtAuth() {
-        return this.jwtAuth;
-    }
 
     public <T> T getService(String name, String address, Class<T> serviceClass) {
 
@@ -49,9 +34,8 @@ public final class AppContext {
         }
     }
 
-    private AppContext(Vertx vertx, ServiceDiscovery serviceDiscovery, JWTAuth jwtAuth) {
+    private AppContext(Vertx vertx, ServiceDiscovery serviceDiscovery) {
         this.vertx = vertx;
         this.serviceDiscovery = serviceDiscovery;
-        this.jwtAuth = jwtAuth;
     }
 }

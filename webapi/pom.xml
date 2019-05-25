@@ -30,7 +30,7 @@
         </dependency>
         <dependency>
             <groupId>pri.zhenhui.demo</groupId>
-            <artifactId>uac</artifactId>
+            <artifactId>udms</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>

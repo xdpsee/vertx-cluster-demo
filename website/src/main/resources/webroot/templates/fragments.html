@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.w3.org/1999/xhtml">
+<body>
+<div th:fragment="header" id="menu" class="ui tiny menu">
+    <div class="header item">
+        <img class="ui mini image" src="../static/images/logo.png">
+    </div>
+    <a class="active item">
+        <i class="map outline teal icon"></i>
+        Home
+    </a>
+    <a class="item">
+        <i class="car teal icon"></i>
+        Vehicle
+    </a>
+    <a class="item">
+        <i class="users teal icon"></i>
+        Account
+    </a>
+    <a class="item">
+        <i class="chart line teal icon"></i>
+        Reports
+    </a>
+    <a class="item">
+        <i class="setting teal icon"></i>
+        Settings
+    </a>
+    <div class="right menu">
+        <div class="ui dropdown item">
+            <i class="language teal icon"></i>
+            Language <i class="dropdown icon"></i>
+            <div class="menu">
+                <a class="item">英语</a>
+                <a class="item">俄语</a>
+                <a class="item">西班牙语</a>
+            </div>
+        </div>
+        <div class="item">
+            <a class="item" href="/logout">
+                <i class="power teal icon"></i>
+                Logout
+            </a>
+        </div>
+    </div>
+</div>
+</body>
+</html>

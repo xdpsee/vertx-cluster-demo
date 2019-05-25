@@ -12,7 +12,7 @@ public class UserDO implements Serializable {
 
     private Long id;
 
-    private long parentId;
+    private Long parentId = 0L;
 
     private String username;
 

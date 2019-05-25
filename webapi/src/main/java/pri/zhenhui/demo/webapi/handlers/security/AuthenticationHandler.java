@@ -1,8 +1,10 @@
 package pri.zhenhui.demo.webapi.handlers.security;
 
-import io.vertx.core.json.JsonObject;
+import io.vertx.ext.auth.jwt.impl.JWTUser;
+import io.vertx.reactivex.ext.auth.User;
 import io.vertx.reactivex.ext.web.RoutingContext;
 import org.apache.commons.lang3.StringUtils;
+import pri.zhenhui.demo.udms.service.UserTokenService;
 import pri.zhenhui.demo.webapi.support.AbstractHandler;
 import pri.zhenhui.demo.webapi.support.AppContext;
 import pri.zhenhui.demo.webapi.support.Result;
@@ -29,9 +31,14 @@ public class AuthenticationHandler extends AbstractHandler {
                 throw new RuntimeException("Invalid Authorization Header ->  Authorization: " + header);
             }
 
-            appContext.jwtAuth().authenticate(new JsonObject().put("jwt", components[1]), authenticate -> {
+            final UserTokenService userTokenService = appContext.getService(UserTokenService.SERVICE_NAME
+                    , UserTokenService.SERVICE_ADDRESS
+                    , UserTokenService.class);
+
+            userTokenService.validateToken(components[1], authenticate -> {
                 if (authenticate.succeeded()) {
-                    context.setUser(authenticate.result());
+                    JWTUser jwtUser = new JWTUser(authenticate.result(), "permissions");
+                    context.setUser(new User(jwtUser));
                     context.next();
                 } else {
                     write(context, Result.error(401, "Authenticate Failed", authenticate.cause()));

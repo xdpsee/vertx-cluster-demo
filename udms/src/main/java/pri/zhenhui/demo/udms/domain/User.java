@@ -4,8 +4,6 @@ import io.vertx.codegen.annotations.DataObject;
 import io.vertx.core.json.JsonObject;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.apache.commons.beanutils.BeanUtils;
-import pri.zhenhui.demo.udms.dal.domain.UserDO;
 
 import java.io.Serializable;
 
@@ -19,7 +17,7 @@ public class User implements Serializable {
 
     private Long id;
 
-    private long parentId;
+    private Long parentId = 0L;
 
     private String username;
 
@@ -30,14 +28,6 @@ public class User implements Serializable {
     private String phone;
 
     private String email;
-
-    public User(UserDO userDO) {
-        try {
-            BeanUtils.copyProperties(this, userDO);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
 
     public User(JsonObject jsonObj) {
         UserConverter.fromJson(jsonObj, this);

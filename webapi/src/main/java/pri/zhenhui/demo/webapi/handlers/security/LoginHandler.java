@@ -1,19 +1,13 @@
 package pri.zhenhui.demo.webapi.handlers.security;
 
-import io.vertx.core.json.JsonObject;
-import io.vertx.ext.jwt.JWTOptions;
 import io.vertx.reactivex.ext.web.RoutingContext;
+import io.vertx.serviceproxy.ServiceException;
 import org.apache.commons.lang3.StringUtils;
-import org.mindrot.jbcrypt.BCrypt;
-import pri.zhenhui.demo.uac.domain.Authority;
-import pri.zhenhui.demo.uac.domain.User;
-import pri.zhenhui.demo.uac.service.AccountService;
-import pri.zhenhui.demo.uac.service.AuthorityService;
+import pri.zhenhui.demo.udms.service.UserTokenService;
+import pri.zhenhui.demo.udms.service.exception.Errors;
 import pri.zhenhui.demo.webapi.support.AbstractHandler;
 import pri.zhenhui.demo.webapi.support.AppContext;
 import pri.zhenhui.demo.webapi.support.Result;
-
-import java.util.stream.Collectors;
 
 public class LoginHandler extends AbstractHandler {
 
@@ -31,57 +25,23 @@ public class LoginHandler extends AbstractHandler {
             return;
         }
 
-        final AccountService accountService = appContext.getService(AccountService.SERVICE_NAME
-                , AccountService.SERVICE_ADDRESS
-                , AccountService.class);
-        final AuthorityService authorityService = appContext.getService(AuthorityService.SERVICE_NAME
-                , AuthorityService.SERVICE_ADDRESS
-                , AuthorityService.class);
+        final UserTokenService userTokenService = appContext.getService(UserTokenService.SERVICE_NAME
+                , UserTokenService.SERVICE_ADDRESS
+                , UserTokenService.class);
 
-        accountService.queryUserByName(username, queryUserByName -> {
-            if (queryUserByName.failed()) {
-                write(context, Result.error(500, "Service Error", queryUserByName.cause()));
-                return;
-            }
-
-            final User user = queryUserByName.result();
-            if (user == null) {
-                write(context, Result.error(404, "User Not Found"));
-                return;
-            }
-
-            if (!BCrypt.checkpw(password, queryUserByName.result().getPassword())) {
-                write(context, Result.error(401, "Password Mismatch"));
-                return;
-            }
-
-            authorityService.queryUserAuthorities(user.getId(), queryUserAuthorities -> {
-                if (queryUserAuthorities.failed()) {
-                    write(context, Result.error(500, "Service Error", queryUserAuthorities.cause()));
-                    return;
+        userTokenService.generateToken(username, password, result -> {
+            if (result.succeeded()) {
+                write(context, Result.success(result.result()));
+            } else {
+                ServiceException exception = (ServiceException) result.cause();
+                if (exception.failureCode() == Errors.USER_NOT_FOUND.code) {
+                    write(context, Result.error(404, "User Not Found"));
+                } else if (exception.failureCode() == Errors.USER_PASSWORD_MISMATCH.code) {
+                    write(context, Result.error(401, "Password Mismatch"));
+                } else {
+                    write(context, Result.error(500, "Service Error", result.cause()));
                 }
-
-                this.<String>executeBlocking(future -> {
-                    try {
-                        JsonObject claims = new JsonObject().put("sub", username).put("uid", user.getId());
-                        JWTOptions options = new JWTOptions()
-                                .setPermissions(queryUserAuthorities.result()
-                                        .stream()
-                                        .map(Authority::getTitle)
-                                        .collect(Collectors.toList())
-                                );
-                        future.complete(appContext.jwtAuth().generateToken(claims, options));
-                    } catch (Throwable e) {
-                        future.fail(e);
-                    }
-                }, generateToken -> {
-                    if (generateToken.failed()) {
-                        write(context, Result.error(500, "Service Error", generateToken.cause()));
-                    } else {
-                        write(context, Result.success(generateToken.result()));
-                    }
-                });
-            });
+            }
         });
     }
 }

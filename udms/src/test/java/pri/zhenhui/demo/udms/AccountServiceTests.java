@@ -114,7 +114,7 @@ public class AccountServiceTests {
             assertNotNull(accountService);
 
             User user = new User();
-            user.setUsername("ling100");
+            user.setUsername("ling300");
             user.setPhone("13402022000");
             user.setPassword(BCrypt.hashpw("12345678", BCrypt.gensalt()));
 

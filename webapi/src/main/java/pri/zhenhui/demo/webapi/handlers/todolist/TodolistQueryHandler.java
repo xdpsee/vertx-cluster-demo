@@ -2,9 +2,9 @@ package pri.zhenhui.demo.webapi.handlers.todolist;
 
 import io.reactivex.Single;
 import io.vertx.reactivex.ext.web.RoutingContext;
-import pri.zhenhui.demo.uac.domain.enums.AuthorityType;
 import pri.zhenhui.demo.todolist.TodolistService;
 import pri.zhenhui.demo.todolist.domain.Todolist;
+import pri.zhenhui.demo.udms.domain.enums.AuthorityType;
 import pri.zhenhui.demo.webapi.exception.PermissionException;
 import pri.zhenhui.demo.webapi.support.AbstractHandler;
 import pri.zhenhui.demo.webapi.support.AppContext;

@@ -2,16 +2,19 @@ package pri.zhenhui.demo.udms.domain;
 
 import io.vertx.codegen.annotations.DataObject;
 import io.vertx.core.json.JsonObject;
+import lombok.EqualsAndHashCode;
 import pri.zhenhui.demo.udms.domain.enums.AuthorityType;
 
 import java.io.Serializable;
 
 @SuppressWarnings("unused")
 @DataObject(generateConverter = true)
+@EqualsAndHashCode
 public class Authority implements Serializable {
 
     private static final long serialVersionUID = 7474327774872249710L;
 
+    @EqualsAndHashCode.Include
     private long id;
 
     private String title;

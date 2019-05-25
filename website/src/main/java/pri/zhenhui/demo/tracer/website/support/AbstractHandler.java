@@ -5,14 +5,16 @@ import io.vertx.core.Handler;
 import io.vertx.reactivex.core.buffer.Buffer;
 import io.vertx.reactivex.ext.web.RoutingContext;
 
+import java.util.HashMap;
 import java.util.Map;
+
 
 /**
  * @author zhenhui
  */
 public abstract class AbstractHandler implements Handler<RoutingContext> {
 
-    private final AppContext appContext;
+    protected final AppContext appContext;
 
     protected AbstractHandler(AppContext appContext) {
         this.appContext = appContext;
@@ -20,8 +22,12 @@ public abstract class AbstractHandler implements Handler<RoutingContext> {
 
     protected Single<Buffer> rxRender(Map<String, Object> context, String templateFileName) {
         return appContext.templateEngine()
-                .rxRender(context, templateFileName)
-                .subscribeOn(appContext.scheduler());
+                .rxRender(context, templateFileName);
+    }
+
+    protected Single<Buffer> rxRender(String templateFileName) {
+        return appContext.templateEngine()
+                .rxRender(new HashMap<>(), templateFileName);
     }
 }
 

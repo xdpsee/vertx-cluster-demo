@@ -5,9 +5,12 @@ import io.reactivex.Single;
 import io.vertx.reactivex.core.AbstractVerticle;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
+import org.mindrot.jbcrypt.BCrypt;
 import pri.zhenhui.demo.support.db.DBUtils;
 import pri.zhenhui.demo.support.db.mybatis.SqlSessionFactoryLoader;
+import pri.zhenhui.demo.udms.dal.domain.UserDO;
 import pri.zhenhui.demo.udms.dal.mapper.AuthorityMapper;
+import pri.zhenhui.demo.udms.dal.mapper.UserMapper;
 import pri.zhenhui.demo.udms.domain.enums.AuthorityType;
 import pri.zhenhui.demo.udms.domain.enums.RoleType;
 import pri.zhenhui.demo.udms.verticles.*;
@@ -18,6 +21,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * @author zhenhui
+ */
 public class MainVerticle extends AbstractVerticle {
 
     public static Map<RoleType, List<AuthorityType>> ROLE_AUTHORITIES = new HashMap<>();
@@ -60,6 +66,14 @@ public class MainVerticle extends AbstractVerticle {
                         int rows = authorityMapper.insertRoleAuthorities(role.id, authorities.stream().map(a -> a.id).collect(Collectors.toList()));
                         System.out.println("insertRoleAuthorities => " + rows);
                     });
+
+                    UserMapper userMapper = session.getMapper(UserMapper.class);
+                    UserDO userDO = new UserDO();
+                    userDO.setParentId(0L);
+                    userDO.setUsername("zhcen");
+                    userDO.setPassword(BCrypt.hashpw("123456", BCrypt.gensalt()));
+                    userMapper.insert(userDO);
+
                     session.commit();
                 } catch (Exception e) {
                     session.rollback();
@@ -81,6 +95,8 @@ public class MainVerticle extends AbstractVerticle {
                 .andThen(vertx.rxDeployVerticle(new UserDeviceServiceVerticle()))
                 .ignoreElement()
                 .andThen(vertx.rxDeployVerticle(new DeviceGroupServiceVerticle()))
+                .ignoreElement()
+                .andThen(vertx.rxDeployVerticle(new UserTokenServiceVerticle()))
                 .ignoreElement();
 
     }

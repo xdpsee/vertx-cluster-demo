@@ -4,6 +4,8 @@ import io.reactivex.Scheduler;
 import io.vertx.reactivex.core.RxHelper;
 import io.vertx.reactivex.core.Vertx;
 import io.vertx.reactivex.ext.web.common.template.TemplateEngine;
+import io.vertx.reactivex.ext.web.sstore.ClusteredSessionStore;
+import io.vertx.reactivex.ext.web.sstore.SessionStore;
 import io.vertx.reactivex.ext.web.templ.thymeleaf.ThymeleafTemplateEngine;
 import io.vertx.servicediscovery.ServiceDiscovery;
 import io.vertx.servicediscovery.ServiceReference;
@@ -15,6 +17,8 @@ import io.vertx.servicediscovery.types.EventBusService;
 public class AppContext {
 
     private final Vertx vertx;
+
+    private SessionStore sessionStore;
 
     private final ServiceDiscovery serviceDiscovery;
 
@@ -32,6 +36,10 @@ public class AppContext {
 
     public Vertx vertx() {return vertx;}
 
+    public SessionStore sessionStore() {
+        return this.sessionStore;
+    }
+
     public <T> T getService(String name, String address, Class<T> serviceClass) {
 
         ServiceReference reference = serviceDiscovery.getReference(EventBusService.createRecord(name, address, serviceClass));
@@ -44,6 +52,7 @@ public class AppContext {
 
     private AppContext(Vertx vertx, ServiceDiscovery serviceDiscovery) {
         this.vertx = vertx;
+        this.sessionStore = ClusteredSessionStore.create(vertx);
         this.serviceDiscovery = serviceDiscovery;
         this.templateEngine = ThymeleafTemplateEngine.create(vertx);
         this.scheduler = RxHelper.scheduler(vertx);
